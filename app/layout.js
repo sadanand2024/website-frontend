@@ -35,7 +35,6 @@ export default function RootLayout({ children }) {
       <body>
         {pathname === "/" ? null : pathname === "/index1" && <Preloader />}
         {/* {children} */}
-        sai anand
       </body>
     </html>
   );
