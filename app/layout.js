@@ -1,7 +1,7 @@
 "use client";
 import { Questrial } from "next/font/google";
 import { usePathname } from "next/navigation";
-
+import inddex1Page from "./index1/page";
 import "@fonts/css/switzer.css";
 import "./globals.css";
 
@@ -33,7 +33,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${secondary_font.variable}`}>
       <body>
-        {pathname === "/" ? null : pathname === "/index1" && <Preloader />}
+        {pathname === "/index1" ? <Preloader /> : null}
         {/* {children} */}
       </body>
     </html>
