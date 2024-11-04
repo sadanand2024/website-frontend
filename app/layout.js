@@ -32,6 +32,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${secondary_font.variable}`}>
       <body>
+        <h1>mek</h1>
         <Preloader />
         {children}
       </body>
