@@ -32,9 +32,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${secondary_font.variable}`}>
       <body>
-        <h1>Kumar</h1>
+        <h1 style={{ color: "red" }}>Kumar</h1>
         <Preloader />
-        {children}
+        {/* {children} */}
       </body>
     </html>
   );
