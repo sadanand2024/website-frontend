@@ -1,7 +1,7 @@
 import Link from "next/link";
 const Banner = ({
   title = "Your Ally for Financial Control",
-  subTitle = "Send money globally with Plax",
+  subTitle = "Send money globally with sai",
   img = "img/home-2/1.png",
   style = { maxWidth: "135%", transform: "translateX(5%)" },
   dark = false,
