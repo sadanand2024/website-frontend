@@ -31,6 +31,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${secondary_font.variable}`}>
+      <h1>acd</h1>
       <body>
         <Preloader />
         {children}
