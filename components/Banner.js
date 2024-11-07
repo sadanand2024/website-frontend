@@ -1,7 +1,13 @@
 import Link from "next/link";
 const Banner = ({
   title = "Your Ally for Financial Control",
-  subTitle = "Send money globally with Plax",
+  subTitle = `Ever felt like finance was another
+language? We get it! Our mission is to turn
+the serious world of finance into a place that’s
+friendly, fun, and easy to understand. We’re
+here to help you learn without the jargon,
+save without the stress, and grow without the
+fuss`,
   img = "img/home-2/1.png",
   style = { maxWidth: "135%", transform: "translateX(5%)" },
   dark = false,
@@ -12,10 +18,14 @@ const Banner = ({
         <div className="row align-items-center">
           <div className="col-xl-6">
             <div className="mil-banner-text">
-              <h6 className="mil-text-gradient-2 mil-mb-20">{subTitle}</h6>
-              <h1 className="mil-display mil-text-gradient-3 mil-mb-60">
+              <h1
+                className="mil-display mil-text-gradient-3 mil-mb-60"
+                style={{ fontSize: "3rem" }}
+              >
                 {title}
               </h1>
+              <h6 className="mil-text-gradient-2 mil-mb-20">{subTitle}</h6>
+
               <div className="mil-buttons-frame">
                 <Link href="register" className="mil-btn mil-md mil-add-arrow">
                   Try demo

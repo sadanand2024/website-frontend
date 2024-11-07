@@ -21,7 +21,8 @@ const Footer1 = ({ bg = true, margin = 160 }) => {
         <div className="row">
           <div className="col-xl-3">
             <a href="#." className="mil-footer-logo mil-mb-60">
-              <img src="img/logo-2.png" alt="Plax" width={28} height={32} />
+              <h2>Tara</h2>
+              {/* <img src="img/logo-2.png" alt="Plax" width={28} height={32} /> */}
             </a>
           </div>
           <div className="col-xl-3 mil-mb-60">
@@ -65,7 +66,13 @@ const Footer1 = ({ bg = true, margin = 160 }) => {
               Subscribe to get the latest news form us
             </p>
             <form id="subscribeForm" className="mil-subscripe-form-footer">
-              <input className="mil-input" name="EMAIL" type="email" placeholder="Email" autocomplete="off" />
+              <input
+                className="mil-input"
+                name="EMAIL"
+                type="email"
+                placeholder="Email"
+                autocomplete="off"
+              />
               <button type="submit">
                 <i className="far fa-envelope-open mil-dark" />
               </button>

@@ -40,23 +40,30 @@ export const CallToAction2 = () => {
       <div className="container">
         <div
           className="mil-out-frame mil-p-160-160"
-          style={{ backgroundImage: "url(img/home-3/5.png)" }}
+          style={{ backgroundImage: "url(img/home-1/freedom.jpg)" }}
         >
           <div className="row justify-content-between align-items-center">
             <div className="col-xl-7 mil-sm-text-center">
               <h2 className="mil-light mil-mb-30 mil-up">
-                Discover the freedom <br />
-                of Total Financial Control
+                Discover the freedom of Total Financial Control!
               </h2>
               <p className="mil-text-m mil-mb-60 mil-dark-soft mil-up">
-                Join Plax and take the first step towards a more <br /> balanced
-                and hassle-free financial life.
+                We know how important it is to have financial independence, at
+                your finger tips.
               </p>
               <div className="mil-buttons-frame mil-up">
-                <a href="https://apps.apple.com/" target="_blank" className="mil-btn mil-md">
+                <a
+                  href="https://apps.apple.com/"
+                  target="_blank"
+                  className="mil-btn mil-md"
+                >
                   App Store
                 </a>
-                <a href="https://play.google.com/" target="_blank" className="mil-btn mil-border mil-md">
+                <a
+                  href="https://play.google.com/"
+                  target="_blank"
+                  className="mil-btn mil-border mil-md"
+                >
                   Google Play
                 </a>
               </div>

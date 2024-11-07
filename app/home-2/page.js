@@ -10,9 +10,12 @@ const page = () => {
   return (
     <PlaxLayout bg={false}>
       <Banner
-        title="Shop with Confidence, Protected"
-        img="img/home-1/1.png"
-        style={{ maxWidth: "125%", transform: "translateX(10%)" }}
+        title="Making Finance Make Sense-Minus the Nonsense"
+        img="img/home-1/finance4.jpg"
+        style={{
+          transform: "translateX(10%)",
+          borderRadius: "20px",
+        }}
       />
       {/* banner end */}
       {/* features */}
@@ -21,37 +24,33 @@ const page = () => {
           <div className="row flex-sm-row-reverse justify-content-between align-items-center">
             <div className="col-xl-6 mil-mb-80">
               <h2 className="mil-mb-30 mil-up">
-                Exclusive Benefits of <br />
-                Using Plax
+                Why use Tara? <br />
               </h2>
               <ul className="mil-list-1">
                 <li>
                   <div className="mil-up">
-                    <h5 className="mil-mb-15 mil-up">Instant Transactions</h5>
+                    <h5 className="mil-mb-15 mil-up">File Your Taxes</h5>
                     <p className="mil-text-m mil-soft mil-up">
-                      Make money transfers immediately, without <br />
-                      complications or delays.
+                      Stress-Free, Every Time Get your taxes filed with ease,
+                      accuracy, and zero hassle.
                     </p>
                   </div>
                 </li>
                 <li>
                   <div className="mil-up">
-                    <h5 className="mil-mb-15 mil-up">Guaranteed Security</h5>
+                    <h5 className="mil-mb-15 mil-up">Insure Yourself </h5>
                     <p className="mil-text-m mil-soft mil-up">
-                      Protect your financial information with our advanced{" "}
-                      <br />
-                      security protocols.
+                      Because You Matter Most Stay protected with simple,
+                      affordable insurance tailored to you.
                     </p>
                   </div>
                 </li>
                 <li>
                   <div className="mil-up">
-                    <h5 className="mil-mb-15 mil-up">
-                      Extensive Global Coverage
-                    </h5>
+                    <h5 className="mil-mb-15 mil-up">Maintain Your Accounts</h5>
                     <p className="mil-text-m mil-soft mil-up">
-                      Access our global network that covers more than <br />
-                      169 countries for your international transactions.
+                      Keep Every Rupee in Check, organize, track, and manage
+                      your finances without breaking a sweat.
                     </p>
                   </div>
                 </li>
@@ -59,7 +58,7 @@ const page = () => {
             </div>
             <div className="col-xl-5 mil-mb-80">
               <div className="mil-image-frame mil-visible-overflow">
-                <img src="img/home-1/2.png" alt="image" className="mil-up" />
+                <img src="img/home-1/tax.jpg" alt="image" className="mil-up" />
                 <div className="mil-img-box mil-accent-box mil-up">
                   <div>
                     <h2 className="mil-light mil-mb-15">100%</h2>
@@ -103,9 +102,9 @@ const page = () => {
             </div>
             <div className="col-xl-5 mil-mb-80">
               <p className="mil-text-m mil-soft mil-up">
-                Dive into the data behind Plax's success. From the number of
+                Dive into the data behind Tara's success. From the number of
                 users to the extent of our global network, these facts and
-                figures highlight Plax's impact on the world of finance and how
+                figures highlight Tara's impact on the world of finance and how
                 we have managed
               </p>
             </div>
@@ -119,9 +118,7 @@ const page = () => {
           <div className="mil-out-frame mil-p-160-100">
             <div className="row align-items-end">
               <div className="col-xl-8 mil-mb-80-adaptive-30">
-                <h2 className="mil-up">
-                  Innovation and Efficiency in Every Transaction
-                </h2>
+                <h2 className="mil-up">Tara’s Services – For Individuals</h2>
               </div>
               <div className="col-xl-4 mil-mb-80 mil-up">
                 <Link
@@ -136,29 +133,16 @@ const page = () => {
               <div className="col-xl-4 mil-mb-60">
                 <div className="mil-icon-box">
                   <img
-                    src="img/home-1/icons/1.svg"
+                    src="img/home-1/icons/3.svg"
                     alt="icon"
                     className="mil-mb-30 mil-up"
                   />
-                  <h5 className="mil-mb-30 mil-up">Unmatched Speed</h5>
+                  <h5 className="mil-mb-30 mil-up">
+                    Private Limited Company – Big Growth, Small Risks
+                  </h5>
                   <p className="mil-text-m mil-soft mil-up">
-                    Make instant transfers and experience <br />
-                    Plax's unparalleled speed with every transaction.
-                  </p>
-                </div>
-              </div>
-              <div className="col-xl-4 mil-mb-60">
-                <div className="mil-icon-box">
-                  <img
-                    src="img/home-1/icons/2.svg"
-                    alt="icon"
-                    className="mil-mb-30 mil-up"
-                  />
-                  <h5 className="mil-mb-30 mil-up">Extensive Global Network</h5>
-                  <p className="mil-text-m mil-soft mil-up">
-                    Connect with the world through our <br />
-                    global network that spans more than <br />
-                    170 countries.
+                    A great choice for growing your brand with built-in
+                    shareholder protection
                   </p>
                 </div>
               </div>
@@ -169,11 +153,113 @@ const page = () => {
                     alt="icon"
                     className="mil-mb-30 mil-up"
                   />
-                  <h5 className="mil-mb-30 mil-up">Advanced Security</h5>
+                  <h5 className="mil-mb-30 mil-up">
+                    One Person Company (OPC) – All You, All Legal
+                  </h5>
                   <p className="mil-text-m mil-soft mil-up">
-                    Protect your assets with our robust <br />
-                    security protocols and cutting-edge <br />
-                    technologies.
+                    Run your business solo but with the perks of a company setup
+                  </p>
+                </div>
+              </div>
+              <div className="col-xl-4 mil-mb-60">
+                <div className="mil-icon-box">
+                  <img
+                    src="img/home-1/icons/3.svg"
+                    alt="icon"
+                    className="mil-mb-30 mil-up"
+                  />
+                  <h5 className="mil-mb-30 mil-up">
+                    Limited Liability Partnership (LLP) – Shared Ideas, Limited
+                    Liability
+                  </h5>
+                  <p className="mil-text-m mil-soft mil-up">
+                    Partner up while keeping your assets safe. Best of both
+                    worlds!
+                  </p>
+                </div>
+              </div>
+
+              <div className="col-xl-4 mil-mb-60">
+                <div className="mil-icon-box">
+                  <img
+                    src="img/home-1/icons/3.svg"
+                    alt="icon"
+                    className="mil-mb-30 mil-up"
+                  />
+                  <h5 className="mil-mb-30 mil-up">
+                    Partnership Firm – Stronger Together
+                  </h5>
+                  <p className="mil-text-m mil-soft mil-up">
+                    Join forces and share the rewards—classic partnership with
+                    shared ownership.
+                  </p>
+                </div>
+              </div>
+
+              <div className="col-xl-4 mil-mb-60">
+                <div className="mil-icon-box">
+                  <img
+                    src="img/home-1/icons/3.svg"
+                    alt="icon"
+                    className="mil-mb-30 mil-up"
+                  />
+                  <h5 className="mil-mb-30 mil-up">
+                    Sole Proprietorship – Business, Uncomplicated
+                  </h5>
+                  <p className="mil-text-m mil-soft mil-up">
+                    Perfect for one-person ventures. You’re the boss, and it’s
+                    all yours.
+                  </p>
+                </div>
+              </div>
+
+              <div className="col-xl-4 mil-mb-60">
+                <div className="mil-icon-box">
+                  <img
+                    src="img/home-1/icons/3.svg"
+                    alt="icon"
+                    className="mil-mb-30 mil-up"
+                  />
+                  <h5 className="mil-mb-30 mil-up">
+                    Section 8 Company – Profit in Purpose
+                  </h5>
+                  <p className="mil-text-m mil-soft mil-up">
+                    For nonprofits with a cause—get the benefits of a registered
+                    entity.
+                  </p>
+                </div>
+              </div>
+
+              <div className="col-xl-4 mil-mb-60">
+                <div className="mil-icon-box">
+                  <img
+                    src="img/home-1/icons/3.svg"
+                    alt="icon"
+                    className="mil-mb-30 mil-up"
+                  />
+                  <h5 className="mil-mb-30 mil-up">
+                    Producer Company – For Farmers, By Farmers
+                  </h5>
+                  <p className="mil-text-m mil-soft mil-up">
+                    Ideal for agriculture-based businesses that thrive in
+                    collaboration.
+                  </p>
+                </div>
+              </div>
+
+              <div className="col-xl-4 mil-mb-60">
+                <div className="mil-icon-box">
+                  <img
+                    src="img/home-1/icons/3.svg"
+                    alt="icon"
+                    className="mil-mb-30 mil-up"
+                  />
+                  <h5 className="mil-mb-30 mil-up">
+                    Nidhi Company – Community Savings, Simplified
+                  </h5>
+                  <p className="mil-text-m mil-soft mil-up">
+                    For those who believe in the power of mutual savings and
+                    lending.
                   </p>
                 </div>
               </div>
@@ -188,7 +274,7 @@ const page = () => {
           <div className="row justify-content-between align-items-center">
             <div className="col-xl-6 mil-mb-80">
               <h2 className="mil-mb-30 mil-up">
-                The Perfect Solution for Your Personal Transfers
+                Services we offer - For CORPORATES
               </h2>
               <p className="mil-text-m mil-soft mil-mb-60 mil-up">
                 Explore the convenience of Plax Consumer and <br />
@@ -197,22 +283,77 @@ const page = () => {
               <ul className="mil-list-2">
                 <li>
                   <div className="mil-up">
-                    <h5 className="mil-mb-15">Intuitive Interface</h5>
+                    <h5 className="mil-mb-15">GST – Taxes Made Painless</h5>
                     <p className="mil-text-m mil-soft">
-                      Enjoy a friendly user experience and navigate the <br />
-                      application intuitively to carry out your transactions
-                      with ease.
+                      We’ll handle GST filing so you stay compliant without any
+                      stress.
                     </p>
                   </div>
                 </li>
                 <li>
                   <div className="mil-up">
-                    <h5 className="mil-mb-15">First Level Security</h5>
+                    <h5 className="mil-mb-15">TDS/TCS – Tax? Done!</h5>
                     <p className="mil-text-m mil-soft">
-                      Protect your transfers and personal data with our advanced{" "}
-                      <br />
-                      security measures, giving you peace of mind with every
-                      transaction.
+                      We make TDS/TCS easy, helping you avoid penalties and keep
+                      cash flow smooth.
+                    </p>
+                  </div>
+                </li>
+
+                <li>
+                  <div className="mil-up">
+                    <h5 className="mil-mb-15">
+                      Income Tax Filings – Save, File, Relax
+                    </h5>
+                    <p className="mil-text-m mil-soft">
+                      Get your taxes filed right—on time and stressfree!
+                    </p>
+                  </div>
+                </li>
+
+                <li>
+                  <div className="mil-up">
+                    <h5 className="mil-mb-15">
+                      Payroll Compliances – Keeping Payroll on Point
+                    </h5>
+                    <p className="mil-text-m mil-soft">
+                      Stay compliant and keep your team happy with worry-free
+                      payroll services.{" "}
+                    </p>
+                  </div>
+                </li>
+
+                <li>
+                  <div className="mil-up">
+                    <h5 className="mil-mb-15">
+                      ROC Filings – Stay Official, Stay Clear
+                    </h5>
+                    <p className="mil-text-m mil-soft">
+                      All your company’s filings, handled professionally and
+                      right on schedule.
+                    </p>
+                  </div>
+                </li>
+
+                <li>
+                  <div className="mil-up">
+                    <h5 className="mil-mb-15">
+                      Accounting – Organized Numbers, Peace of Mind
+                    </h5>
+                    <p className="mil-text-m mil-soft">
+                      We make sure every rupee is accounted for— no surprises.
+                    </p>
+                  </div>
+                </li>
+
+                <li>
+                  <div className="mil-up">
+                    <h5 className="mil-mb-15">
+                      Audit – Confidence in Every Check
+                    </h5>
+                    <p className="mil-text-m mil-soft">
+                      Get thorough audits that boost trust and keep your
+                      business in top shape.{" "}
                     </p>
                   </div>
                 </li>
@@ -220,7 +361,11 @@ const page = () => {
             </div>
             <div className="col-xl-5 mil-mb-80">
               <div className="mil-image-frame mil-visible-overflow">
-                <img src="img/home-1/3.png" alt="image" className="mil-up" />
+                <img
+                  src="img/home-1/services.jpg"
+                  alt="image"
+                  className="mil-up"
+                />
                 <div className="mil-img-box mil-right-max mil-soft-box mil-up">
                   <img src="img/home-1/icons/4.svg" alt="icon" />
                 </div>
@@ -280,11 +425,11 @@ const page = () => {
             <div className="row justify-content-between align-items-center">
               <div className="col-xl-7 mil-mt-60">
                 <h2 className="mil-mb-30 mil-up">
-                  Discover Plax today and Transform your Financial Experience!
+                  Bring Tara onboard and watch your finances turn out to be fun!
                 </h2>
                 <p className="mil-text-m mil-mb-60 mil-up">
-                  Discover the innovation, speed and security <br />
-                  of Plax in every transaction.
+                  Tara will be the perfect interface between you and your
+                  Chartered Accountant & Finance teams!
                 </p>
                 <div className="mil-up">
                   <Link
@@ -297,9 +442,17 @@ const page = () => {
               </div>
               <div className="col-xl-5 mil-mt-60">
                 <img
-                  src="img/home-1/5.png"
+                  src="img/home-1/handshake.jpg"
                   alt="img"
-                  style={{ width: "100%" }}
+                  style={{
+                    width: "100%",
+                    borderTopLeftRadius: "10px",
+                    borderTopRightRadius: "10px",
+                    position: "relative",
+                    // display: "inline-block",
+                    maskImage:
+                      "linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 1)) ",
+                  }}
                   className="mil-up"
                 />
               </div>
@@ -314,13 +467,10 @@ const page = () => {
           <div className="row justify-content-center">
             <div className="col-xl-8">
               <div className="mil-text-center">
-                <h2 className="mil-mb-30 mil-up">
-                  Explore Our Frequently <br />
-                  Asked Questions
-                </h2>
+                <h2 className="mil-mb-30 mil-up">FAQs</h2>
                 <p className="mil-text-m mil-soft mil-mb-60 mil-up">
                   Find quick and clear answers to the most common <br />
-                  questions about Plax
+                  questions about Tara
                 </p>
               </div>
               <PlaxAccordion />
