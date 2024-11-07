@@ -380,7 +380,7 @@ const page = () => {
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-xl-7 mil-relative">
-              <Testimonials1 />
+              {/* <Testimonials1 /> */}
             </div>
           </div>
         </div>

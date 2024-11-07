@@ -399,7 +399,7 @@ const page = () => {
                           />
                         </svg>
                         <p className="mil-text-l mil-mb-60 mil-up mil-light">
-                          Plax is not just a payments platform, it is a
+                          Tara is not just a payments platform, it is a
                           comprehensive solution. The global network, security
                           and variety of options make Plax my number one option
                           for all my quisque rutrum transactions. Aenean lost.
@@ -438,7 +438,7 @@ const page = () => {
                           />
                         </svg>
                         <p className="mil-text-l mil-mb-60 mil-up mil-light">
-                          Plax is not just a payments platform, it is a
+                          Tara is not just a payments platform, it is a
                           comprehensive solution. The global network, security
                           and variety of options make Plax my number one option
                           for all my quisque rutrum transactions. Aenean lost.
@@ -477,7 +477,7 @@ const page = () => {
                           />
                         </svg>
                         <p className="mil-text-l mil-mb-60 mil-up mil-light">
-                          Plax is not just a payments platform, it is a
+                          Tara is not just a payments platform, it is a
                           comprehensive solution. The global network, security
                           and variety of options make Plax my number one option
                           for all my quisque rutrum transactions. Aenean lost.
