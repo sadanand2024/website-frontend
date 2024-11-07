@@ -24,8 +24,8 @@ const secondary_font = Questrial({
 });
 
 export const metadata = {
-  title: "Tara Finance ",
-  description: "One Stop Solution for all your Financial Needs",
+  title: "Tara",
+  description: "Financial Solution",
 };
 
 export default function RootLayout({ children }) {
