@@ -20,7 +20,7 @@ fuss`,
             <div className="mil-banner-text">
               <h1
                 className="mil-display mil-text-gradient-3 mil-mb-60"
-                style={{ fontSize: "3rem" }}
+                style={{ fontSize: "2.5rem" }}
               >
                 {title}
               </h1>
@@ -28,14 +28,14 @@ fuss`,
 
               <div className="mil-buttons-frame">
                 <Link href="register" className="mil-btn mil-md mil-add-arrow">
-                  Try demo
+                  Book a Free Consultation{" "}
                 </Link>
-                <a
+                {/* <a
                   href="https://www.youtube.com/watch?v=gRhoYxy9Oss"
                   className="mil-btn mil-md mil-light mil-add-play has-popup-video"
                 >
                   Watch tutorial
-                </a>
+                </a> */}
               </div>
             </div>
           </div>

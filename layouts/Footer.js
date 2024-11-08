@@ -26,7 +26,7 @@ const Footer1 = ({ bg = true, margin = 160 }) => {
             </a>
           </div>
           <div className="col-xl-3 mil-mb-60">
-            <h6 className="mil-mb-60">Usefull Links</h6>
+            <h6 className="mil-mb-60">Useful Links</h6>
             <ul className="mil-footer-list">
               <li className="mil-text-m mil-soft mil-mb-15">
                 <Link href="/">Home</Link>
@@ -40,23 +40,21 @@ const Footer1 = ({ bg = true, margin = 160 }) => {
               <li className="mil-text-m mil-soft mil-mb-15">
                 <Link href="services">Services</Link>
               </li>
-              <li className="mil-text-m mil-soft mil-mb-15">
+              {/* <li className="mil-text-m mil-soft mil-mb-15">
                 <Link href="price">Pricing</Link>
-              </li>
+              </li> */}
             </ul>
           </div>
           <div className="col-xl-3 mil-mb-60">
-            <h6 className="mil-mb-60">Help</h6>
+            <h6 className="mil-mb-60">Get in touch</h6>
             <ul className="mil-footer-list">
               <li className="mil-text-m mil-soft mil-mb-15">
-                999 Rue du Cherche-Midi, 7755500666 Paris, <br />
-                France
+                999 Rue du Cherche-Midi, <br />
+                India
               </li>
+              <li className="mil-text-m mil-soft mil-mb-15">1212121212</li>
               <li className="mil-text-m mil-soft mil-mb-15">
-                +001 (808) 555-0111
-              </li>
-              <li className="mil-text-m mil-soft mil-mb-15">
-                support@plax.network
+                contact@tarafirst.com
               </li>
             </ul>
           </div>
@@ -91,18 +89,16 @@ const Footer1 = ({ bg = true, margin = 160 }) => {
         <div className="mil-footer-bottom">
           <div className="row">
             <div className="col-xl-6">
-              <p className="mil-text-s mil-soft">
-                © 2024 Plax Finance &amp; Fintech Design
-              </p>
+              <p className="mil-text-s mil-soft">© 2024 Tara first</p>
             </div>
-            <div className="col-xl-6">
+            {/* <div className="col-xl-6">
               <p className="mil-text-s mil-text-right mil-sm-text-left mil-soft">
                 Developed by{" "}
                 <a href="https://bslthemes.com" target="blank">
                   bslthemes
                 </a>
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -120,7 +116,7 @@ const Footer3 = ({ bg = true, margin = 160 }) => {
             </a>
           </div>
           <div className="col-xl-3 mil-mb-60">
-            <h6 className="mil-mb-60 mil-soft">Usefull Links</h6>
+            <h6 className="mil-mb-60 mil-soft">Useful Links</h6>
             <ul className="mil-footer-list">
               <li className="mil-text-m mil-pale mil-mb-15">
                 <Link href="/">Home</Link>
@@ -134,9 +130,9 @@ const Footer3 = ({ bg = true, margin = 160 }) => {
               <li className="mil-text-m mil-pale mil-mb-15">
                 <Link href="services">Services</Link>
               </li>
-              <li className="mil-text-m mil-pale mil-mb-15">
+              {/* <li className="mil-text-m mil-pale mil-mb-15">
                 <Link href="price">Pricing</Link>
-              </li>
+              </li> */}
             </ul>
           </div>
           <div className="col-xl-3 mil-mb-60">
@@ -220,9 +216,9 @@ const Footer2 = () => {
               <li className="mil-text-m mil-dark-soft mil-mb-15">
                 <Link href="services">Services</Link>
               </li>
-              <li className="mil-text-m mil-dark-soft mil-mb-15">
+              {/* <li className="mil-text-m mil-dark-soft mil-mb-15">
                 <Link href="price">Pricing</Link>
-              </li>
+              </li> */}
             </ul>
           </div>
           <div className="col-xl-3 mil-mb-60">

@@ -10,7 +10,12 @@ const page = () => {
   return (
     <PlaxLayout bg={false}>
       <Banner
-        title="Making Finance Make Sense-Minus the Nonsense"
+        title={
+          <>
+            Making Finance Make Sense, <br />
+            Minus the Nonsense
+          </>
+        }
         img="img/home-1/finance4.jpg"
         style={{
           transform: "translateX(10%)",
@@ -118,7 +123,12 @@ const page = () => {
           <div className="mil-out-frame mil-p-160-100">
             <div className="row align-items-end">
               <div className="col-xl-8 mil-mb-80-adaptive-30">
-                <h2 className="mil-up">Tara’s Services – For Individuals</h2>
+                <h2 className="mil-up">
+                  Our Services{" "}
+                  <span style={{ color: "rgb(242, 116, 87)" }}>
+                    for Individuals
+                  </span>
+                </h2>
               </div>
               <div className="col-xl-4 mil-mb-80 mil-up">
                 <Link
@@ -274,7 +284,10 @@ const page = () => {
           <div className="row justify-content-between align-items-center">
             <div className="col-xl-6 mil-mb-80">
               <h2 className="mil-mb-30 mil-up">
-                Services we offer - For CORPORATES
+                Services we offer -
+                <span style={{ color: "rgb(242, 116, 87)" }}>
+                  for Corporates
+                </span>
               </h2>
               <p className="mil-text-m mil-soft mil-mb-60 mil-up">
                 Explore the convenience of Plax Consumer and <br />
@@ -425,7 +438,8 @@ const page = () => {
             <div className="row justify-content-between align-items-center">
               <div className="col-xl-7 mil-mt-60">
                 <h2 className="mil-mb-30 mil-up">
-                  Bring Tara onboard and watch your finances turn out to be fun!
+                  Bring Tara onboard and watch your finances
+                  <br /> turn out to be meaningful!
                 </h2>
                 <p className="mil-text-m mil-mb-60 mil-up">
                   Tara will be the perfect interface between you and your
