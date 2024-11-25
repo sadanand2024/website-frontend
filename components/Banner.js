@@ -19,7 +19,7 @@ fuss`,
           <div className="col-xl-6">
             <div className="mil-banner-text">
               <h1
-                className="mil-display mil-text-gradient-3 mil-mb-60"
+                className="mil-display mil-text-gradient-3 mil-mb-20"
                 style={{ fontSize: "2.5rem" }}
               >
                 {title}
@@ -27,7 +27,7 @@ fuss`,
               <h6 className="mil-text-gradient-2 mil-mb-20">{subTitle}</h6>
 
               <div className="mil-buttons-frame">
-                <Link href="register" className="mil-btn mil-md mil-add-arrow">
+                <Link href="contact" className="mil-btn mil-md mil-add-arrow">
                   Book a Free Consultation{" "}
                 </Link>
                 {/* <a
@@ -63,14 +63,14 @@ export const PageBanner = ({
             <div className="mil-banner-text mil-text-center">
               <div className="mil-text-m mil-mb-20">{pageName}</div>
               <h1 className="mil-mb-60">{title}</h1>
-              <ul className="mil-breadcrumbs mil-center">
+              {/* <ul className="mil-breadcrumbs mil-center">
                 <li>
                   <Link href="/">Home</Link>
                 </li>
                 <li>
                   <a href="#">{pageName}</a>
                 </li>
-              </ul>
+              </ul> */}
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import Banner from "@/components/Banner";
 import { CallToAction2 } from "@/components/CallToAction";
 import PlaxAccordion from "@/components/PlaxAccordion";
@@ -7,6 +8,114 @@ import PlaxLayout from "@/layouts/PlaxLayout";
 import Link from "next/link";
 
 const page = () => {
+  const [showAllBusiness, setShowAllBusiness] = useState(false);
+  const [showAllIndividual, setShowAllIndividual] = useState(false);
+  let services = [
+    {
+      individuals: [
+        {
+          title: "Private Limited Company – Big Growth, Small Risks",
+          description:
+            "A great choice for growing your brand with built-in shareholder protection",
+          icon: "img/home-1/icons/3.svg",
+        },
+        {
+          title: "One Person Company (OPC) – All You, All Legal",
+          description:
+            "Run your business solo but with the perks of a company setup",
+          icon: "img/home-1/icons/3.svg",
+        },
+        {
+          title:
+            "Limited Liability Partnership (LLP) – Shared Ideas, Limited Liability",
+          description:
+            "Partner up while keeping your assets safe. Best of both worlds!",
+          icon: "img/home-1/icons/3.svg",
+        },
+        {
+          title: "Partnership Firm – Stronger Together",
+          description:
+            "Join forces and share the rewards—classic partnership with shared ownership.",
+          icon: "img/home-1/icons/3.svg",
+        },
+        {
+          title: "Sole Proprietorship – Business, Uncomplicated",
+          description:
+            "Perfect for one-person ventures. You’re the boss, and it’s all yours.",
+          icon: "img/home-1/icons/3.svg",
+        },
+        {
+          title: "Section 8 Company – Profit in Purpose",
+          description:
+            "For nonprofits with a cause—get the benefits of a registered entity.",
+          icon: "img/home-1/icons/3.svg",
+        },
+        {
+          title: "Producer Company – For Farmers, By Farmers",
+          description:
+            "Ideal for agriculture-based businesses that thrive in collaboration.",
+          icon: "img/home-1/icons/3.svg",
+        },
+        {
+          title: "Nidhi Company – Community Savings, Simplified",
+          description:
+            "For those who believe in the power of mutual savings and lending.",
+          icon: "img/home-1/icons/3.svg",
+        },
+      ],
+      business: [
+        {
+          title: "GST – Taxes Made Painless",
+          description:
+            "We’ll handle GST filing so you stay compliant without any stress.",
+          icon: "img/home-1/icons/2.svg",
+        },
+        {
+          title: "TDS/TCS – Tax? Done!",
+          description:
+            "We make TDS/TCS easy, helping you avoid penalties and keep cash flow smooth.",
+          icon: "img/home-1/icons/2.svg",
+        },
+        {
+          title: "Income Tax Filings – Save, File, Relax",
+          description: "Get your taxes filed right—on time and stressfree!",
+          icon: "img/home-1/icons/2.svg",
+        },
+        {
+          title: "Payroll Compliances – Keeping Payroll on Point",
+          description:
+            "Stay compliant and keep your team happy with worry-free payroll services.",
+          icon: "img/home-1/icons/2.svg",
+        },
+        {
+          title: "ROC Filings – Stay Official, Stay Clear",
+          description:
+            "All your company’s filings, handled professionally and right on schedule.",
+          icon: "img/home-1/icons/3.svg",
+        },
+        {
+          title: "Accounting – Organized Numbers, Peace of Mind",
+          description:
+            "We make sure every rupee is accounted for—no surprises.",
+          icon: "img/home-1/icons/3.svg",
+        },
+        {
+          title: "Audit – Confidence in Every Check",
+          description:
+            "Get thorough audits that boost trust and keep your business in top shape.",
+          icon: "img/home-1/icons/3.svg",
+        },
+      ],
+    },
+  ];
+
+  const individualsToDisplay = showAllIndividual
+    ? services[0].individuals
+    : services[0].individuals.slice(0, 4);
+  const businessToDisplay = showAllBusiness
+    ? services[0].business
+    : services[0].business.slice(0, 4);
+
   return (
     <PlaxLayout bg={false}>
       <Banner
@@ -120,157 +229,85 @@ const page = () => {
       {/* call to action */}
       <div className="mil-cta mil-up">
         <div className="container">
-          <div className="mil-out-frame mil-p-160-100">
+          <div className="mil-out-frame mil-p-100-100">
             <div className="row align-items-end">
               <div className="col-xl-8 mil-mb-80-adaptive-30">
-                <h2 className="mil-up">
-                  Our Services{" "}
-                  <span style={{ color: "rgb(242, 116, 87)" }}>
-                    for Individuals
-                  </span>
-                </h2>
+                <h2 className="mil-up">Our Services </h2>
               </div>
-              <div className="col-xl-4 mil-mb-80 mil-up">
+              {/* <div className="col-xl-4 mil-mb-80 mil-up">
                 <Link
                   href="/services"
                   className="mil-btn mil-m mil-add-arrow mil-adaptive-right"
                 >
                   Learn More
                 </Link>
-              </div>
+              </div> */}
             </div>
             <div className="row">
-              <div className="col-xl-4 mil-mb-60">
-                <div className="mil-icon-box">
-                  <img
-                    src="img/home-1/icons/3.svg"
-                    alt="icon"
-                    className="mil-mb-30 mil-up"
-                  />
-                  <h5 className="mil-mb-30 mil-up">
-                    Private Limited Company – Big Growth, Small Risks
-                  </h5>
-                  <p className="mil-text-m mil-soft mil-up">
-                    A great choice for growing your brand with built-in
-                    shareholder protection
-                  </p>
+              <div className="services-container">
+                {/* Individual Services */}
+                <div className="individual-services">
+                  <h3 style={{ color: "rgb(242, 116, 87)", fontSize: "2rem" }}>
+                    For Individual
+                  </h3>{" "}
+                  <br />
+                  {individualsToDisplay.map((service, index) => (
+                    <div key={index} className="service-card">
+                      <div className="service-header">
+                        <img
+                          src={service.icon}
+                          alt={`${service.title} icon`}
+                          className="service-icon"
+                        />
+                        <h6 className="service-title">{service.title}</h6>
+                      </div>
+                      <p className="service-description">
+                        {service.description}
+                      </p>
+                    </div>
+                  ))}
+                  <div style={{ paddingBottom: 10 }}>
+                    {!showAllIndividual && (
+                      <button
+                        onClick={() => setShowAllIndividual(true)}
+                        className="mil-btn mil-m mil-add-arrow"
+                      >
+                        Show More
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="col-xl-4 mil-mb-60">
-                <div className="mil-icon-box">
-                  <img
-                    src="img/home-1/icons/3.svg"
-                    alt="icon"
-                    className="mil-mb-30 mil-up"
-                  />
-                  <h5 className="mil-mb-30 mil-up">
-                    One Person Company (OPC) – All You, All Legal
-                  </h5>
-                  <p className="mil-text-m mil-soft mil-up">
-                    Run your business solo but with the perks of a company setup
-                  </p>
-                </div>
-              </div>
-              <div className="col-xl-4 mil-mb-60">
-                <div className="mil-icon-box">
-                  <img
-                    src="img/home-1/icons/3.svg"
-                    alt="icon"
-                    className="mil-mb-30 mil-up"
-                  />
-                  <h5 className="mil-mb-30 mil-up">
-                    Limited Liability Partnership (LLP) – Shared Ideas, Limited
-                    Liability
-                  </h5>
-                  <p className="mil-text-m mil-soft mil-up">
-                    Partner up while keeping your assets safe. Best of both
-                    worlds!
-                  </p>
-                </div>
-              </div>
-
-              <div className="col-xl-4 mil-mb-60">
-                <div className="mil-icon-box">
-                  <img
-                    src="img/home-1/icons/3.svg"
-                    alt="icon"
-                    className="mil-mb-30 mil-up"
-                  />
-                  <h5 className="mil-mb-30 mil-up">
-                    Partnership Firm – Stronger Together
-                  </h5>
-                  <p className="mil-text-m mil-soft mil-up">
-                    Join forces and share the rewards—classic partnership with
-                    shared ownership.
-                  </p>
-                </div>
-              </div>
-
-              <div className="col-xl-4 mil-mb-60">
-                <div className="mil-icon-box">
-                  <img
-                    src="img/home-1/icons/3.svg"
-                    alt="icon"
-                    className="mil-mb-30 mil-up"
-                  />
-                  <h5 className="mil-mb-30 mil-up">
-                    Sole Proprietorship – Business, Uncomplicated
-                  </h5>
-                  <p className="mil-text-m mil-soft mil-up">
-                    Perfect for one-person ventures. You’re the boss, and it’s
-                    all yours.
-                  </p>
-                </div>
-              </div>
-
-              <div className="col-xl-4 mil-mb-60">
-                <div className="mil-icon-box">
-                  <img
-                    src="img/home-1/icons/3.svg"
-                    alt="icon"
-                    className="mil-mb-30 mil-up"
-                  />
-                  <h5 className="mil-mb-30 mil-up">
-                    Section 8 Company – Profit in Purpose
-                  </h5>
-                  <p className="mil-text-m mil-soft mil-up">
-                    For nonprofits with a cause—get the benefits of a registered
-                    entity.
-                  </p>
-                </div>
-              </div>
-
-              <div className="col-xl-4 mil-mb-60">
-                <div className="mil-icon-box">
-                  <img
-                    src="img/home-1/icons/3.svg"
-                    alt="icon"
-                    className="mil-mb-30 mil-up"
-                  />
-                  <h5 className="mil-mb-30 mil-up">
-                    Producer Company – For Farmers, By Farmers
-                  </h5>
-                  <p className="mil-text-m mil-soft mil-up">
-                    Ideal for agriculture-based businesses that thrive in
-                    collaboration.
-                  </p>
-                </div>
-              </div>
-
-              <div className="col-xl-4 mil-mb-60">
-                <div className="mil-icon-box">
-                  <img
-                    src="img/home-1/icons/3.svg"
-                    alt="icon"
-                    className="mil-mb-30 mil-up"
-                  />
-                  <h5 className="mil-mb-30 mil-up">
-                    Nidhi Company – Community Savings, Simplified
-                  </h5>
-                  <p className="mil-text-m mil-soft mil-up">
-                    For those who believe in the power of mutual savings and
-                    lending.
-                  </p>
+                {/* Business Services */}
+                <div className="business-services">
+                  <h3 style={{ color: "rgb(242, 116, 87)", fontSize: "2rem" }}>
+                    For Business
+                  </h3>{" "}
+                  <br />
+                  {businessToDisplay.map((service, index) => (
+                    <div key={index} className="service-card">
+                      <div className="service-header">
+                        <img
+                          src={service.icon}
+                          alt={`${service.title} icon`}
+                          className="service-icon"
+                        />
+                        <h6 className="service-title">{service.title}</h6>
+                      </div>
+                      <p className="service-description">
+                        {service.description}
+                      </p>
+                    </div>
+                  ))}
+                  <div style={{ paddingBottom: 10 }}>
+                    {!showAllBusiness && (
+                      <button
+                        onClick={() => setShowAllBusiness(true)}
+                        className="mil-btn mil-m mil-add-arrow"
+                      >
+                        Show More
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -279,7 +316,7 @@ const page = () => {
       </div>
       {/* call to action end */}
       {/* features */}
-      <div className="mil-features mil-p-160-80">
+      {/* <div className="mil-features mil-p-160-80">
         <div className="container">
           <div className="row justify-content-between align-items-center">
             <div className="col-xl-6 mil-mb-80">
@@ -386,7 +423,7 @@ const page = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* features end */}
       {/* testimonials */}
       <div className="mil-testimonials mil-p-0-160">

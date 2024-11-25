@@ -1,105 +1,155 @@
-import { PageBanner } from "@/components/Banner";
+"use client";
 import { CallToAction2 } from "@/components/CallToAction";
 import PlaxLayout from "@/layouts/PlaxLayout";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import CustomInput from "@/components/CustomInput";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
 const page = () => {
+  const formik = useFormik({
+    initialValues: {
+      firstname: "",
+      lastname: "",
+      email: "",
+      phonenumber: "",
+      message: "",
+    },
+    validationSchema: Yup.object({
+      firstname: Yup.string().required("First name is required"),
+      lastname: Yup.string().required("Last name is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      phonenumber: Yup.string()
+        .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
+        .required("Phone number is required"),
+      message: Yup.string().required("Message is required"),
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      console.log("Form values:", values);
+      alert("Thank you! Your message has been sent.");
+      resetForm();
+    },
+  });
+
+  const { errors, touched, handleSubmit, getFieldProps } = formik;
+
   return (
     <PlaxLayout bg={false}>
-      <PageBanner
-        pageName="Contact us"
-        title="Connect with Us: We are Here to Help You"
-      />
+      <Box sx={{ pt: 20, px: 2 }}>
+        {/* Page Title */}
+        <h1 align="center">We Are Here to Help You</h1>
+        <Typography
+          variant="body1"
+          align="center"
+          color="textSecondary"
+          gutterBottom
+        >
+          We'd love to hear from you! Please fill out the form below.
+        </Typography>
 
-      {/* contact */}
-      <div className="mil-blog-list mil-p-0-160">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-xl-9">
-              <form>
-                <div className="row">
-                  <div className="col-md-6 mil-mb-30">
-                    <input
-                      className="mil-input mil-up"
-                      type="text"
-                      placeholder="Name"
-                      name="name"
-                    />
-                  </div>
-                  <div className="col-md-6 mil-mb-30">
-                    <input
-                      className="mil-input mil-up"
-                      type="email"
-                      placeholder="Email"
-                      name="email"
-                    />
-                  </div>
-                  <div className="col-xl-12 mil-mb-30">
-                    <input
-                      className="mil-input mil-up"
-                      type="tel"
-                      placeholder="Telephone number"
-                      name="tel"
-                    />
-                  </div>
-                  <div className="col-xl-12 mil-mb-30 ">
-                    <textarea
-                      cols={30}
-                      rows={10}
-                      className="mil-up"
-                      placeholder="Message"
-                      name="message"
-                      defaultValue={""}
-                    />
-                  </div>
-                </div>
-                <div className="mil-checkbox-frame mil-mb-30 mil-up">
-                  <div className="mil-checkbox">
-                    <input
-                      type="checkbox"
-                      id="checkbox"
-                      name="checkmark"
-                      defaultChecked=""
-                    />
-                    <label htmlFor="checkbox" />
-                  </div>
-                  <p className="mil-text-xs mil-soft">
-                    I agree that the data submitted, collected and stored *
-                  </p>
-                </div>
-                <div className="mil-up">
-                  <button type="submit" className="mil-btn mil-m">
-                    Send Message
-                  </button>
-                </div>
-              </form>
-              <div className="alert-success" style={{ display: "none" }}>
-                <h5>Thanks, your message is sent successfully.</h5>
-              </div>
-              <div className="mil-p-160-0">
-                <h5 className="mil-mb-30 mil-up">
-                  We are available on the following channels:
-                </h5>
-                <p className="mil-text-m mil-soft mil-mb-10 mil-up">
-                  Address: 999 Rue du Cherche-Midi, 7755500666 Paris, France
-                </p>
-                <p className="mil-text-m mil-soft mil-mb-10 mil-up">
-                  Telephone: +001 (808) 555-0111
-                </p>
-                <p className="mil-text-m mil-soft mil-mb-10 mil-up">
-                  Fax: +001 (808) 555-0112
-                </p>
-                <p className="mil-text-m mil-soft mil-up">
-                  Email: support@plax.network
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* contact end */}
-      {/* call to action */}
-      <CallToAction2 />
-      {/* call to action end */}
+        {/* Form Section */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            py: 5,
+          }}
+        >
+          <form
+            onSubmit={handleSubmit}
+            style={{ width: "100%", maxWidth: "600px" }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <CustomInput
+                  id="firstname"
+                  label="First Name"
+                  aria-label="First Name"
+                  {...getFieldProps("firstname")}
+                  touched={touched.firstname}
+                  errors={errors.firstname}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <CustomInput
+                  id="lastname"
+                  label="Last Name"
+                  aria-label="Last Name"
+                  {...getFieldProps("lastname")}
+                  touched={touched.lastname}
+                  errors={errors.lastname}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CustomInput
+                  id="email"
+                  label="Email"
+                  type="email"
+                  aria-label="Email"
+                  {...getFieldProps("email")}
+                  touched={touched.email}
+                  errors={errors.email}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CustomInput
+                  id="phonenumber"
+                  label="Phone Number"
+                  type="tel"
+                  aria-label="Phone Number"
+                  {...getFieldProps("phonenumber")}
+                  touched={touched.phonenumber}
+                  errors={errors.phonenumber}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CustomInput
+                  id="message"
+                  label="Message"
+                  multiline
+                  rows={5}
+                  aria-label="Message"
+                  {...getFieldProps("message")}
+                  touched={touched.message}
+                  errors={errors.message}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <button
+                  className="mil-btn mil-md mil-add-arrow"
+                  type="submit"
+                  fullWidth
+                  style={{ width: "100%" }}
+                >
+                  Submit
+                </button>
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
+
+        {/* Contact Information */}
+        <Box textAlign="center" sx={{ pb: 2 }}>
+          <h5>We are also available on the following channel</h5>
+          <Typography variant="body2" color="textSecondary">
+            Address: Madhapur, Hyderabad
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            Telephone: 1234567897
+          </Typography>
+
+          <Typography variant="body2" color="textSecondary">
+            Email: admin@tarafirst.com
+          </Typography>
+        </Box>
+
+        {/* Call to Action Section */}
+        <CallToAction2 />
+      </Box>
     </PlaxLayout>
   );
 };
+
 export default page;

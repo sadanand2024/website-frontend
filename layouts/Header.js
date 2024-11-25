@@ -22,7 +22,7 @@ const Header = ({ dark }) => {
         </Link>
         <nav className={`mil-top-menu ${toggle ? "mil-active" : ""}`}>
           <ul>
-            <li
+            {/* <li
               className={`mil-has-children ${
                 currentPath.includes("home") || currentPath == "/"
                   ? "mil-active"
@@ -47,14 +47,14 @@ const Header = ({ dark }) => {
                   <Link href="home-5">Type 5</Link>
                 </li>
               </ul>
-            </li>
-            <li className={`${activeMenuFuntion(["about"])}`}>
+            </li> */}
+            {/* <li className={`${activeMenuFuntion(["about"])}`}>
               <Link href="about">About</Link>
-            </li>
+            </li> */}
             <li className={`${activeMenuFuntion(["services"])}`}>
               <Link href="services">Services</Link>
             </li>
-            <li
+            {/* <li
               className={`mil-has-children ${activeMenuFuntion([
                 "blog",
                 "publication",
@@ -69,11 +69,16 @@ const Header = ({ dark }) => {
                   <Link href="publication">Blog details</Link>
                 </li>
               </ul>
+            </li> */}
+
+            <li className={`${activeMenuFuntion(["knowledgehub"])}`}>
+              <Link href="knowledgehub">Knowledge Hub</Link>
             </li>
-            <li className={`${activeMenuFuntion(["contact"])}`}>
-              <Link href="contact">Contact</Link>
+
+            <li className={`${activeMenuFuntion(["about"])}`}>
+              <Link href="about">About Tara</Link>
             </li>
-            <li
+            {/* <li
               className={`mil-has-children ${activeMenuFuntion([
                 "career",
                 "price",
@@ -95,11 +100,11 @@ const Header = ({ dark }) => {
                   <Link href="register">Register</Link>
                 </li>
               </ul>
-            </li>
+            </li> */}
           </ul>
         </nav>
         <div className="mil-menu-buttons">
-          <Link href="register" className="mil-btn mil-sm">
+          <Link href="/register" className="mil-btn mil-sm">
             Log in
           </Link>
           <div

@@ -85,7 +85,7 @@ typography
 
 ------------------------------------------- */
 * {
-  font-family: var(--font-secondary), sans-serif;
+  /* font-family: var(--font-secondary), sans-serif; */
   color: rgb(13, 81, 82);
 }
 
@@ -974,13 +974,13 @@ top menu
   border-radius: 10px;
   height: 48px;
   padding: 0 15px;
-  color: rgb(137, 141, 150);
+  /* color: rgb(137, 141, 150); */
   font-family: "Switzer-Variable";
   font-weight: 600;
   letter-spacing: -2%;
   z-index: 1;
   white-space: nowrap;
-  font-size: 15px;
+  font-size: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1333,7 +1333,7 @@ banner
   height: auto;
   background-color: transparent;
   min-height: 680px;
-  padding-top: 80px;
+  /* padding-top: 80px; */
   margin-top: 0;
 }
 .mil-banner.banner-short {
@@ -2705,3 +2705,76 @@ footer.mil-footer-dark-2 .mil-footer-bottom {
 .mil-subscripe-form-footer button i.mil-dark {
   color: rgb(13, 81, 82);
 }/*# sourceMappingURL=style.css.map */
+
+
+/* anand */
+.services-container {
+  display: flex;
+  gap: 20px;
+}
+
+.individual-services, .business-services {
+  flex: 1;
+}
+@media (max-width: 768px) {
+  .services-container {
+    flex-direction: column;
+  }
+
+  .business-services,
+  .individual-services {
+    flex: 1 1 100%; /* Take full width on smaller screens */
+  }
+}
+.services-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.business-services,
+.individual-services {
+  flex: 1;
+  min-width: 300px;
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  min-height: 150px; /* Set a minimum height for uniformity */
+  max-height: 150px; 
+}
+
+.service-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.service-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.service-title {
+  /* font-size: 1.2rem; */
+  font-weight: bold;
+  margin: 0;
+}
+
+.service-description {
+  margin-top: 10px;
+  color: #555;
+  flex-grow: 1; /* Ensures description area stretches if needed */
+}
+
+
+.show-more:hover {
+  background-color: #0056b3;
+}
+
