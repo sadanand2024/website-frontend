@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Box } from "@mui/material";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -14,8 +15,8 @@ export default function DashboardPage() {
   // }, [router]);
 
   return (
-    <div>
-      <h1>Welcome to Tara</h1>
-    </div>
+    <Box sx={{ m: 3 }}>
+      <h3>Welcome to Tara</h3>
+    </Box>
   );
 }

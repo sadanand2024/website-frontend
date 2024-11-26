@@ -10,6 +10,15 @@ const CustomInput = ({
 }) => {
   return (
     <TextField
+      sx={{
+        "& .MuiInputLabel-root": {
+          fontSize: "14px",
+        },
+        "& .MuiInputBase-input": {
+          // fontFamily: "Courier New, monospace",
+          fontSize: "15px",
+        },
+      }}
       id={id}
       placeholder={placeholder}
       type={type}

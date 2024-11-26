@@ -243,9 +243,10 @@ export default function FirmForm() {
               disabled={formik.isSubmitting}
               sx={{
                 padding: "8px 32px",
+                textTransform: "none",
               }}
             >
-              {formik.isSubmitting ? "Processing..." : "Complete Registration"}
+              {formik.isSubmitting ? "Processing..." : "Next"}
             </Button>
           </DialogActions>
         </Box>
@@ -345,6 +346,7 @@ export default function FirmForm() {
               disabled={firmkycFormik.isSubmitting}
               sx={{
                 padding: "8px 32px",
+                textTransform: "none",
               }}
             >
               {firmkycFormik.isSubmitting

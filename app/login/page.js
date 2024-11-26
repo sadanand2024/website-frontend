@@ -62,29 +62,40 @@ const LoginPage = () => {
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   return (
-    <Grid container sx={{ minHeight: "100vh", alignItems: "center" }}>
-      {/* Left Section */}
+    <Grid
+      container
+      sx={{
+        minHeight: "100vh",
+        background: "linear-gradient(to bottom, #f9fafa, #ffffff)",
+      }}
+    >
       <Grid
         item
         xs={12}
-        sm={6}
+        sm={5}
         sx={{
-          background: "linear-gradient(to bottom, #f9fafa, #ffffff)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
-          p: 4,
+          pt: 10,
         }}
       >
-        <Typography variant="h4" fontWeight="bold" mb={2}>
+        <Typography variant="h4" fontWeight="bold" mb={2} className="logoLeft">
           <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
-            Tara
+            <img
+              src={"img/L2.png"}
+              alt="Tara"
+              height={42}
+            />
           </Link>
         </Typography>
-        <Typography variant="body1" color="text.secondary" mb={4}>
-          Hi, Welcome back .
+        <Typography variant="h4" fontWeight="bold" mb={2}>
+          Hi, Welcome back
+        </Typography>
+        <Typography variant="body1" color="text.primary" mb={4}>
+          More effectively with optimized workflows.
         </Typography>
 
         <Box
@@ -107,12 +118,11 @@ const LoginPage = () => {
           />
         </Box>
       </Grid>
-
       {/* Right Section */}
       <Grid
         item
         xs={12}
-        sm={6}
+        sm={7}
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -145,6 +155,16 @@ const LoginPage = () => {
               touched={touched.email_or_phonenumber}
               errors={errors.email_or_phonenumber}
             />
+            <Typography
+              align="right"
+              variant="body2"
+              color="text.secondary"
+              mb={-1}
+            >
+              <Link href="/forgot-password" underline="hover">
+                Forgot password?
+              </Link>
+            </Typography>
             <CustomInput
               id="password"
               label="Password"

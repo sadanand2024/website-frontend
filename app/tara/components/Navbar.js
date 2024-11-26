@@ -57,18 +57,16 @@ const Navbar = () => {
     >
       <Toolbar>
         {/* Left Side: Logo or Name */}
-        <Box sx={{ flex: 1, textAlign: "center" }}>
-          <Link href="/">
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: "bold",
-                cursor: "pointer",
-              }}
-            >
-              Tara
-            </Typography>
-          </Link>
+        <Box sx={{ textAlign: "left" }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            <Link href="/">Tara</Link>
+          </Typography>
         </Box>
 
         {/* Center: Empty to center-align logo */}
