@@ -31,6 +31,7 @@ export default function RootLayout({ children }) {
       <Head>{/* Metadata is used here */}</Head>
       <body>
         {/* GoogleOAuthProvider is wrapping your app to provide Google login functionality */}
+
         <GoogleOAuthProvider clientId="<your_google_client_id_here>">
           {children}
         </GoogleOAuthProvider>

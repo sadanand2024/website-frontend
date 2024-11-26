@@ -24,6 +24,7 @@ const MovingCardTabs = () => {
   return (
     <Dialog
       open={dialogOpen}
+      onClose={() => setDialogOpen(false)}
       maxWidth="md"
       PaperProps={{
         sx: {

@@ -1,7 +1,7 @@
 import React from "react";
 
 function Gstcompoennet() {
-  return <div>Gstcompoennet now</div>;
+  return <h3>GST Coming Soon </h3>;
 }
 
 export default Gstcompoennet;

@@ -6,16 +6,14 @@ export default function DashboardPage() {
   const router = useRouter();
 
   // useEffect(() => {
-  //   // Check if the user has submitted the form, otherwise show a modal
-  //   const formSubmitted = localStorage.getItem("formSubmitted");
-  //   if (!formSubmitted) {
-  //     router.push("/dashboard"); // If not, redirect back to dashboard page to show the modal
+  //   // Optional: Check if user is authenticated here
+  //   const token = localStorage.getItem("authToken");
+
+  //   if (!token) {
+  //     // Redirect to login if not authenticated
+  //     router.push("/login");
   //   }
   // }, [router]);
 
-  return (
-    <div>
-      <h1>Welcome to Tara</h1>
-    </div>
-  );
+  return <h3>Home Dashboard </h3>;
 }
