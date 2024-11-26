@@ -49,13 +49,31 @@ p.s. I am available for Freelance hire (UI design, web development). email: mill
 main
 
 ------------------------------------------- */
+
+/* For webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px; /* Set the width of the scrollbar */
+  /* height:  80%; */
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: darkgrey; /* Customize the color of the scrollbar thumb */
+  border-radius: 18px; /* Optional: make the scrollbar thumb rounded */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Optional: customize the scrollbar track */
+}
+
+
 html,
 body {
   padding: 0;
   margin: 0;
   /* font-family: "Switzer-Variable"; */
   /* font-size: 18px; */
-  font-weight: 400;
+  /* font-weight: 400; */
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
@@ -2822,8 +2840,15 @@ footer.mil-footer-dark-2 .mil-footer-bottom {
 .show-more:hover {
   background-color: #0056b3;
 }
+
 .logoLeft {
   position: absolute;
   top: 20px;
   left: 20px;
+}
+
+.logoRight {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }

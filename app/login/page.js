@@ -84,11 +84,7 @@ const LoginPage = () => {
       >
         <Typography variant="h4" fontWeight="bold" mb={2} className="logoLeft">
           <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
-            <img
-              src={"img/L2.png"}
-              alt="Tara"
-              height={42}
-            />
+            <img src={"img/L2.png"} alt="Tara" height={42} />
           </Link>
         </Typography>
         <Typography variant="h4" fontWeight="bold" mb={2}>
@@ -130,12 +126,17 @@ const LoginPage = () => {
           p: 4,
         }}
       >
+        <Typography variant="body1" fontWeight="bold" mb={2} className="logoRight">
+          <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
+            Need help?
+          </Link>
+        </Typography>
         <Container maxWidth="xs">
           <Typography variant="h5" fontWeight="bold" mb={1}>
             Sign in to your account
           </Typography>
           <Typography variant="body2" color="text.secondary" mb={3}>
-            Don’t have an account?{" "}
+            Don’t have an account?&nbsp;
             <Link href="/register" underline="hover">
               Get started
             </Link>
