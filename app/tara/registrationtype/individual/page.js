@@ -166,8 +166,9 @@ export default function IndividualForm() {
               variant="contained"
               type="submit"
               disabled={formik.isSubmitting}
+              sx={{ textTransform: "none" }}
             >
-              {formik.isSubmitting ? "Processing..." : "Complete Registration"}
+              {formik.isSubmitting ? "Processing..." : "Next"}
             </Button>
           </DialogActions>
         </Box>
@@ -240,7 +241,7 @@ export default function IndividualForm() {
             />
             <CustomInput
               size="small"
-              label="D O B"
+              label="Date Of Birth"
               value={kycFormik.values.mobile}
               {...getKycFieldProps("mobile")}
               touched={kycTouched.mobile}
@@ -323,6 +324,9 @@ export default function IndividualForm() {
               variant="contained"
               type="submit"
               disabled={kycFormik.isSubmitting}
+              sx={{
+                textTransform: "none",
+              }}
             >
               {kycFormik.isSubmitting ? "Processing..." : "Complete KYC"}
             </Button>
