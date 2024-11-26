@@ -3,10 +3,10 @@ export async function POST(req) {
     const { email_or_phonenumber, password } = await req.json();
 
     // Simulate checking credentials (you would normally query a database here)
-    if (
-      email_or_phonenumber === "tarateam@gmail.com" &&
-      password === "tarateam"
-    ) {
+    // if (
+    //   email_or_phonenumber === "tarateam@gmail.com" &&
+    //   password === "tarateam"
+    // ) {
       // Respond with success if the credentials are correct
       return new Response(
         JSON.stringify({
@@ -15,7 +15,7 @@ export async function POST(req) {
         }),
         { status: 200, headers: { "Content-Type": "application/json" } }
       );
-    }
+    // }
 
     // If credentials are invalid, respond with an error
     return new Response(
