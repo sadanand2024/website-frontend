@@ -2,11 +2,7 @@ import { Box } from "@mui/material";
 import React from "react";
 
 function Gstcompoennet() {
-  return (
-    <Box sx={{ m: 3 }}>
-      <h3>GST Component</h3>
-    </Box>
-  );
+  return <h3>GST Coming Soon </h3>;
 }
 
 export default Gstcompoennet;

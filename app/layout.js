@@ -41,6 +41,7 @@ export default function RootLayout({ children }) {
       </Head>
       <body>
         {/* GoogleOAuthProvider is wrapping your app to provide Google login functionality */}
+
         {/* <GoogleOAuthProvider clientId="<your_google_client_id_here>"> */}
         <ThemeProvider theme={theme}>{children}</ThemeProvider>
         {/* </GoogleOAuthProvider> */}
