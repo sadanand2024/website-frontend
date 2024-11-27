@@ -1,19 +1,14 @@
+// /app/dashboard/page.js
 "use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+
+import { Box, Typography } from "@mui/material";
 
 export default function DashboardPage() {
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   // Optional: Check if user is authenticated here
-  //   const token = localStorage.getItem("authToken");
-
-  //   if (!token) {
-  //     // Redirect to login if not authenticated
-  //     router.push("/login");
-  //   }
-  // }, [router]);
-
-  return <h3>Home Dashboard </h3>;
+  return (
+    <Box>
+      <Typography variant="h4" gutterBottom>
+        Hi, Welcome back
+      </Typography>
+    </Box>
+  );
 }

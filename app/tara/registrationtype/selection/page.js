@@ -21,6 +21,21 @@ const MovingCardTabs = () => {
     }
   };
 
+  const getTabLabel = (label, desc) => {
+    return (
+      <>
+        <h6 style={{ margin: 0, textAlign: "center" }}>{label}</h6>
+        <Typography
+          variant="body1"
+          sx={{ mt: 2, textAlign: "center" }}
+          color="disabled"
+          id="dialog-description"
+        >
+          {desc}
+        </Typography>
+      </>
+    );
+  };
   return (
     <Dialog
       open={dialogOpen}
@@ -40,7 +55,8 @@ const MovingCardTabs = () => {
       </h4>
       <Typography
         variant="body1"
-        sx={{ mb: 4, textAlign: "center", color: "#666" }}
+        sx={{ mb: 4, textAlign: "center" }}
+        color="disabled"
         id="dialog-description"
       >
         Pick your account type to proceed.
@@ -55,10 +71,10 @@ const MovingCardTabs = () => {
         sx={{
           p: 0.5,
           position: "relative",
-          transition: "transform 0.1s ease-in-out",
-          "& .MuiTabs-indicator": {
-            backgroundColor: "#d7d9db",
-          },
+          transition: "transform 0.6s ease-in-out",
+          // "& .MuiTabs-indicator": {
+          //   backgroundColor: "rgb(215 217 219)",
+          // },
           backgroundColor: "#d7d9db",
           borderRadius: 2,
           display: "flex",
@@ -67,12 +83,12 @@ const MovingCardTabs = () => {
         }}
       >
         <Tab
-          label={
-            <h6 style={{ margin: 0, textAlign: "center" }}>
-              Individual or Corporate Entity
-            </h6>
-          }
+          label={getTabLabel(
+            "Individual Entity or Corporate Entity",
+            "Organization created by an individual or individuals to conduct business"
+          )}
           sx={{
+            textTransform: "none",
             padding: "30px 20px", // Reduce padding for smaller screens
             minWidth: "150px", // Set a minimum width
             flex: "1 1 auto", // Flex-grow for responsiveness
@@ -87,12 +103,12 @@ const MovingCardTabs = () => {
           onClick={() => setSelectedType("individual")}
         />
         <Tab
-          label={
-            <h6 style={{ margin: 0, textAlign: "center" }}>
-              Chartered Accountant Practitioner
-            </h6>
-          }
+          label={getTabLabel(
+            "Chartered Accountant or Tax Consultant",
+            "Provides tax advice and support to individuals, businesses, and organizations"
+          )}
           sx={{
+            textTransform: "none",
             padding: "30px 20px", // Reduce padding for smaller screens
             minWidth: "150px", // Set a minimum width
             flex: "1 1 auto", // Flex-grow for responsiveness

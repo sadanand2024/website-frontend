@@ -9,6 +9,8 @@ import Preloader from "@/layouts/Preloader";
 import "@css/style.css";
 import { GoogleOAuthProvider } from "@react-oauth/google"; // Import GoogleOAuthProvider
 import Head from "next/head";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "../components/theme";
 
 // Server-side metadata (do not use `use client` with this)
 export const metadata = {
@@ -28,13 +30,21 @@ const secondary_font = Questrial({
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${secondary_font.variable}`}>
-      <Head>{/* Metadata is used here */}</Head>
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet"
+        />
+        {/* Metadata is used here */}
+      </Head>
       <body>
         {/* GoogleOAuthProvider is wrapping your app to provide Google login functionality */}
 
-        <GoogleOAuthProvider clientId="<your_google_client_id_here>">
-          {children}
-        </GoogleOAuthProvider>
+        {/* <GoogleOAuthProvider clientId="<your_google_client_id_here>"> */}
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        {/* </GoogleOAuthProvider> */}
       </body>
     </html>
   );
