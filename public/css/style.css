@@ -122,7 +122,7 @@ h6,
 .h5,
 .h6 {
   font-weight: 600;
-  font-family: "Switzer-Variable";
+  /* font-family: "Switzer-Variable"; */
   line-height: 1.3;
   letter-spacing: -0.04em;
   color: rgb(13, 81, 82);
@@ -140,7 +140,7 @@ h6 span,
 .h5 span,
 .h6 span {
   font-weight: 600;
-  font-family: "Switzer-Variable";
+  /* font-family: "Switzer-Variable"; */
   line-height: 1.3;
   letter-spacing: -0.04em;
 }
@@ -430,7 +430,7 @@ breadcrumbs
   color: rgb(160, 205, 205);
 }
 .mil-breadcrumbs li a {
-  font-family: "Switzer-Variable";
+  /* font-family: "Switzer-Variable"; */
   font-size: 14px;
   font-weight: 500;
 }
@@ -466,7 +466,7 @@ buttons
   white-space: nowrap;
   background-color: rgb(242, 116, 87);
   border-radius: 10px;
-  font-family: "Switzer-Variable";
+  /* font-family: "Switzer-Variable"; */
   font-weight: 600;
   color: rgb(255, 255, 255);
   transition: 0.2s cubic-bezier(0, 0, 0.3642, 1);
@@ -517,7 +517,7 @@ buttons
   color: rgb(196, 196, 196);
 }
 .mil-btn.mil-add-arrow:after {
-  font-family: "Font Awesome 5 Free";
+  /* font-family: "Font Awesome 5 Free"; */
   font-weight: 900;
   content: "\f061";
   margin-left: 15px;
@@ -525,7 +525,7 @@ buttons
   transition: 0.2s cubic-bezier(0, 0, 0.3642, 1);
 }
 .mil-btn.mil-add-play:after {
-  font-family: "Font Awesome 5 Free";
+  /* font-family: "Font Awesome 5 Free"; */
   font-weight: 900;
   content: "\f04b";
   margin-left: 15px;
@@ -581,7 +581,7 @@ buttons
 }
 
 .mil-link {
-  font-family: "Switzer-Variable";
+  /* font-family: "Switzer-Variable"; */
   font-size: 16px;
   font-weight: 600;
   letter-spacing: -2%;
@@ -933,7 +933,7 @@ back to top
   visibility: visible;
 }
 .progress-wrap:after {
-  font-family: "Font Awesome 5 Free";
+  /* font-family: "Font Awesome 5 Free"; */
   font-weight: 900;
   content: "\f062";
   z-index: 1;
@@ -1005,7 +1005,7 @@ top menu
   height: 48px;
   padding: 0 15px;
   /* color: rgb(137, 141, 150); */
-  font-family: "Switzer-Variable";
+  /* font-family: "Switzer-Variable"; */
   font-weight: 600;
   letter-spacing: -2%;
   z-index: 1;
@@ -1449,7 +1449,7 @@ content list
   margin-right: 0;
 }
 .mil-banner-list li:before {
-  font-family: "Font Awesome 5 Free";
+  /* font-family: "Font Awesome 5 Free"; */
   font-weight: 900;
   content: "\f00c";
   margin-right: 15px;
@@ -1523,7 +1523,7 @@ content list
   transition: 0.4s cubic-bezier(0, 0, 0.3642, 1);
 }
 .mil-list-2 li:after {
-  font-family: "Font Awesome 5 Free";
+  /* font-family: "Font Awesome 5 Free"; */
   font-weight: 900;
   content: "\f00c";
   display: flex;
@@ -1639,7 +1639,7 @@ testimonials
   align-items: center;
 }
 .mil-testi-prev:after {
-  font-family: "Font Awesome 5 Free";
+  /* font-family: "Font Awesome 5 Free"; */
   font-weight: 900;
   content: "\f054";
   transform: rotate(180deg);
@@ -1663,7 +1663,7 @@ testimonials
   align-items: center;
 }
 .mil-testi-next:after {
-  font-family: "Font Awesome 5 Free";
+  /* font-family: "Font Awesome 5 Free"; */
   font-weight: 900;
   content: "\f054";
   color: rgb(255, 255, 255);
@@ -2438,7 +2438,7 @@ comments
   right: 0;
   font-weight: 600;
   font-size: 14px;
-  font-family: "Switzer-Variable";
+  /* font-family: "Switzer-Variable"; */
   color: rgb(242, 116, 87);
 }
 .mil-comments li ul {
@@ -2469,14 +2469,14 @@ form
   border: solid 1px rgba(137, 141, 150, 0.2);
   font-weight: 600;
   font-size: 14px;
-  font-family: "Switzer-Variable";
+  /* font-family: "Switzer-Variable"; */
   border-radius: 20px;
   padding: 0 30px;
 }
 .mil-input::placeholder {
   font-weight: 600;
   font-size: 14px;
-  font-family: "Switzer-Variable";
+  /* font-family: "Switzer-Variable"; */
 }
 
 textarea {
@@ -2488,7 +2488,7 @@ textarea {
 textarea::placeholder {
   font-weight: 600;
   font-size: 14px;
-  font-family: "Switzer-Variable";
+  /* font-family: "Switzer-Variable"; */
 }
 
 .mil-checkbox-frame {
@@ -2627,7 +2627,7 @@ price
   position: absolute;
   top: -20px;
   right: -20px;
-  font-family: "Switzer-Variable";
+    /* font-family: "Switzer-Variable"; */
   font-size: 12px;
   font-weight: 600;
   color: rgb(255, 255, 255);
@@ -2644,7 +2644,7 @@ price
   border-radius: 50px;
   font-size: 14px;
   font-weight: 600;
-  font-family: "Switzer-Variable";
+    /* font-family: "Switzer-Variable"; */
   margin-right: 5px;
   transition: 0.2s cubic-bezier(0, 0, 0.3642, 1);
 }

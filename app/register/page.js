@@ -161,9 +161,9 @@ const RegistrationPage = () => {
             Get started absolutely free
           </Typography>
           <Typography variant="body2" color="text.secondary" mb={3}>
-            Already have an account?{" "}
+            Already have an account?&nbsp;
             <Link href="/login" underline="hover">
-              Get started
+              Login
             </Link>
           </Typography>
           <Box
