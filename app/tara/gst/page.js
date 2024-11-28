@@ -39,7 +39,7 @@ const styles = {
     color: "#4F4F4F",
   },
   value: {
-    fontSize: "30px",
+    fontSize: "1.5rem",
     fontWeight: "bold",
   },
   trend: {
@@ -90,7 +90,7 @@ const chartData = [
     chartSeries: [
       {
         name: "Sales",
-        data: [50, 70, 90, 110, 130, 150, 170], // Dummy data for the line chart
+        data: [50, 70, 90, 60, 130, 150, 170], // Dummy data for the line chart
       },
     ],
   },
