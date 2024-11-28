@@ -11,6 +11,10 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Chart from "react-apexcharts";
+import mainCardBg from "../../../public/img/MainCard.jpg";
+import bg from "../../../public/img/cardBg.jpg";
+import Welcome from "../../../public/img/Welcome.png";
+import Image from "next/image";
 
 const styles = {
   card: {
@@ -33,6 +37,8 @@ const styles = {
     marginTop: "20px",
     display: "flex",
     flexDirection: "column",
+    justifyContent: "end",
+    height: "70%",
   },
   title: {
     fontSize: "15px",
@@ -73,9 +79,38 @@ const useStyles = makeStyles((theme) => ({
     //   backgroundColor: theme.palette.primary.dark,
     // },
   },
+  entryCard: {
+    position: "relative",
+    color: theme.palette.common.white,
+    backgroundImage: `url(${mainCardBg.src})`,
+    backgroundColor: theme.palette.primary.main,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    minHeight: "280px",
+    maxHeight: "280px",
+    borderRadius: "18px",
+    overflow: "hidden",
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(6, 44, 44, 0.8)",
+      zIndex: 1,
+    },
+    "& > *": {
+      position: "relative",
+      zIndex: 2,
+    },
+  },
   grid: {
     minHeight: "200px",
     minHeight: "200px",
+    boxShadow:
+      "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 1)" /* Shadow effect */,
   },
 }));
 
@@ -222,20 +257,40 @@ function Gstcompoennet() {
     };
   };
 
+  console.log(mainCardBg);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
         <Grid item xs={8}>
-          <Grid container>
-            <Grid item xs={7}>
-              <Card className={classes.root}>
-                <Button>Styled Button</Button>
-              </Card>
+          <Grid container className={classes.entryCard}>
+            <Grid item xs={7} sx={{ pt: 6, pl: 6 }}>
+              <Typography sx={{ color: "#fff" }} variant="h5">
+                Welcom Back ,
+              </Typography>
+              <Typography sx={{ color: "#fff" }} variant="h5">
+                Krishna Sai
+              </Typography>
+              <Typography sx={{ color: "#c9c9c9", mt: 2 }} variant="subtitle1">
+                simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever
+              </Typography>
             </Grid>
-            <Grid item xs={5}>
-              <Card className={classes.root}>
-                <Button>Styled Button</Button>
-              </Card>
+            <Grid
+              item
+              xs={5}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Image
+                src={Welcome}
+                alt="Welcome Image"
+                width={280} // Fixed width
+                height={280} // Fixed height
+                style={{ borderRadius: "10px" }} // Optional styling
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -259,15 +314,18 @@ function Gstcompoennet() {
           </Box>
         </Grid>
         {chartData.map((row, idx) => (
-          <Grid item xs={3}>
-            <Card className={classes.grid}>
+          <Grid item xs={3} className={classes.card}>
+            <Card
+              className={classes.grid}
+              sx={{
+                borderRadius: "16px",
+              }}
+            >
               <Grid
                 container
                 style={{
                   ...styles.card,
-                  backgroundImage: `${row.gradient},
-                  url('img/L1.png')
-                `,
+                  backgroundImage: `${row.gradient}, url(${bg.src})`,
                 }}
               >
                 <Grid item xs={6}>
