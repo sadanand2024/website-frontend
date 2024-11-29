@@ -53,7 +53,7 @@ const LoginPage = () => {
           const { id, email, mobile_number, access, refresh } = res;
 
           login({ id, email, mobile_number }, { access, refresh });
-          router.push("/tara"); // Navigate to dashboard after login
+          router.push("/tara/registrationtype/selection"); // Navigate to dashboard after login
         } else {
           alert("Login failed. Please check your credentials.");
         }
@@ -67,6 +67,7 @@ const LoginPage = () => {
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   useEffect(() => {
+    console.log("longpage");
     if (tokens?.access) {
       router.push("/tara");
     }
