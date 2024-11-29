@@ -104,7 +104,7 @@ const Header = ({ dark }) => {
           </ul>
         </nav>
         <div className="mil-menu-buttons">
-          <Link href="/register" className="mil-btn mil-sm">
+          <Link href="/login" className="mil-btn mil-sm">
             Log in
           </Link>
           <div

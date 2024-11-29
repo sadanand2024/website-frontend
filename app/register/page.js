@@ -62,7 +62,7 @@ const RegistrationPage = () => {
       ),
     }),
 
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       try {
         let url = `user_management/register/`;
         let postData = {
@@ -71,7 +71,7 @@ const RegistrationPage = () => {
         };
         let { res, error } = await Factory("post", url, postData);
         console.log(res);
-        if (res?.statusCode === 0) {
+        if (res?.status_cd === 0) {
           setDialog({
             open: true,
             type: "success",
@@ -82,13 +82,16 @@ const RegistrationPage = () => {
           setDialog({
             open: true,
             type: "error",
-            message: "Something went wrong. Please try again.",
+            message:
+              res.data.data["email"] ||
+              "Something went wrong. Please try again.",
           });
         }
       } catch (error) {
         console.error("Error during user registration:", error);
         alert("Something went wrong");
       }
+      resetForm();
     },
   });
 
