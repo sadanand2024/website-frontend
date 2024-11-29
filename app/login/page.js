@@ -16,10 +16,14 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useState, useEffect } from "react";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "../constants";
+import Factory from "../utils/Factory";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const router = useRouter();
   const [captcha, setCaptcha] = useState("");
+  const { login } = useAuth();
 
   const formik = useFormik({
     initialValues: {
@@ -36,25 +40,26 @@ const LoginPage = () => {
         .required("Password is required"),
     }),
     onSubmit: async (values) => {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      try {
+        const url = `token_auth/`;
+        const postData = {
+          email_or_mobile: values.email_or_phonenumber,
+          password: values.password,
+        };
 
-      const data = await response.json();
+        const { res, error } = await Factory("post", url, postData);
 
-      if (response.ok) {
-        // Handle successful login
-        console.log("Login success:", data);
-        localStorage.setItem("auth_token", data.token);
-        // router.push("/registration/selection"); // Redirect to the selection page after login
-        router.push("/tara/registrationtype/selection"); // Redirect to the selection page after login
-      } else {
-        // Handle error (show error message to the user)
-        console.error("Login failed:", data.error);
+        if (res) {
+          const { id, email, mobile_number, access, refresh } = res;
+
+          login({ id, email, mobile_number }, { access, refresh });
+          router.push("/tara"); // Navigate to dashboard after login
+        } else {
+          alert("Login failed. Please check your credentials.");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        alert("Something went wrong. Please try again.");
       }
     },
   });
@@ -126,7 +131,12 @@ const LoginPage = () => {
           p: 4,
         }}
       >
-        <Typography variant="body1" fontWeight="bold" mb={2} className="logoRight">
+        <Typography
+          variant="body1"
+          fontWeight="bold"
+          mb={2}
+          className="logoRight"
+        >
           <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
             Need help?
           </Link>

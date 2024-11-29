@@ -1,4 +1,6 @@
 "use client";
+import Factory from "../utils/Factory";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import CustomInput from "@/components/CustomInput";
@@ -22,9 +24,17 @@ import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,
 } from "react-google-recaptcha-v3";
-
+import RegistrationSuccessDialog from "../../components/RegistrationSuccessDialog";
 import useRecaptchaV3 from "@/components/useRecaptchaV3";
 const RegistrationPage = () => {
+  const [dialog, setDialog] = useState({
+    open: false,
+    type: "", // "success" or "error"
+    message: "",
+  });
+  const handleCloseDialog = () => {
+    setDialog({ ...dialog, open: false });
+  };
   const {
     token,
     error: captchaError,
@@ -54,30 +64,30 @@ const RegistrationPage = () => {
 
     onSubmit: async (values) => {
       try {
-        // Simulate API call here (Replace with your actual API route later)
-        const response = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: values.email_or_phonenumber,
-            password: values.password,
-            // You can add CAPTCHA logic here later
-          }),
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-          localStorage.setItem("auth_token", response.token);
-          router.push("/tara/registrationtype/selection"); // Redirect to the selection page after login
+        let url = `user_management/register/`;
+        let postData = {
+          email: values.email_or_phonenumber,
+          password: values.password,
+        };
+        let { res, error } = await Factory("post", url, postData);
+        console.log(res);
+        if (res?.statusCode === 0) {
+          setDialog({
+            open: true,
+            type: "success",
+            message:
+              "You have successfully registered. Please check your email for the activation link.",
+          });
         } else {
-          // Handle errors
-          alert(result.error || "Registration failed.");
+          setDialog({
+            open: true,
+            type: "error",
+            message: "Something went wrong. Please try again.",
+          });
         }
       } catch (error) {
-        console.error("Error during registration:", error);
-        alert("Something went wrong during registration.");
+        console.error("Error during user registration:", error);
+        alert("Something went wrong");
       }
     },
   });
@@ -248,6 +258,12 @@ const RegistrationPage = () => {
           </Box>
         </Container>
       </Grid>
+      <RegistrationSuccessDialog
+        open={dialog.open}
+        type={dialog.type}
+        message={dialog.message}
+        onClose={handleCloseDialog}
+      />
     </Grid>
     // </GoogleReCaptchaProvider>
   );
