@@ -18,20 +18,14 @@ export default function DashboardLayout({ children }) {
 
   useEffect(() => {
     const authenticateUser = () => {
-      try {
-        const tokensData = JSON.parse(localStorage.getItem("tokens"));
-        const userDetails = JSON.parse(localStorage.getItem("user"));
-
-        if (!tokensData?.access) {
-          router.push("/login");
-        } else {
-          setUser(userDetails); // Set user details if available
-          setTokens(tokensData); // Set tokens
-        }
-      } catch (error) {
-        console.error("Error reading localStorage:", error);
+      const tokensData = JSON.parse(localStorage.getItem("tokens"));
+      const userDetails = JSON.parse(localStorage.getItem("user"));
+      if (!tokensData?.access) {
+        console.log(tokensData, userDetails);
         router.push("/login");
-      } finally {
+      } else {
+        setUser(userDetails); // Set user details if available
+        setTokens(tokensData); // Set tokens
         setLoading(false); // Stop the loading spinner
       }
     };
@@ -39,13 +33,12 @@ export default function DashboardLayout({ children }) {
     authenticateUser();
   }, [router, setUser, setTokens]);
 
-
-
   const handleLogout = () => {
+    setLoading(true);
     logout(); // Ensure the logout function clears tokens/context
     router.push("/login"); // Redirect to login page after logout
-    handleMenuClose();
   };
+
   return (
     <Box sx={{ display: "flex" }}>
       {!loading && (
