@@ -14,6 +14,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google"; // Import GoogleOAuth
 import Head from "next/head";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../components/theme";
+import { AuthProvider } from "./context/AuthContext";
 
 // Server-side metadata (do not use `use client` with this)
 export const metadata = {
@@ -47,8 +48,10 @@ export default function RootLayout({ children }) {
         {/* GoogleOAuthProvider is wrapping your app to provide Google login functionality */}
 
         {/* <GoogleOAuthProvider clientId="<your_google_client_id_here>"> */}
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
-        {/* </GoogleOAuthProvider> */}
+        <AuthProvider>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          {/* </GoogleOAuthProvider> */}
+        </AuthProvider>
       </body>
     </html>
   );

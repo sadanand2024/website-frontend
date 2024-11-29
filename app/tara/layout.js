@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, CssBaseline, useMediaQuery } from "@mui/material";
-import AppBarComponent from "./Appbar";
-import Sidebar from "./SideNavbar";
+import AppBarComponent from "./components/Appbar";
+import Sidebar from "./components/SideNavbar";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 export default function DashboardLayout({ children }) {
   const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -12,10 +13,20 @@ export default function DashboardLayout({ children }) {
   const toggleDrawer = () => setOpen(!open);
   const handleAvatarClick = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
-  const handleLogout = () => {
-    router.push("/login"), handleMenuClose();
-  };
 
+  const { user, tokens, logout } = useAuth();
+  useEffect(() => {
+    // Check if token is available. If not, redirect to login page.
+    if (!tokens?.access) {
+      // If no access token, redirect to login page
+      router.push("/login");
+    }
+  }, [tokens, router]);
+  const handleLogout = () => {
+    logout(); // Ensure the logout function clears tokens/context
+    router.push("/login"); // Redirect to login page after logout
+    handleMenuClose();
+  };
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
