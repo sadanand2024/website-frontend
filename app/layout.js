@@ -7,6 +7,9 @@ import "@css/plugins/swiper.min.css";
 import "@css/plugins/magnific-popup.css";
 import Preloader from "@/layouts/Preloader";
 import "@css/style.css";
+import '@flaticon/flaticon-uicons/css/all/all.css'; // Import Flaticon UIcons CSS
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 import { GoogleOAuthProvider } from "@react-oauth/google"; // Import GoogleOAuthProvider
 import Head from "next/head";
 import { ThemeProvider } from "@mui/material/styles";
@@ -38,6 +41,7 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet"
         />
+        <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-thin-straight/css/uicons-thin-straight.css'></link>
         {/* Metadata is used here */}
       </Head>
       <body>
