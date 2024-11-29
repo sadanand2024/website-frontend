@@ -23,7 +23,7 @@ import { useAuth } from "../context/AuthContext";
 const LoginPage = () => {
   const router = useRouter();
   const [captcha, setCaptcha] = useState("");
-  const { login } = useAuth();
+  const { user, tokens, logout, login } = useAuth();
 
   const formik = useFormik({
     initialValues: {
@@ -65,6 +65,12 @@ const LoginPage = () => {
   });
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+
+  useEffect(() => {
+    if (tokens?.access) {
+      router.push("/tara");
+    }
+  }, [tokens, router]);
 
   return (
     <Grid
