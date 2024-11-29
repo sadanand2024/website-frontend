@@ -1,8 +1,9 @@
-import { Box } from "@mui/material";
-import React from "react";
+"use client";
+import * as React from "react";
+import { Typography } from "@mui/material";
 
 function Gstcompoennet() {
-  return <h3>GST Coming Soon </h3>;
+  return <Typography>GST Component</Typography>;
 }
 
 export default Gstcompoennet;

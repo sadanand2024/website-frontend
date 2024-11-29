@@ -6,6 +6,8 @@ import PlaxLayout from "@/layouts/PlaxLayout";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Page from "./home-2/page";
+import { useEffect, useContext } from "react";
+
 const page = () => {
   const pathname = usePathname();
   return (

@@ -24,6 +24,9 @@ const theme = createTheme({
     info: {
       main: "#8e44ad", // Info color (purple)
     },
+    black: {
+      main: "#000",
+    },
   },
 });
 
