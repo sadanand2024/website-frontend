@@ -86,7 +86,7 @@ function CustomTable({ heading, headers, rows, sx, ...props }) {
                   onClick={() => {
                     console.log("Clicked");
                   }}
-                  class="fi fi-br-menu-dots-vertical"
+                  className="fi fi-br-menu-dots-vertical"
                 ></i>
               </TableCell>
             </TableRow>

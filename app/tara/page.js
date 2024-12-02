@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import dynamic from "next/dynamic"; // Import the dynamic function
 import {
   Box,
   Paper,
@@ -16,7 +17,7 @@ import {
   ListItemAvatar,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import Chart from "react-apexcharts";
+// import Chart from "react-apexcharts";
 import mainCardBg from "../../public/img/MainCard.jpg";
 import bg from "../../public/img/cardBg.jpg";
 import Welcome from "../../public/img/Welcome.png";
@@ -26,6 +27,7 @@ import Avatar from "@mui/material/Avatar";
 import ImageIcon from "@mui/icons-material/Image";
 import WorkIcon from "@mui/icons-material/Work";
 import BeachAccessIcon from "@mui/icons-material/BeachAccess";
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const styles = {
   card: {
@@ -103,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "16px",
     overflow: "hidden",
     boxShadow:
-    "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.6)" /* Shadow effect */,
+      "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.6)" /* Shadow effect */,
     "&::before": {
       content: '""',
       position: "absolute",
@@ -331,7 +333,7 @@ function DashboardPage() {
               </Typography>
               <Typography sx={{ color: "#fff" }} variant="h6">
                 Welcom Back
-                </Typography>
+              </Typography>
               <Typography sx={{ color: "#c9c9c9", mt: 2 }} variant="subtitle1">
                 simply dummy text of the printing and typesetting industry.
                 Lorem Ipsum has been the industry's standard dummy text ever
@@ -399,7 +401,7 @@ function DashboardPage() {
                     /> */}
                     <i
                       style={{ fontSize: "40px", color: row.color }}
-                      class={row.icon}
+                      className={row.icon}
                     ></i>
                   </div>
                 </Grid>
@@ -447,7 +449,10 @@ function DashboardPage() {
         sx={{ mt: 4, borderRadius: "16px", width: "75%" }}
       />
       <div style={{ display: "flex" }}>
-        <Card sx={{ width: "35%", mt: 4, mr: 8 }} style={{  borderRadius: "16px" }}>
+        <Card
+          sx={{ width: "35%", mt: 4, mr: 8 }}
+          style={{ borderRadius: "16px" }}
+        >
           <List
             sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
           >
@@ -464,7 +469,7 @@ function DashboardPage() {
                   <IconButton edge="end" aria-label="delete">
                     <i
                       style={{ color: "#757575c2" }}
-                      class="fa-solid fa-right-left"
+                      className="fa-solid fa-right-left"
                     ></i>
                   </IconButton>
                 }
@@ -495,7 +500,7 @@ function DashboardPage() {
             </ListItem>
           </List>
         </Card>
-        <Card sx={{ width: "35%", mt: 4 }} style={{  borderRadius: "16px" }}>
+        <Card sx={{ width: "35%", mt: 4 }} style={{ borderRadius: "16px" }}>
           <List
             sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
           >
@@ -512,7 +517,7 @@ function DashboardPage() {
                   <IconButton edge="end" aria-label="delete">
                     <i
                       style={{ color: "#757575c2" }}
-                      class="fa-solid fa-right-left"
+                      className="fa-solid fa-right-left"
                     ></i>
                   </IconButton>
                 }
