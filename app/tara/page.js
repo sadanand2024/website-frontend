@@ -102,6 +102,8 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "280px",
     borderRadius: "16px",
     overflow: "hidden",
+    boxShadow:
+    "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.6)" /* Shadow effect */,
     "&::before": {
       content: '""',
       position: "absolute",
@@ -121,7 +123,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "200px",
     minHeight: "200px",
     boxShadow:
-      "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 1)" /* Shadow effect */,
+      "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3)" /* Shadow effect */,
   },
 }));
 
@@ -325,11 +327,11 @@ function DashboardPage() {
           <Grid container className={classes.entryCard}>
             <Grid item xs={7} sx={{ pt: 6, pl: 6 }}>
               <Typography sx={{ color: "#fff" }} variant="h5">
-                Welcom Back ,
+                Hello Krishna Sai,
               </Typography>
-              <Typography sx={{ color: "#fff" }} variant="h5">
-                Krishna Sai
-              </Typography>
+              <Typography sx={{ color: "#fff" }} variant="h6">
+                Welcom Back
+                </Typography>
               <Typography sx={{ color: "#c9c9c9", mt: 2 }} variant="subtitle1">
                 simply dummy text of the printing and typesetting industry.
                 Lorem Ipsum has been the industry's standard dummy text ever
