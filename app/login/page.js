@@ -19,11 +19,15 @@ import { useRouter } from "next/navigation";
 import { BASE_URL } from "../constants";
 import Factory from "../utils/Factory";
 import { useAuth } from "../context/AuthContext";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { InputAdornment, IconButton } from "@mui/material";
 
 const LoginPage = () => {
   const router = useRouter();
   const [captcha, setCaptcha] = useState("");
   const { user, tokens, logout, login } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -185,10 +189,26 @@ const LoginPage = () => {
             <CustomInput
               id="password"
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               {...getFieldProps("password")}
               touched={touched.password}
               errors={errors.password}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
+                      {showPassword ? (
+                        <VisibilityOffIcon />
+                      ) : (
+                        <VisibilityIcon />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
 
             {/* Submit Button */}

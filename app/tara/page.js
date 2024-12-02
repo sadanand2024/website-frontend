@@ -445,7 +445,10 @@ function DashboardPage() {
         sx={{ mt: 4, borderRadius: "16px", width: "75%" }}
       />
       <div style={{ display: "flex" }}>
-        <Card sx={{ width: "35%", mt: 4, mr: 8 }} style={{  borderRadius: "16px" }}>
+        <Card
+          sx={{ width: "35%", mt: 4, mr: 8 }}
+          style={{ borderRadius: "16px" }}
+        >
           <List
             sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
           >
@@ -493,7 +496,7 @@ function DashboardPage() {
             </ListItem>
           </List>
         </Card>
-        <Card sx={{ width: "35%", mt: 4 }} style={{  borderRadius: "16px" }}>
+        <Card sx={{ width: "35%", mt: 4 }} style={{ borderRadius: "16px" }}>
           <List
             sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
           >

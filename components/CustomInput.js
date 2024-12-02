@@ -6,6 +6,7 @@ const CustomInput = ({
   type = "text",
   touched,
   errors,
+  InputProps,
   ...props
 }) => {
   return (
@@ -32,6 +33,8 @@ const CustomInput = ({
         ) : null
       } // Custom red error text
       {...props} // Pass all props, including onChange
+      InputProps={InputProps}
+      {...props}
     />
   );
 };
