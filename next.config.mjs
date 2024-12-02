@@ -1,28 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
-  distDir: "out",
-  reactStrictMode: true,
-  swcMinify: true,
-  // assetPrefix: ".",
+  output: "export",        // Enables static export
+  distDir: "out",          // Specifies the output folder (default: "out")
+  reactStrictMode: true,   // Enables React strict mode
+  swcMinify: true,         // Enables SWC-based minification
   images: {
-    unoptimized: true,
+    unoptimized: true,     // Disables image optimization (for static export)
   },
+  // assetPrefix: ".",      // Uncomment if using custom asset prefix for assets
 };
 
-export default nextConfig;
-
-// const nextConfig = {
-//   output: 'export',
-//   images: {
-//       unoptimized: true,
-//   },
-//   distDir: 'out', // Where to export all pages
-//   trailingSlash: true,
-//   assetPrefix: '.',
-
-//   // time in seconds of no pages generating during static
-//   // generation before timing out
-//   staticPageGenerationTimeout: 1000,
-//   reactStrictMode: false
-// }
+module.exports = nextConfig;  // Export the configuration using CommonJS syntax
