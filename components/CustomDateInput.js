@@ -1,32 +1,43 @@
-import { TextField } from "@mui/material";
+import React from "react";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import TextField from "@mui/material/TextField";
 
-const CustomDateInput = ({ id, placeholder, touched, errors, ...props }) => {
+const CustomDatePicker = ({
+  label = "Select Date",
+  value,
+  onChange,
+  disableFuture = false,
+  disablePast = false,
+  minDate,
+  maxDate,
+  error = false,
+  helperText = "",
+  size = "small", // Default size is medium
+}) => {
   return (
-    <TextField
-      id={id}
-      placeholder={placeholder}
-      type="date"
-      fullWidth
-      variant="outlined"
-      size="small"
-      InputLabelProps={{
-        shrink: true, // This makes the label float above the input
-      }}
-      error={!!(touched && errors)} // Set error state if touched and errors exist
-      helperText={
-        touched && errors ? (
-          <span style={{ color: "red" }}>{errors}</span>
-        ) : null
-      } // Custom red error text
-      sx={{
-        // Ensure the width is 100% and handles layout properly
-        "& .MuiInputBase-root": {
-          width: "100%", // Ensure the input width is 100% of the parent container
-        },
-      }}
-      {...props} // Pass all props, including onChange
-    />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DatePicker
+        label={label}
+        value={value}
+        onChange={onChange}
+        disableFuture={disableFuture}
+        disablePast={disablePast}
+        minDate={minDate}
+        maxDate={maxDate}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            error={error}
+            helperText={helperText}
+            fullWidth
+            size={size} // Pass the size prop to match other TextFields
+          />
+        )}
+      />
+    </LocalizationProvider>
   );
 };
 
-export default CustomDateInput;
+export default CustomDatePicker;

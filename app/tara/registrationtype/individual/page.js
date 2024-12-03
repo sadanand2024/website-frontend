@@ -17,8 +17,8 @@ import CustomDateInput from "@/components/CustomDateInput";
 
 export default function IndividualForm() {
   const router = useRouter();
-  const [dialogOpen, setDialogOpen] = useState(true); // For the first dialog
-  const [kycDialogOpen, setKycDialogOpen] = useState(false); // For the second KYC dialog
+  const [dialogOpen, setDialogOpen] = useState(false); // For the first dialog
+  const [kycDialogOpen, setKycDialogOpen] = useState(true); // For the second KYC dialog
 
   const [userData, setUserData] = useState(null); // This will store the user data for auto-population
 
@@ -68,7 +68,7 @@ export default function IndividualForm() {
       mobile: Yup.string()
         .matches(/^\d{10}$/, "Mobile number must be 10 digits")
         .required("Mobile number is required"),
-      dob: Yup.date().nullable().notRequired(),
+      dob: Yup.date().nullable().notRequired().required("DOB is required"),
       addressLine1: Yup.string().required("Address Line 1 is required"),
       addressLine2: Yup.string().optional(),
       addressLine3: Yup.string().optional(),
@@ -242,10 +242,10 @@ export default function IndividualForm() {
             <CustomInput
               size="small"
               label="Date Of Birth"
-              value={kycFormik.values.mobile}
-              {...getKycFieldProps("mobile")}
-              touched={kycTouched.mobile}
-              errors={kycErrors.mobile}
+              value={kycFormik.values.dob}
+              {...getKycFieldProps("dob")}
+              touched={kycTouched.dob}
+              errors={kycErrors.dob}
             />
             {/* <CustomDateInput
               id="dob"

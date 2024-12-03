@@ -1,8 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import { Box, Typography, Button, Dialog, Tabs, Tab } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  Dialog,
+  Tabs,
+  Tab,
+  Link,
+} from "@mui/material";
 import { useRouter } from "next/navigation";
-
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import Factory from "@/app/utils/Factory";
 const MovingCardTabs = () => {
   const [selectedIndex, setSelectedIndex] = useState(0); // Track selected tab index
   const [selectedType, setSelectedType] = useState(null); // Selected type for navigation
@@ -13,11 +22,27 @@ const MovingCardTabs = () => {
     setSelectedIndex(newValue); // Set the selected tab index
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (selectedType) {
-      sessionStorage.setItem("userType", selectedType);
-      setDialogOpen(false);
-      router.push(`/tara/registrationtype/${selectedType}`);
+      console.group(selectedType);
+      // let type = selectedType === 'firm' ? 'cafirm' : 'business' ? 'business_or_corporate : 'individual' ? 'individual'
+      // try {
+      //   const url = `/user_management/update-users-info`;
+      //   const postData = { user_type: selectedType };
+
+      //   const { res, error } = await Factory("post", url, postData);
+      //   console.log(res);
+      //   if (res) {
+      //     // sessionStorage.setItem("userType", selectedType);
+      //     // setDialogOpen(false);
+      //     // router.push(`/tara/registrationtype/${selectedType}`);
+      //   } else {
+      //     alert("Please check your credentials.");
+      //   }
+      // } catch (error) {
+      //   console.error("Login error:", error);
+      //   alert("Something went wrong. Please try again.");
+      // }
     }
   };
 
@@ -93,8 +118,8 @@ const MovingCardTabs = () => {
       >
         <Tab
           label={getTabLabel(
-            "Individual Entity or Corporate Entity",
-            "Organization created by an individual or individuals to conduct business",
+            "Business",
+            " Streamlining business operations, compliance with financial regulations for efficient management and growth.",
             selectedIndex === 0
           )}
           sx={{
@@ -112,11 +137,11 @@ const MovingCardTabs = () => {
             cursor: "pointer",
             textAlign: "center",
           }}
-          onClick={() => setSelectedType("individual")}
+          onClick={() => setSelectedType("business")}
         />
         <Tab
           label={getTabLabel(
-            "Chartered Accountant or Tax Consultant",
+            "Tax Consultant",
             "Provides tax advice and support to individuals, businesses, and organizations",
             selectedIndex === 1
           )}
@@ -140,7 +165,28 @@ const MovingCardTabs = () => {
       </Tabs>
 
       {/* Next Button */}
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
+        {/* <Link href= '/registrstiontype/individual'>
+          <a
+            variant="contained"
+            color="primary"
+            sx={{ px: 5 }}
+            onClick={handleNext}
+            // disabled={!selectedType} // Disable the button if no type is selected
+          >
+            Skip if You are an Individual
+          </a>
+        </Link> */}
+        <Link
+          color="primary"
+          style={{ cursor: "pointer" }}
+          onClick={
+            () => setSelectedType("individual")
+            // router.push(`/tara/registrationtype/individual`)
+          }
+        >
+          Skip if You are an Individual
+        </Link>
         <Button
           variant="contained"
           color="primary"

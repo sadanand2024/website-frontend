@@ -54,11 +54,11 @@ const SuccessDialog = ({ open, onClose, type, message }) => {
         )}
         {/* Dynamic Title */}
         <Typography variant="h6" fontWeight="bold">
-          {isSuccess ? "Registration Successful!" : "Something Went Wrong!"}
+          {isSuccess ? "Registration Successful!" : message}
         </Typography>
         {/* Dynamic Message */}
         <Typography variant="body2" color="text.secondary" mt={1}>
-          {message}
+          {isSuccess && message}
         </Typography>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center" }}>

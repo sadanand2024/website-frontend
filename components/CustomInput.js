@@ -6,16 +6,19 @@ const CustomInput = ({
   type = "text",
   touched,
   errors,
+  InputProps,
+  maxWidth, // Default maxWidth
+  width,
   ...props
 }) => {
   return (
     <TextField
       sx={{
+        maxWidth, // Apply maxWidth from props
         "& .MuiInputLabel-root": {
           fontSize: "14px",
         },
         "& .MuiInputBase-input": {
-          // fontFamily: "Courier New, monospace",
           fontSize: "15px",
         },
       }}
@@ -25,13 +28,14 @@ const CustomInput = ({
       fullWidth
       variant="outlined"
       size="small"
-      error={false} // Prevent red border
+      error={Boolean(touched && errors)} // Shows error when `touched` and `errors` are true
       helperText={
         touched && errors ? (
           <span style={{ color: "red" }}>{errors}</span>
         ) : null
       } // Custom red error text
-      {...props} // Pass all props, including onChange
+      InputProps={InputProps}
+      {...props}
     />
   );
 };
