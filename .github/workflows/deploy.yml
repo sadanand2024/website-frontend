@@ -1,36 +1,48 @@
 name: Deploy Next.js Application to S3
 
 on:
-  workflow_dispatch:  # Manually triggered workflow
+  push:
+    branches:
+      - dev  # Trigger on push to dev branch
+  pull_request:
+    branches:
+      - dev  # Trigger when a PR is merged into the dev branch
+  workflow_dispatch:  # Manual trigger via the "Run workflow" button
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Check out the repository
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 18 # Match the Node.js version used in your project
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
+      # Step 4: Build the Next.js application
       - name: Build Next.js app
         run: npm run build
 
+      # Step 5: Export the static application
       - name: Export Next.js app
         run: npm run export
 
+      # Step 6: Deploy to S3
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
-          AWS_S3_BUCKET: ${{ secrets.DEV_S3_BUCKET }}
+          AWS_S3_BUCKET: ${{ secrets.DEV_S3_BUCKET }} # Your S3 bucket name
           AWS_ACCESS_KEY_ID: ${{ secrets.DEV_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_ACCESS_KEY }}
-          SOURCE_DIR: "./out"
+          SOURCE_DIR: "./out" # Directory containing the static export
