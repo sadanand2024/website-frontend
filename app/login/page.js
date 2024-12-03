@@ -73,7 +73,7 @@ const LoginPage = () => {
   useEffect(() => {
     console.log("longpage");
     if (tokens?.access) {
-      router.push("/tara");
+      router.push("/tara/registrationtype/selection");
     }
   }, [tokens, router]);
 

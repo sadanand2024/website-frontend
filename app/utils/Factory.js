@@ -16,12 +16,14 @@ function Factory(api, URL, payload, headers = {}) {
         break;
     }
   };
-
+  const tokens = localStorage.getItem("tokens");
+  const parsedTokens = JSON.parse(tokens); // Parse the stored tokens object
+  console.log(parsedTokens.access); // Log the access token
   return axios({
     method: api,
     url: BASE_URL + URL,
     headers: {
-      Authorization: `JWT ${localStorage.getItem("token")}`,
+      Authorization: `JWT ${parsedTokens.access}`,
       ...headers,
     },
     data: payload,
