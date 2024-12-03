@@ -1,0 +1,36 @@
+name: Deploy Next.js Application to S3
+
+on:
+  workflow_dispatch:  # Manually triggered workflow
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Next.js app
+        run: npm run build
+
+      - name: Export Next.js app
+        run: npm run export
+
+      - name: Deploy to S3
+        uses: jakejarvis/s3-sync-action@v0.5.1
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.DEV_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.DEV_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_ACCESS_KEY }}
+          SOURCE_DIR: "./out"
