@@ -18,7 +18,7 @@ function Factory(api, URL, payload, headers = {}) {
   };
   const tokens = localStorage.getItem("tokens");
   const parsedTokens = JSON.parse(tokens); // Parse the stored tokens object
-  console.log(parsedTokens.access); // Log the access token
+  // console.log(parsedTokens.access); // Log the access token
   return axios({
     method: api,
     url: BASE_URL + URL,
