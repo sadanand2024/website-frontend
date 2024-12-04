@@ -1,9 +1,6 @@
 name: Deploy Next.js Application to S3
 
 on:
-  push:
-    branches:
-      - dev  # Trigger this workflow when changes are pushed to the dev branch
   pull_request:
     branches:
       - dev  # Trigger when a PR is merged into the dev branch
