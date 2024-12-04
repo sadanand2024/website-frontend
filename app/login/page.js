@@ -22,7 +22,7 @@ import { useAuth } from "../context/AuthContext";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { InputAdornment, IconButton } from "@mui/material";
-
+import axios from "axios";
 const LoginPage = () => {
   const router = useRouter();
   const [captcha, setCaptcha] = useState("");
@@ -45,19 +45,19 @@ const LoginPage = () => {
     }),
     onSubmit: async (values) => {
       try {
-        const url = `token_auth/`;
+        const url = `/token_auth/`;
         const postData = {
           email_or_mobile: values.email_or_phonenumber,
           password: values.password,
         };
 
-        const { res, error } = await Factory("post", url, postData);
+        const res = await axios.post(BASE_URL + url, postData);
 
-        if (res) {
-          const { id, email, mobile_number, access, refresh } = res;
+        if (res.status === 200) {
+          const { id, email, mobile_number, access, refresh } = res.data;
 
           login({ id, email, mobile_number }, { access, refresh });
-          router.push("/tara/registrationtype/selection"); // Navigate to dashboard after login
+          router.push("/tara/registrationtype/selection"); // Navigate to the next page
         } else {
           alert("Login failed. Please check your credentials.");
         }

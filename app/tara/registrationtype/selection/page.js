@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -23,26 +23,35 @@ const MovingCardTabs = () => {
   };
 
   const handleNext = async () => {
+    let type;
+    console.log(selectedType);
     if (selectedType) {
-      console.group(selectedType);
-      // let type = selectedType === 'firm' ? 'cafirm' : 'business' ? 'business_or_corporate : 'individual' ? 'individual'
-      // try {
-      //   const url = `/user_management/update-users-info`;
-      //   const postData = { user_type: selectedType };
+      if (selectedType === "firm") {
+        type = "cafirm";
+      } else if (selectedType === "business") {
+        type = "business";
+      } else if (selectedType === "individual") {
+        type = "individual";
+      } else {
+        type = null; // Default value if no conditions match
+      }
+      try {
+        const url = `/user_management/update-users-info`;
+        const postData = { user_type: type };
 
-      //   const { res, error } = await Factory("post", url, postData);
-      //   console.log(res);
-      //   if (res) {
-      //     // sessionStorage.setItem("userType", selectedType);
-      //     // setDialogOpen(false);
-      //     // router.push(`/tara/registrationtype/${selectedType}`);
-      //   } else {
-      //     alert("Please check your credentials.");
-      //   }
-      // } catch (error) {
-      //   console.error("Login error:", error);
-      //   alert("Something went wrong. Please try again.");
-      // }
+        const { res, error } = await Factory("patch", url, postData);
+        console.log(res);
+        if (res.status_cd === 0) {
+          sessionStorage.setItem("userType", selectedType);
+          setDialogOpen(false);
+          router.push(`/tara/registrationtype/${selectedType}`);
+        } else {
+          alert("Something went Wrong");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        alert("Something went wrong. Please try again.");
+      }
     }
   };
 
@@ -180,13 +189,14 @@ const MovingCardTabs = () => {
         <Link
           color="primary"
           style={{ cursor: "pointer" }}
-          onClick={
-            () => setSelectedType("individual")
-            // router.push(`/tara/registrationtype/individual`)
-          }
+          onClick={() => {
+            setSelectedType("individual");
+            // handleNext();
+          }}
         >
           Skip if You are an Individual
         </Link>
+
         <Button
           variant="contained"
           color="primary"

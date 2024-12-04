@@ -2,6 +2,8 @@ import axios from "axios";
 import { BASE_URL } from "../constants";
 
 function Factory(api, URL, payload, headers = {}) {
+  const tokens = JSON.parse(localStorage.getItem("tokens"));
+
   const getErrorMessage = (api) => {
     switch (api) {
       case "put":
@@ -12,18 +14,18 @@ function Factory(api, URL, payload, headers = {}) {
         return "Data deleted successfully.";
       case "get":
         return "Data fetched successfully.";
+      case "patch":
+        return "Data fetched successfully.";
       default:
         break;
     }
   };
-  const tokens = localStorage.getItem("tokens");
-  const parsedTokens = JSON.parse(tokens); // Parse the stored tokens object
-  console.log(parsedTokens.access); // Log the access token
+
   return axios({
     method: api,
     url: BASE_URL + URL,
     headers: {
-      Authorization: `JWT ${parsedTokens.access}`,
+      Authorization: `Bearer ${tokens.access}`,
       ...headers,
     },
     data: payload,
