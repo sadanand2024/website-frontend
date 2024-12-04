@@ -7,8 +7,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  trailingSlash: true,
-  assetPrefix: './', // Adjusts static file paths
+  // trailingSlash: true,
 };
 
 export default nextConfig;
