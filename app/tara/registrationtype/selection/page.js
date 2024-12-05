@@ -174,7 +174,14 @@ const MovingCardTabs = () => {
       </Tabs>
 
       {/* Next Button */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "right",
+          alignItems: "center",
+          mt: 4,
+        }}
+      >
         {/* <Link href= '/registrstiontype/individual'>
           <a
             variant="contained"
@@ -193,8 +200,10 @@ const MovingCardTabs = () => {
             setSelectedType("individual");
             // handleNext();
           }}
+          sx={{ mr: 2 }}
         >
-          Skip if You are an Individual
+          Skip if you're an Individual 
+          {/* <i class="fa-solid fa-arrow-right" /> */}
         </Link>
 
         <Button
