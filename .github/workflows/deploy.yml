@@ -38,7 +38,6 @@ jobs:
       - name: Build Next.js app
         run: |
           npm run build
-          npm run export
 
       # Step 6: Deploy files to the Nginx server
       - name: Copy files to Nginx server
