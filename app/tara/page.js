@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import VisaconsultencDashboard from "./visaconsultencydashboard";
-import CAfirmDashboard from "./cafirmDashboard";
-import IndividualDashboard from "./individualDashboard";
+// import CAfirmDashboard from "./cafirmDashboard";
+// import IndividualDashboard from "./individualDashboard";
 import { useAuth } from "../context/AuthContext";
 
 function DashboardPage() {
