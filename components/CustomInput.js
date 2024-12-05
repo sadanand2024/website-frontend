@@ -9,6 +9,7 @@ const CustomInput = ({
   InputProps,
   maxWidth, // Default maxWidth
   width,
+  autoComplete,
   ...props
 }) => {
   return (
@@ -23,6 +24,7 @@ const CustomInput = ({
         },
       }}
       id={id}
+      autoComplete={autoComplete}
       placeholder={placeholder}
       type={type}
       fullWidth

@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import HomeIcon from "@mui/icons-material/Home";
 import BusinessIcon from "@mui/icons-material/Business";
 import WorkIcon from "@mui/icons-material/Work";
-
+import GroupsIcon from "@mui/icons-material/Groups";
 export default function Sidebar({ open, toggleDrawer, isSmallScreen }) {
   const [openNested, setOpenNested] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState("");
@@ -56,6 +56,24 @@ export default function Sidebar({ open, toggleDrawer, isSmallScreen }) {
     },
   ];
 
+  const visa_consultensy_navigationItems = [
+    {
+      title: "Dashboard",
+      icon: <HomeIcon />,
+      path: "/tara",
+    },
+    {
+      title: "Tasks",
+      icon: <WorkIcon />,
+      path: "/tara/gst",
+    },
+    {
+      title: "Clients",
+      icon: <GroupsIcon />,
+      path: "/tara/visaconsultencydashboard/clients",
+    },
+  ];
+
   return (
     <Drawer
       sx={{
@@ -77,7 +95,7 @@ export default function Sidebar({ open, toggleDrawer, isSmallScreen }) {
       onClose={toggleDrawer}
     >
       <List>
-        {navigationItems.map((item, index) => (
+        {visa_consultensy_navigationItems.map((item, index) => (
           <React.Fragment key={index}>
             <ListItemButton
               onClick={() =>

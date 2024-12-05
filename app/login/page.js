@@ -44,38 +44,76 @@ const LoginPage = () => {
         .required("Password is required"),
     }),
     onSubmit: async (values) => {
-      try {
-        const url = `/token_auth/`;
-        const postData = {
-          email_or_mobile: values.email_or_phonenumber,
-          password: values.password,
-        };
+      const handleLogin = async (data) => {
+        try {
+          const url = `/token_auth/`;
+          const res = await axios.post(`${BASE_URL}${url}`, data);
 
-        const res = await axios.post(BASE_URL + url, postData);
+          if (res.status === 200) {
+            const {
+              id,
+              email,
+              mobile_number,
+              access,
+              refresh,
+              user_kyc,
+              user_type,
+            } = res.data;
 
-        if (res.status === 200) {
-          const { id, email, mobile_number, access, refresh } = res.data;
+            // Call login function from context
+            login(
+              { id, email, mobile_number, user_kyc, user_type },
+              { access, refresh }
+            );
 
-          login({ id, email, mobile_number }, { access, refresh });
-          router.push("/tara/registrationtype/selection"); // Navigate to the next page
-        } else {
-          alert("Login failed. Please check your credentials.");
+            // Navigate based on user_kyc status
+            router.push(
+              user_kyc === true ? "/tara" : "/tara/registrationtype/selection"
+            );
+          } else {
+            throw new Error("Invalid login credentials.");
+          }
+        } catch (error) {
+          // Handle different error scenarios
+          if (error.response && error.response.status === 401) {
+            alert("Incorrect email/phone or password. Please try again.");
+          } else if (error.response && error.response.status === 500) {
+            alert("Server error. Please try again later.");
+          } else {
+            alert(
+              "Something went wrong. Please check your network or try again."
+            );
+          }
+          console.error("Login error:", error);
         }
-      } catch (error) {
-        console.error("Login error:", error);
-        alert("Something went wrong. Please try again.");
-      }
+      };
+
+      // Prepare post data
+      const postData = {
+        email_or_mobile: values.email_or_phonenumber,
+        password: values.password,
+      };
+
+      await handleLogin(postData);
     },
   });
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
+  // useEffect(() => {
+  //   if (tokens?.access) {
+  //     router.push("/tara/registrationtype/selection");
+  //   }
+  // }, [tokens, router]);
   useEffect(() => {
-    console.log("longpage");
     if (tokens?.access) {
-      router.push("/tara/registrationtype/selection");
+      // Navigate based on user_kyc value
+      const navigateTo = user?.user_kyc
+        ? "/tara"
+        : "/tara/registrationtype/selection";
+      router.push(navigateTo);
     }
-  }, [tokens, router]);
+  }, [tokens, user, router]);
 
   return (
     <Grid
@@ -165,7 +203,7 @@ const LoginPage = () => {
           <Box
             component="form"
             noValidate
-            autoComplete="off"
+            autoComplete="on"
             onSubmit={handleSubmit}
             sx={{ display: "flex", flexDirection: "column", gap: 2 }}
           >
@@ -173,9 +211,11 @@ const LoginPage = () => {
             <CustomInput
               label="Email or Phone Number"
               id="email_or_phonenumber"
+              name="email_or_phonenumber"
               {...getFieldProps("email_or_phonenumber")}
               touched={touched.email_or_phonenumber}
               errors={errors.email_or_phonenumber}
+              inputProps={{ autoComplete: "username" }}
             />
             <Typography
               align="right"
@@ -190,6 +230,7 @@ const LoginPage = () => {
             <CustomInput
               id="password"
               label="Password"
+              name="password"
               type={showPassword ? "text" : "password"}
               {...getFieldProps("password")}
               touched={touched.password}
