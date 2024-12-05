@@ -179,7 +179,7 @@ const MovingCardTabs = () => {
           display: "flex",
           justifyContent: "right",
           alignItems: "center",
-          mt: 5,
+          mt: 4,
         }}
       >
         {/* <Link href= '/registrstiontype/individual'>
