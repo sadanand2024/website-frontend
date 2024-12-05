@@ -27,7 +27,6 @@ export default function AppBarComponent({
 }) {
   const router = useRouter();
   const { user, tokens, logout } = useAuth();
-  console.log(user);
   return (
     <AppBar
       position="fixed"
