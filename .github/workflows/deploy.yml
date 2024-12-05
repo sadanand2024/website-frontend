@@ -42,7 +42,7 @@ jobs:
       # Step 6: Deploy files to the Nginx server
       - name: Copy files to Nginx server
         run: |
-          scp -i ~/.ssh/id_rsa ./out/* ec2-user@${{ secrets.EC2_PUBLIC_IP }}:/usr/share/nginx/html/
+          scp -r -i ~/.ssh/id_rsa ./out/* ec2-user@${{ secrets.EC2_PUBLIC_IP }}:/usr/share/nginx/html/
 
 
       # Step 7: Reload Nginx to apply changes
