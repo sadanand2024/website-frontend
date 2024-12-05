@@ -7,7 +7,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // trailingSlash: true,
+  trailingSlash: true,
+  assetPrefix: "",
 };
 
 export default nextConfig;
