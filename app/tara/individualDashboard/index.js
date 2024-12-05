@@ -16,7 +16,8 @@ import {
   ListItemAvatar,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import Chart from "react-apexcharts";
+// import Chart from "react-apexcharts";
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import mainCardBg from "../../../public/img/MainCard.jpg";
 
 import bg from "../../../public/img/cardBg.jpg";
