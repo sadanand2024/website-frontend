@@ -209,7 +209,7 @@ const MovingCardTabs = () => {
         <Button
           variant="contained"
           color="primary"
-          sx={{ px: 5 }}
+          sx={{ px: 4 }}
           onClick={handleNext}
           disabled={!selectedType} // Disable the button if no type is selected
         >
