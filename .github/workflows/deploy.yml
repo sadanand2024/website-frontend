@@ -1,4 +1,4 @@
-name: Deploy Next.js Application to S3
+name: Build and Deploy Next.js to Nginx
 
 on:
   push:
@@ -10,36 +10,42 @@ on:
   workflow_dispatch:  # Manual trigger for the workflow
 
 jobs:
-  build-and-deploy:
+  build_and_deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Check out the repository
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js (ensure it's the correct version)
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18  # Ensure this matches the version in your buildspec.yml
+      # Step 2: Set up SSH key for accessing EC2
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-      # Step 3: Install dependencies
+      # Step 3: Set up known hosts to avoid SSH prompts
+      - name: Set up known hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
+
+      # Step 4: Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
 
-      # Step 4: Build the Next.js application (this includes the static export)
+      # Step 5: Build the Next.js app
       - name: Build Next.js app
-        run: npm run build
+        run: |
+          npm run build
+          npm run export
 
-      # Step 5: Deploy to S3
-      - name: Deploy to S3
-        uses: jakejarvis/s3-sync-action@v0.5.1
-        with:
-          args: --follow-symlinks --delete
-        env:
-          AWS_S3_BUCKET: ${{ secrets.DEV_S3_BUCKET }} # Your S3 bucket name
-          AWS_ACCESS_KEY_ID: ${{ secrets.DEV_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_ACCESS_KEY }}
-          SOURCE_DIR: "./out" # Directory containing the static export
+      # Step 6: Deploy files to the Nginx server
+      - name: Copy files to Nginx server
+        run: |
+          scp -r -i ~/.ssh/id_rsa ./out/ ec2-user@${{ secrets.EC2_PUBLIC_IP }}:/usr/share/nginx/html/
 
+      # Step 7: Reload Nginx to apply changes
+      - name: Reload Nginx
+        run: |
+          ssh -i ~/.ssh/id_rsa ec2-user@${{ secrets.EC2_PUBLIC_IP }} 'sudo systemctl reload nginx'
