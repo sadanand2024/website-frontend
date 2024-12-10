@@ -5,8 +5,7 @@ import AppBarComponent from "./components/Appbar";
 import Sidebar from "./components/SideNavbar";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
-// import Selection from "./registrationtype/Selection";
-import Selection from "./registrationtype/selection";
+import Selection from "./registrationtype/Selection";
 
 export default function DashboardLayout({ children }) {
   const [open, setOpen] = useState(true);
