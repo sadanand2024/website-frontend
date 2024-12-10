@@ -5,6 +5,9 @@ import AppBarComponent from "./components/Appbar";
 import Sidebar from "./components/SideNavbar";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
+// import Selection from "./registrationtype/Selection";
+import Selection from "./registrationtype/selection";
+
 export default function DashboardLayout({ children }) {
   const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -15,24 +18,22 @@ export default function DashboardLayout({ children }) {
   const handleAvatarClick = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
   const { user, logout, setUser, setTokens } = useAuth();
-
   useEffect(() => {
     const authenticateUser = () => {
       const tokensData = JSON.parse(localStorage.getItem("tokens"));
       const userDetails = JSON.parse(localStorage.getItem("user"));
       if (!tokensData?.access) {
-        console.log(tokensData, userDetails);
         router.push("/login");
       } else {
         setUser(userDetails); // Set user details if available
         setTokens(tokensData); // Set tokens
         setLoading(false); // Stop the loading spinner
+        // router.push("/tara/visaconsultencydashboard/clients");
       }
     };
 
     authenticateUser();
   }, [router, setUser, setTokens]);
-
   const handleLogout = () => {
     setLoading(true);
     logout(); // Ensure the logout function clears tokens/context
@@ -55,6 +56,7 @@ export default function DashboardLayout({ children }) {
             open={open}
             toggleDrawer={toggleDrawer}
             isSmallScreen={isSmallScreen}
+            // defaultSelectedRoute="/tara/visaconsultencydashboard/clients"
           />
           <Box
             component="main"
@@ -68,6 +70,7 @@ export default function DashboardLayout({ children }) {
           >
             {children}
           </Box>
+          {/* {user.user_type ? <Selection /> : <></>} */}
         </>
       )}
     </Box>

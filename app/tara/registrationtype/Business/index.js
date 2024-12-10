@@ -16,19 +16,21 @@ import {
   RadioGroup,
   Grid,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { statesAndUTs } from "../../../utils/statesAndUTs";
 import CustomAutocomplete from "@/components/CustomAutocomplete";
 import CustomDatePicker from "@/components/CustomDateInput";
 import Factory from "@/app/utils/Factory";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function BusinessKYC() {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(true);
   const [firmkycDialogOpen, setFirmkycDialogOpen] = useState(false);
+  const { user, logout, setUser, setTokens } = useAuth();
 
   const [selectedDate, setSelectedDate] = useState(dayjs()); // Initialize with dayjs()
-
+  console.log(user);
   const handleDateChange = (newDate) => {
     const formattedDate = dayjs(newDate).format("YYYY-MM-DD");
     setSelectedDate(dayjs(newDate));
@@ -52,16 +54,16 @@ export default function BusinessKYC() {
       country: "IN",
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Name is required"),
-      dob: Yup.string().required("DOB is required"),
-      pan_number: Yup.string().required("PAN Card number is required"),
-      aadhaar_number: Yup.string().required("Aadhar Card number is required"),
-      address_line1: Yup.string().required("Address Line 1 is required"),
-      city: Yup.string().required("City is required"),
-      state: Yup.string().required("State is required"),
-      zip: Yup.string().required("Zip code is required"),
-      phoneNumber: Yup.string().required("Phone number is required"),
-      havefirm: Yup.boolean(),
+      // name: Yup.string().required("Name is required"),
+      // dob: Yup.string().required("DOB is required"),
+      // pan_number: Yup.string().required("PAN Card number is required"),
+      // aadhaar_number: Yup.string().required("Aadhar Card number is required"),
+      // address_line1: Yup.string().required("Address Line 1 is required"),
+      // city: Yup.string().required("City is required"),
+      // state: Yup.string().required("State is required"),
+      // zip: Yup.string().required("Zip code is required"),
+      // phoneNumber: Yup.string().required("Phone number is required"),
+      // havefirm: Yup.boolean(),
     }),
     onSubmit: async (values) => {
       console.log(values);
@@ -118,18 +120,18 @@ export default function BusinessKYC() {
       country: "IN",
     },
     validationSchema: Yup.object({
-      firmname: Yup.string().required("Firm Name is required"),
-      firmregistrationnumber: Yup.string().required(
-        "Firm Registration Number is required"
-      ),
-      firmemail: Yup.string()
-        .email("Invalid email address")
-        .required("Firm Email is required"),
-      firmmobilenumber: Yup.string().required("Firm Mobile Number is required"),
-      noofpartnersinfirm: Yup.string().required("No of Partners is required"),
-      city: Yup.string().required("City is required"),
-      state: Yup.string().required("State is required"),
-      zip: Yup.string().required("Zip code is required"),
+      // firmname: Yup.string().required("Firm Name is required"),
+      // firmregistrationnumber: Yup.string().required(
+      //   "Firm Registration Number is required"
+      // ),
+      // firmemail: Yup.string()
+      //   .email("Invalid email address")
+      //   .required("Firm Email is required"),
+      // firmmobilenumber: Yup.string().required("Firm Mobile Number is required"),
+      // noofpartnersinfirm: Yup.string().required("No of Partners is required"),
+      // city: Yup.string().required("City is required"),
+      // state: Yup.string().required("State is required"),
+      // zip: Yup.string().required("Zip code is required"),
     }),
     onSubmit: async (values) => {
       console.log(values);
@@ -150,7 +152,7 @@ export default function BusinessKYC() {
         number_of_firm_partners: Number(values.noofpartnersinfirm),
       };
       console.log("two", postData);
-
+      setFirmkycDialogOpen(false);
       //   try {
       //     const url = `/user_management/firmkyc/`;
       //     const { res, error } = await Factory("post", url, postData);
@@ -176,7 +178,13 @@ export default function BusinessKYC() {
     handleSubmit: kycHandleSubmit,
     getFieldProps: getKycFieldProps,
   } = firmkycFormik;
+  useEffect(() => {
+    const userDetails = JSON.parse(localStorage.getItem("user"));
+    console.log(userDetails);
+    // userDetails.user_type = selectedType;
 
+    // localStorage.setItem("user", JSON.stringify(userDetails));
+  }, []);
   return (
     <Box>
       <Dialog

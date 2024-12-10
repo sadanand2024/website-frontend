@@ -31,6 +31,7 @@ import ServicesSuccessMessage from "../componnets/ServicesSuccessMessage";
 import Serviceselection from "../componnets/Serviceselection";
 import ServiceHistory from "../componnets/ServiceHistory";
 import CloseIcon from "@mui/icons-material/Close";
+
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
@@ -60,31 +61,47 @@ const FormPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      firstname: "", // Set 'firstname' as the name from query params
-      lastname: "",
+      first_name: "",
+      last_name: "",
       email: "",
-      mobilenumber: "",
+      mobile_number: "",
       purpose: "Visa",
-      visatype: "",
-      destinationcountry: "",
-      passportnumber: "",
+      visa_type: "",
+      destination_country: "",
+      passport_number: "",
     },
     validationSchema: Yup.object({
-      firstname: Yup.string().required("First name is required"),
-      lastname: Yup.string().required("Last name is required"),
+      first_name: Yup.string().required("First name is required"),
+      last_name: Yup.string().required("Last name is required"),
       email: Yup.string()
         .email("Invalid email format")
         .required("Email is required"),
-      mobilenumber: Yup.string().required("Mobile number is required"),
-      //   purpose: Yup.string().required("Purpose is required"),
-      //   visatype: Yup.string().required("Visa type is required"),
-      //   destinationcountry: Yup.string().required(
-      //     "Destination country is required"
-      //   ),
-      //   passportnumber: Yup.string().required("Passport number is required"),
+      mobile_number: Yup.string().required("Mobile number is required"),
     }),
     onSubmit: async (values) => {
-      console.log("Form submitted with values:", values);
+      const postData = {
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email: values.email,
+        mobile_number: values.mobile_number,
+        purpose: values.purpose,
+        visa_type: values.visa_type,
+        destination_country: values.destination_country,
+      };
+      try {
+        const url = `/user_management/visa-users/`;
+        const { res, error } = await Factory("post", url, postData);
+        console.log(res);
+
+        if (res.status_cd === 0) {
+          setDialogOpen(false);
+        } else {
+          alert("Something went wrong");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Something went wrong. Please try again.");
+      }
     },
   });
 
@@ -315,7 +332,7 @@ const FormPage = () => {
       >
         <Button
           variant="outlined"
-          color="error"
+          //   color="error"
           type="button"
           disabled={formik.isSubmitting}
           onClick={() => {
@@ -327,7 +344,7 @@ const FormPage = () => {
             right: 30,
           }}
         >
-          Close
+          <CloseIcon />
         </Button>
         <DialogTitle>
           <h3>{name} Registration</h3>
@@ -351,8 +368,8 @@ const FormPage = () => {
                 id="firstname"
                 label="First Name"
                 {...getFieldProps("firstname")}
-                touched={touched.firstname}
-                errors={errors.firstname}
+                touched={touched.first_name}
+                errors={errors.first_name}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -360,8 +377,8 @@ const FormPage = () => {
                 id="lastname"
                 label="Last Name"
                 {...getFieldProps("lastname")}
-                touched={touched.lastname}
-                errors={errors.lastname}
+                touched={touched.last_name}
+                errors={errors.last_name}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -378,8 +395,8 @@ const FormPage = () => {
                 id="mobilenumber"
                 label="Mobile Number"
                 {...getFieldProps("mobilenumber")}
-                touched={touched.mobilenumber}
-                errors={errors.mobilenumber}
+                touched={touched.mobile_number}
+                errors={errors.mobile_number}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -400,8 +417,11 @@ const FormPage = () => {
                 label="Visa Type"
                 options={visaTypes}
                 {...getFieldProps("visatype")}
-                error={touched.visatype && Boolean(errors.visatype)} // Check if the field was touched and has an error
-                helperText={touched.visatype && errors.visatype} // Display the error message
+                error={touched.visa_type && Boolean(errors.visa_type)} // Check if the field was touched and has an error
+                helperText={touched.visa_type && errors.visa_type} // Display the error message
+                onChange={(event, newValue) => {
+                  formik.setFieldValue("visa_type", newValue);
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -411,11 +431,11 @@ const FormPage = () => {
                 options={destinationCountries}
                 {...getFieldProps("destinationcountry")}
                 error={
-                  touched.destinationcountry &&
-                  Boolean(errors.destinationcountry)
+                  touched.destination_country &&
+                  Boolean(errors.destination_country)
                 } // Check if the field was touched and has an error
                 helperText={
-                  touched.destinationcountry && errors.destinationcountry
+                  touched.destination_country && errors.destination_country
                 } // Display the error message
                 onChange={(event, newValue) => {
                   formik.setFieldValue("destinationcountry", newValue);
@@ -427,8 +447,8 @@ const FormPage = () => {
                 id="passportnumber"
                 label="Passport Number"
                 {...getFieldProps("passportnumber")}
-                touched={touched.passportnumber}
-                errors={errors.passportnumber}
+                touched={touched.passport_number}
+                errors={errors.passport_number}
               />
             </Grid>
           </Grid>

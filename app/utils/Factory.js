@@ -33,8 +33,9 @@ function Factory(api, URL, payload, headers = {}) {
     .then((res) => {
       if (res?.status == 200) {
         return {
-          res: res.data,
+          // res: res.data,
           variant: "success",
+          res: { status_cd: 0, ...res.data },
           message: getErrorMessage(api),
         };
       } else if (res?.status == 201) {
