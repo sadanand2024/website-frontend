@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { Box, Grid, Card, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Image from "next/image";
@@ -21,6 +21,7 @@ import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import CardTravelIcon from "@mui/icons-material/CardTravel";
 import BookIcon from "@mui/icons-material/Book";
 import { Description } from "@mui/icons-material";
+import Factory from "@/app/utils/Factory";
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.common.white,
@@ -81,20 +82,20 @@ const quickaccessCards = [
     title: "Pending",
 
     icon: <HourglassEmptyIcon style={{ fontSize: 30 }} />,
-    count: 20,
+    count: 0,
   },
   {
     name: "In - Progress",
     title: "In - Progress",
     icon: <AccountBalanceIcon style={{ fontSize: 30 }} />,
-    count: 10,
+    count: 0,
   },
   {
     name: "Completed",
     title: "Completed",
 
     icon: <CheckCircleIcon style={{ fontSize: 30 }} />,
-    count: 13,
+    count: 0,
   },
 ];
 
@@ -155,7 +156,7 @@ const ServicesCards = [
 ];
 function VisaconsultencDashboard() {
   const classes = useStyles();
-
+  const [clientListData, setClientListData] = useState({});
   const router = useRouter();
   const handleCardClick = (card) => {
     if (card.name === "Create New Request") {
@@ -173,6 +174,24 @@ function VisaconsultencDashboard() {
       `/tara/visaconsultencydashboard/form?name=${encodeURIComponent(card.name)}&title=${encodeURIComponent(card.title)}`
     );
   };
+  const getClientsData = async () => {
+    const url = "/user_management/visa-clients/dashboard-status/";
+    try {
+      const { res, error } = await Factory("get", url, {});
+      console.log(res.data);
+      if (res.status_cd === 0) {
+        setClientListData(res.data);
+      }
+    } catch (error) {
+      // Catch any errors during the request
+      console.error("Error:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    getClientsData(); // Load client list on component mount
+  }, []);
   return (
     <Box sx={{ flexGrow: 1, padding: 0 }}>
       <Grid container spacing={2} sx={{ marginTop: 0, paddingTop: 0 }}>
@@ -255,7 +274,15 @@ function VisaconsultencDashboard() {
               <Typography sx={{ mt: 2 }} variant="h6">
                 {card.name}
               </Typography>
-              <h6>{card?.count && `(${card?.count})`}</h6>
+              <h6>
+                {card.title === "Pending"
+                  ? clientListData.pending
+                  : card.title === "In - Progress"
+                    ? clientListData.in_progress
+                    : card.title === "Create New Request"
+                      ? ""
+                      : clientListData.completed}
+              </h6>
             </Card>
           </Grid>
         ))}

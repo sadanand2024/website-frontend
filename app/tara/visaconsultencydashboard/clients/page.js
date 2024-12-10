@@ -82,20 +82,13 @@ const FormPage = () => {
     }),
     onSubmit: async (values) => {
       const postData = {
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: values.email,
-        mobile_number: values.mobile_number,
-        purpose: values.purpose,
-        visa_type: values.visa_type,
-        destination_country: values.destination_country,
+        ...values,
       };
       try {
         const url = `/user_management/visa-users/`;
-        const { res, error } = await Factory("post", url, postData);
-        console.log(res);
-
+        const { res } = await Factory("post", url, postData);
         if (res.status_cd === 0) {
+          getClientList(); // Refresh client list after successful submission
           setDialogOpen(false);
         } else {
           alert("Something went wrong");
@@ -107,20 +100,26 @@ const FormPage = () => {
     },
   });
 
-  const { errors, touched, handleSubmit, getFieldProps } = formik;
-  // useEffect(() ={
-  //     const url = `/user_management/visa-clients/`;
-  //     const { res, error } = await Factory("post", url, postData);
-  //     console.log(res);
-  //     setClientList(res)
+  const getClientList = async () => {
+    const url = "/user_management/visa-clients/";
+    try {
+      const { res, error } = await Factory("get", url, {});
 
-  //     if (res.status_cd === 0) {
-  //       setDialogOpen(false);
-  //       alert("Something went wrong");
-  //     }
-  //     console.error("Error:", error);
-  //     alert("Something went wrong. Please try again.");
-  // }, [])
+      if (res.status_cd === 0) {
+        setClientList(res.data);
+      }
+    } catch (error) {
+      // Catch any errors during the request
+      console.error("Error:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    getClientList(); // Load client list on component mount
+  }, []);
+  const { errors, touched, handleSubmit, getFieldProps } = formik;
+
   return (
     <div style={{ padding: "20px" }}>
       {/* Client List Header and Add Client Button */}
@@ -170,7 +169,7 @@ const FormPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dummyData.map((client, index) => (
+            {clientList.map((client, index) => (
               <TableRow
                 key={index}
                 sx={{ cursor: "pointer" }}
@@ -262,7 +261,7 @@ const FormPage = () => {
                 id="last_name"
                 label="Last Name"
                 {...getFieldProps("last_name")}
-                touched={touched.last}
+                touched={touched.last_name}
                 errors={errors.last_name}
               />
             </Grid>

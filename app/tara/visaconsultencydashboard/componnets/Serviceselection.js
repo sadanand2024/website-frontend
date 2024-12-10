@@ -1,6 +1,11 @@
 "use client";
+
 import { useSearchParams } from "next/navigation";
-import CustomInput from "@/components/CustomInput";
+import { useEffect, useState } from "react";
+import Factory from "@/app/utils/Factory"; // Import custom Factory function for API calls
+import CustomInput from "@/components/CustomInput"; // Import custom input component
+
+// MUI components
 import {
   Typography,
   Grid,
@@ -24,29 +29,18 @@ import {
   Checkbox,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { ConstructionOutlined } from "@mui/icons-material";
 
-const FormPage = ({ setShowSuccessMessage }) => {
+const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
   const searchParams = useSearchParams();
   const [servicelistDialogue, setServicelistDialogue] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
+  const [newSelectedOptions, setNewSelectedOptions] = useState([]);
   const [quantityMap, setQuantityMap] = useState({});
   const [commentMap, setCommentMap] = useState({});
-
-  const ServicesCards = [
-    { name: "ITR Filing", title: "ITR Services Request" },
-    { name: "Networth Assessment", title: "Networth Certificate" },
-    { name: "Business Proof", title: "Business Proof" },
-    { name: "Loans", title: "Loan" },
-    { name: "Visa Fund", title: "Visa Fund" },
-    { name: "Forex Payment", title: "Forex Payment" },
-    { name: "Insurance", title: "Insurance" },
-    { name: "Travel Booking", title: "Travel Booking" },
-    { name: "Visa Slot", title: "Visa Slot" },
-    { name: "Passport Application", title: "Passport Application" },
-  ];
-
-  const handleServiceSelection = (serviceName) => {
+  const [ServicesCards, setServicesCards] = useState([]);
+  // Handle service selection
+  const handleServiceSelection = (serviceName, service) => {
     setSelectedServices((prevSelectedServices) => {
       if (prevSelectedServices.includes(serviceName)) {
         return prevSelectedServices.filter(
@@ -56,8 +50,22 @@ const FormPage = ({ setShowSuccessMessage }) => {
         return [...prevSelectedServices, serviceName];
       }
     });
+
+    let newOptions = [...newSelectedOptions];
+    newOptions.push(service);
+    setNewSelectedOptions(newOptions); ///
+    // setNewSelectedOptions((prevSelectedServices) => {
+    //   if (prevSelectedServices.includes(serviceName)) {
+    //     return prevSelectedServices.filter(
+    //       (service) => service !== serviceName
+    //     );
+    //   } else {
+    //     return [...prevSelectedServices, serviceName];
+    //   }
+    // });
   };
 
+  // Handle quantity change (increment or decrement)
   const handleQuantityChange = (service, operation) => {
     setQuantityMap((prevQuantityMap) => ({
       ...prevQuantityMap,
@@ -65,6 +73,7 @@ const FormPage = ({ setShowSuccessMessage }) => {
     }));
   };
 
+  // Handle comment change
   const handleCommentChange = (service, comment) => {
     setCommentMap((prevCommentMap) => ({
       ...prevCommentMap,
@@ -72,23 +81,110 @@ const FormPage = ({ setShowSuccessMessage }) => {
     }));
   };
 
-  const servicesSubmit = () => {
+  // Submit selected services
+  const servicesSubmit = async () => {
+    console.log(newSelectedOptions);
     const serviceData = selectedServices.map((service) => ({
       service,
       quantity: quantityMap[service] || 0,
       comments: commentMap[service] || "",
     }));
+
     console.log("Final Selected Services:", serviceData);
-    setServicelistDialogue(false);
-    setShowSuccessMessage(true);
+
+    // Remove the services from serviceData that are present in newSelectedOptions based on service_name
+    const filteredServices = serviceData
+      .filter((service) =>
+        newSelectedOptions.some(
+          (option) => option.service_name === service.service
+        )
+      )
+      .map((service) => ({
+        service_type: service.service, // Rename the key to service_type
+        quantity: service.quantity,
+        comments: service.comments,
+      }));
+    // Prepare the post data with filtered services (remaining services)
+    const postData = {
+      visaapplication_id: selectedClientData.id,
+      services: filteredServices, // Only the remaining services after filtering
+    };
+
+    console.log(postData);
+    // setServicelistDialogue(false);
+    // setShowSuccessMessage(true);
+
+    const url = "/user_management/visa-applicants/";
+
+    try {
+      const { res, error } = await Factory("post", url, postData);
+      cosnoile.log(res);
+      if (res.status_cd === 0) {
+        // setServicesCards(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      alert("Something went wrong. Please try again.");
+    }
   };
+
+  // Fetch services list from API
+  const getServicesList = async () => {
+    const url = "/user_management/services/";
+    try {
+      const { res, error } = await Factory("get", url, {});
+      if (res.status_cd === 0) {
+        setServicesCards(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  // Fetch and update services list on component mount
+  useEffect(() => {
+    getServicesList();
+  }, []);
+
+  // Sync selected services, quantity, and comments with selectedClientData
+  useEffect(() => {
+    if (selectedClientData.services.length > 0) {
+      const selectedServiceTypes = selectedClientData.services.map(
+        (client) => client.service_type
+      );
+
+      // Pre-select services based on service_type matching in ServicesCards
+      const preSelectedServices = ServicesCards.filter((service) =>
+        selectedServiceTypes.includes(service.id)
+      ).map((service) => service.service_name);
+
+      setSelectedServices(preSelectedServices);
+
+      // Set quantity and comments for the pre-selected services
+      const newQuantityMap = {};
+      const newCommentMap = {};
+      selectedClientData.services.forEach((service) => {
+        const serviceInCard = ServicesCards.find(
+          (cardService) => cardService.id === service.service_type
+        );
+        if (serviceInCard) {
+          newQuantityMap[serviceInCard.service_name] = service.quantity;
+          newCommentMap[serviceInCard.service_name] = service.comments;
+        }
+      });
+
+      setQuantityMap(newQuantityMap);
+      setCommentMap(newCommentMap);
+    }
+  }, [selectedClientData, ServicesCards]);
 
   return (
     <>
       <Box style={{ padding: "20px", textAlign: "center", marginTop: 20 }}>
-        <h3>Select Services</h3>
+        <Typography variant="h5">Select Services</Typography>
         <Grid container spacing={2} sx={{ mt: 1 }}>
-          {ServicesCards.map((card, idx) => (
+          {ServicesCards.map((service, idx) => (
             <Grid item xs={12} sm={6} md={4} key={idx}>
               <Card
                 sx={{
@@ -104,7 +200,20 @@ const FormPage = ({ setShowSuccessMessage }) => {
                   width: "100%",
                   margin: "1px",
                 }}
-                onClick={() => handleServiceSelection(card.name)}
+                onClick={() => {
+                  if (
+                    !selectedClientData.services.some(
+                      (clientService) =>
+                        clientService.service_name === service.service_name
+                    )
+                  ) {
+                    handleServiceSelection(service.service_name, service); // Toggle on card click
+                  }
+                }}
+                disabled={selectedClientData.services.some(
+                  (clientService) =>
+                    clientService.service_name === service.service_name
+                )} // Disable entire card
               >
                 <Box
                   display="flex"
@@ -114,8 +223,12 @@ const FormPage = ({ setShowSuccessMessage }) => {
                 >
                   <FormControlLabel
                     control={<Radio size="small" />}
-                    label={card.name}
-                    checked={selectedServices.includes(card.name)}
+                    label={service.service_name}
+                    disabled={selectedClientData.services.some(
+                      (clientService) =>
+                        clientService.service_name === service.service_name
+                    )} // Disable radio if already selected in client data
+                    checked={selectedServices.includes(service.service_name)}
                   />
                 </Box>
               </Card>
@@ -127,6 +240,7 @@ const FormPage = ({ setShowSuccessMessage }) => {
       <Box sx={{ marginTop: "30px" }}>
         <Button
           variant="contained"
+          type="button"
           onClick={() => setServicelistDialogue(true)}
           sx={{
             padding: "10px 30px",
@@ -134,7 +248,7 @@ const FormPage = ({ setShowSuccessMessage }) => {
             fontSize: "16px",
           }}
         >
-          Submit
+          Next
         </Button>
       </Box>
 
@@ -157,7 +271,7 @@ const FormPage = ({ setShowSuccessMessage }) => {
       >
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h3>Service List</h3>
+            <Typography variant="h6">Service List</Typography>
             <Autocomplete
               multiple
               renderTags={() => null}
@@ -166,24 +280,38 @@ const FormPage = ({ setShowSuccessMessage }) => {
               id="service-checkbox"
               options={ServicesCards}
               value={ServicesCards.filter((service) =>
-                selectedServices.includes(service.name)
+                selectedServices.includes(service.service_name)
               )}
-              onChange={(event, newValue) => {
-                setSelectedServices(newValue.map((item) => item.name));
+              onChange={(event, newValue, value2, value3) => {
+                let newOptions = [...newSelectedOptions];
+                if (value2 === "removeOption") {
+                  newOptions = newOptions.filter(
+                    (item) => item.id !== value3.option.id
+                  );
+                } else newOptions.push(value3.option);
+                console.log(newOptions);
+                setNewSelectedOptions(newOptions);
+                setSelectedServices(newValue.map((item) => item.service_name));
               }}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option) => option.service_name}
+              getOptionDisabled={(option) =>
+                selectedClientData.services.some(
+                  (item) => item.service_type === option.id
+                )
+              }
               renderInput={(params) => (
                 <TextField {...params} label="Update Services" />
               )}
               isOptionEqualToValue={(option, value) =>
-                option.name === value.name
+                option.service_name === value.service_name
               }
               renderOption={(props, option, { selected }) => (
                 <li {...props}>
                   <Checkbox checked={selected} />
-                  {option.name}
+                  {option.service_name}
                 </li>
               )}
+              disableCloseOnSelect
             />
           </Box>
         </DialogTitle>
@@ -206,7 +334,7 @@ const FormPage = ({ setShowSuccessMessage }) => {
             <Table
               sx={{ minWidth: 650 }}
               size="medium"
-              aria-label="a dense table"
+              aria-label="service table"
             >
               <TableHead>
                 <TableRow
@@ -271,10 +399,7 @@ const FormPage = ({ setShowSuccessMessage }) => {
             <Button
               variant="contained"
               type="button"
-              sx={{
-                padding: "8px 32px",
-                textTransform: "none",
-              }}
+              sx={{ padding: "8px 32px", textTransform: "none" }}
               onClick={servicesSubmit}
             >
               Submit
