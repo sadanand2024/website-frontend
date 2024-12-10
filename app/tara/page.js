@@ -10,7 +10,6 @@ function DashboardPage() {
   const { user, logout, setUser, setTokens } = useAuth();
   const userTypes = ["individual", "cafirm", "business", "service_provider"];
   const [userType, setUserType] = useState(null);
-  console.log(user);
   useEffect(() => {
     // const fetchedUserType = "service_provider";
 

@@ -52,19 +52,19 @@ export default function FirmForm() {
       country: "IN",
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Name is required"),
-      dob: Yup.string().required("DOB is required"),
-      icai_number: Yup.string().required("ICAI number is required"),
-      pan_number: Yup.string().required("PAN Card number is required"),
-      aadhaar_number: Yup.string().required("Aadhar Card number is required"),
-      registeredaddresslane1: Yup.string().required(
-        "Address Line 1 is required"
-      ),
-      city: Yup.string().required("City is required"),
-      state: Yup.string().required("State is required"),
-      zip: Yup.string().required("Zip code is required"),
-      phoneNumber: Yup.string().required("Phone number is required"),
-      have_firm: Yup.boolean(),
+      // name: Yup.string().required("Name is required"),
+      // dob: Yup.string().required("DOB is required"),
+      // icai_number: Yup.string().required("ICAI number is required"),
+      // pan_number: Yup.string().required("PAN Card number is required"),
+      // aadhaar_number: Yup.string().required("Aadhar Card number is required"),
+      // registeredaddresslane1: Yup.string().required(
+      //   "Address Line 1 is required"
+      // ),
+      // city: Yup.string().required("City is required"),
+      // state: Yup.string().required("State is required"),
+      // zip: Yup.string().required("Zip code is required"),
+      // phoneNumber: Yup.string().required("Phone number is required"),
+      // have_firm: Yup.boolean(),
     }),
     onSubmit: async (values) => {
       // Construct postData
@@ -88,26 +88,26 @@ export default function FirmForm() {
       setDialogOpen(false); // Close the current dialog
       console.log("1");
       setFirmkycDialogOpen(true);
-      try {
-        const url = `/user_management/users-kyc/`;
+      // try {
+      //   const url = `/user_management/users-kyc/`;
 
-        const { res, error } = await Factory("post", url, postData);
-        console.log(res); // Log the response
+      //   const { res, error } = await Factory("post", url, postData);
+      //   console.log(res); // Log the response
 
-        if (res.status_cd === 0) {
-          if (postData.have_firm === "true") {
-            setDialogOpen(false); // Close the current dialog
-            setFirmkycDialogOpen(true); // Open the firm KYC dialog
-          } else {
-            alert("something went wrong");
-          }
-        } else {
-          alert("Please check your credentials.");
-        }
-      } catch (error) {
-        console.error("KYC submission error:", error);
-        alert("Something went wrong. Please try again.");
-      }
+      //   if (res.status_cd === 0) {
+      //     if (postData.have_firm === "true") {
+      //       setDialogOpen(false); // Close the current dialog
+      //       setFirmkycDialogOpen(true); // Open the firm KYC dialog
+      //     } else {
+      //       alert("something went wrong");
+      //     }
+      //   } else {
+      //     alert("Please check your credentials.");
+      //   }
+      // } catch (error) {
+      //   console.error("KYC submission error:", error);
+      //   alert("Something went wrong. Please try again.");
+      // }
     },
   });
 
@@ -127,18 +127,18 @@ export default function FirmForm() {
       country: "IN",
     },
     validationSchema: Yup.object({
-      firmname: Yup.string().required("Firm Name is required"),
-      firmregistrationnumber: Yup.string().required(
-        "Firm Registration Number is required"
-      ),
-      firmemail: Yup.string()
-        .email("Invalid email address")
-        .required("Firm Email is required"),
-      firmmobilenumber: Yup.string().required("Firm Mobile Number is required"),
-      noofpartnersinfirm: Yup.string().required("No of Partners is required"),
-      city: Yup.string().required("City is required"),
-      state: Yup.string().required("State is required"),
-      zip: Yup.string().required("Zip code is required"),
+      // firmname: Yup.string().required("Firm Name is required"),
+      // firmregistrationnumber: Yup.string().required(
+      //   "Firm Registration Number is required"
+      // ),
+      // firmemail: Yup.string()
+      //   .email("Invalid email address")
+      //   .required("Firm Email is required"),
+      // firmmobilenumber: Yup.string().required("Firm Mobile Number is required"),
+      // noofpartnersinfirm: Yup.string().required("No of Partners is required"),
+      // city: Yup.string().required("City is required"),
+      // state: Yup.string().required("State is required"),
+      // zip: Yup.string().required("Zip code is required"),
       // firmaddress1: Yup.string().required("Firm Address  is required"),
     }),
     onSubmit: async (values) => {
@@ -160,23 +160,23 @@ export default function FirmForm() {
         number_of_firm_partners: Number(values.noofpartnersinfirm),
       };
       console.log("2");
+      setFirmkycDialogOpen(false);
+      // try {
+      //   const url = `/user_management/firmkyc/`;
 
-      try {
-        const url = `/user_management/firmkyc/`;
+      //   const { res, error } = await Factory("post", url, postData);
+      //   console.log(res); // Log the response
 
-        const { res, error } = await Factory("post", url, postData);
-        console.log(res); // Log the response
-
-        if (res.status_cd === 0) {
-          setFirmkycDialogOpen(false); // Open the firm KYC dialog
-          router.push("/tara");
-        } else {
-          alert("Something went wrong");
-        }
-      } catch (error) {
-        console.error("KYC submission error:", error);
-        alert("Something went wrong. Please try again.");
-      }
+      //   if (res.status_cd === 0) {
+      //     setFirmkycDialogOpen(false); // Open the firm KYC dialog
+      //     router.push("/tara");
+      //   } else {
+      //     alert("Something went wrong");
+      //   }
+      // } catch (error) {
+      //   console.error("KYC submission error:", error);
+      //   alert("Something went wrong. Please try again.");
+      // }
     },
   });
 

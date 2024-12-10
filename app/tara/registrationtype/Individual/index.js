@@ -47,24 +47,24 @@ export default function IndividualForm() {
       country: "IN",
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Name is required"),
-      email: Yup.string()
-        .email("Invalid email format")
-        .required("Email is required"),
-      mobile: Yup.string()
-        .matches(/^\d{10}$/, "Mobile number must be 10 digits")
-        .required("Mobile number is required"),
-      dob: Yup.date().nullable().required("Date of Birth is required"), // Make sure nullable is set for date
-      addressLine1: Yup.string().required("Address Line 1 is required"),
-      city: Yup.string().required("City is required"),
-      state: Yup.string().required("State is required"),
-      zip: Yup.string()
-        .matches(/^\d{6}$/, "Zip code must be 6 digits")
-        .required("Zip code is required"),
-      aadharcardnumber: Yup.string()
-        .matches(/^\d{12}$/, "Aadhar Card must be 12 digits")
-        .required("Aadhar Card number is required"),
-      pan_number: Yup.string().required("PAN Card number is required"),
+      // name: Yup.string().required("Name is required"),
+      // email: Yup.string()
+      //   .email("Invalid email format")
+      //   .required("Email is required"),
+      // mobile: Yup.string()
+      //   .matches(/^\d{10}$/, "Mobile number must be 10 digits")
+      //   .required("Mobile number is required"),
+      // dob: Yup.date().nullable().required("Date of Birth is required"), // Make sure nullable is set for date
+      // addressLine1: Yup.string().required("Address Line 1 is required"),
+      // city: Yup.string().required("City is required"),
+      // state: Yup.string().required("State is required"),
+      // zip: Yup.string()
+      //   .matches(/^\d{6}$/, "Zip code must be 6 digits")
+      //   .required("Zip code is required"),
+      // aadharcardnumber: Yup.string()
+      //   .matches(/^\d{12}$/, "Aadhar Card must be 12 digits")
+      //   .required("Aadhar Card number is required"),
+      // pan_number: Yup.string().required("PAN Card number is required"),
     }),
     onSubmit: async (values) => {
       const postData = {
@@ -83,21 +83,22 @@ export default function IndividualForm() {
         have_firm: "false",
         date: values.dob,
       };
-      try {
-        const url = `/user_management/users-kyc/`;
-        const { res, error } = await Factory("post", url, postData);
-        console.log(res);
+      setKycDialogOpen(false);
+      // try {
+      //   const url = `/user_management/users-kyc/`;
+      //   const { res, error } = await Factory("post", url, postData);
+      //   console.log(res);
 
-        if (res.status_cd === 0) {
-          setKycDialogOpen(false);
-          router.push("/tara");
-        } else {
-          alert("Please check your credentials.");
-        }
-      } catch (error) {
-        console.error("KYC submission error:", error);
-        alert("Something went wrong. Please try again.");
-      }
+      //   if (res.status_cd === 0) {
+      //     setKycDialogOpen(false);
+      //     router.push("/tara");
+      //   } else {
+      //     alert("Please check your credentials.");
+      //   }
+      // } catch (error) {
+      //   console.error("KYC submission error:", error);
+      //   alert("Something went wrong. Please try again.");
+      // }
     },
   });
 
