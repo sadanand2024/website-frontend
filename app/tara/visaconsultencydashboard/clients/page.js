@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
@@ -46,6 +46,7 @@ const FormPage = () => {
   const title = searchParams.get("title"); // Retrieve 'title' from query params
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [clientList, setClientList] = useState([]);
 
   const dummyData = [
     {
@@ -107,7 +108,19 @@ const FormPage = () => {
   });
 
   const { errors, touched, handleSubmit, getFieldProps } = formik;
+  // useEffect(() ={
+  //     const url = `/user_management/visa-clients/`;
+  //     const { res, error } = await Factory("post", url, postData);
+  //     console.log(res);
+  //     setClientList(res)
 
+  //     if (res.status_cd === 0) {
+  //       setDialogOpen(false);
+  //       alert("Something went wrong");
+  //     }
+  //     console.error("Error:", error);
+  //     alert("Something went wrong. Please try again.");
+  // }, [])
   return (
     <div style={{ padding: "20px" }}>
       {/* Client List Header and Add Client Button */}
