@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Factory from "@/app/utils/Factory";
-import IndividualForm from "../individual";
+import IndividualForm from "../Individual";
 import BusinessForm from "../Business";
 import FirmForm from "../Firm";
 
