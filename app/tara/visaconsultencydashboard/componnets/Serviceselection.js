@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Factory from "@/app/utils/Factory"; // Import custom Factory function for API calls
 import CustomInput from "@/components/CustomInput"; // Import custom input component
+import CloseIcon from "@mui/icons-material/Close";
 
 // MUI components
 import {
@@ -30,7 +31,6 @@ import {
   TextField,
 } from "@mui/material";
 import { ConstructionOutlined } from "@mui/icons-material";
-
 const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
   const searchParams = useSearchParams();
   const [servicelistDialogue, setServicelistDialogue] = useState(false);
@@ -41,19 +41,35 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
   const [ServicesCards, setServicesCards] = useState([]);
   // Handle service selection
   const handleServiceSelection = (serviceName, service) => {
+    // let __newSelectedOptions = JSON.parse(JSON.stringify(newSelectedOptions));
+    // console.log(__newSelectedOptions);
     setSelectedServices((prevSelectedServices) => {
       if (prevSelectedServices.includes(serviceName)) {
+        // __newSelectedOptions = __newSelectedOptions.filter(
+        //   (item) => item.id !== service.id
+        // );
+        // setNewSelectedOptions(__newSelectedOptions);
+        let newOptions = [...newSelectedOptions];
+        newOptions = newOptions.filter((item) => item.id !== service.id);
+        setNewSelectedOptions(newOptions);
+
         return prevSelectedServices.filter(
           (service) => service !== serviceName
         );
       } else {
+        let newOptions = [...newSelectedOptions];
+        newOptions.push(service);
+        setNewSelectedOptions(newOptions);
+        // __newSelectedOptions.push(service);
+        // setNewSelectedOptions(__newSelectedOptions);
+
         return [...prevSelectedServices, serviceName];
       }
     });
+    // console.log(__newSelectedOptions);
+    // setNewSelectedOptions(newOptions);
 
-    let newOptions = [...newSelectedOptions];
-    newOptions.push(service);
-    setNewSelectedOptions(newOptions); ///
+    ///
     // setNewSelectedOptions((prevSelectedServices) => {
     //   if (prevSelectedServices.includes(serviceName)) {
     //     return prevSelectedServices.filter(
@@ -83,16 +99,59 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
 
   // Submit selected services
   const servicesSubmit = async () => {
-    console.log(newSelectedOptions);
-    const serviceData = selectedServices.map((service) => ({
-      service,
-      quantity: quantityMap[service] || 0,
-      comments: commentMap[service] || "",
-    }));
+    let services = [
+      {
+        id: 1,
+        service_name: "ITR",
+      },
+      {
+        id: 2,
+        service_name: "Networth",
+      },
+      {
+        id: 3,
+        service_name: "Business Proof",
+      },
+      {
+        id: 4,
+        service_name: "Loans",
+      },
+      {
+        id: 5,
+        service_name: "Visa Fund",
+      },
+      {
+        id: 6,
+        service_name: "Forex Payments",
+      },
+      {
+        id: 7,
+        service_name: "Insurance",
+      },
+      {
+        id: 8,
+        service_name: "Travel Booking",
+      },
+      {
+        id: 9,
+        service_name: "Visa Slot",
+      },
+      {
+        id: 10,
+        service_name: "Passport Application",
+      },
+    ];
+    const serviceData = selectedServices.map((service) => {
+      const serviceObj = services.find((obj) => obj.service_name === service);
 
-    console.log("Final Selected Services:", serviceData);
+      return {
+        id: serviceObj ? serviceObj.id : null,
+        service: service,
+        quantity: quantityMap[service] || 0,
+        comments: commentMap[service] || "",
+      };
+    });
 
-    // Remove the services from serviceData that are present in newSelectedOptions based on service_name
     const filteredServices = serviceData
       .filter((service) =>
         newSelectedOptions.some(
@@ -100,27 +159,28 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
         )
       )
       .map((service) => ({
-        service_type: service.service, // Rename the key to service_type
+        // service_type: service.service, // Rename the key to service_type
         quantity: service.quantity,
         comments: service.comments,
+        service_type: service.id,
       }));
-    // Prepare the post data with filtered services (remaining services)
+    console.log(filteredServices);
+
     const postData = {
       visaapplication_id: selectedClientData.id,
-      services: filteredServices, // Only the remaining services after filtering
+      services: filteredServices,
     };
 
     console.log(postData);
-    // setServicelistDialogue(false);
-    // setShowSuccessMessage(true);
-
-    const url = "/user_management/visa-applicants/";
+    const url = "/user_management/visa-servicetasks/";
 
     try {
       const { res, error } = await Factory("post", url, postData);
       cosnoile.log(res);
       if (res.status_cd === 0) {
         // setServicesCards(res.data);
+        // setServicelistDialogue(false);
+        // setShowSuccessMessage(true);
       }
     } catch (error) {
       console.error("Error fetching services:", error);
@@ -178,11 +238,13 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
       setCommentMap(newCommentMap);
     }
   }, [selectedClientData, ServicesCards]);
+  console.log(newSelectedOptions);
+  console.log(selectedServices);
 
   return (
     <>
       <Box style={{ padding: "20px", textAlign: "center", marginTop: 20 }}>
-        <Typography variant="h5">Select Services</Typography>
+        <h3>Select Services</h3>
         <Grid container spacing={2} sx={{ mt: 1 }}>
           {ServicesCards.map((service, idx) => (
             <Grid item xs={12} sm={6} md={4} key={idx}>
@@ -254,7 +316,6 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
 
       <Dialog
         open={servicelistDialogue}
-        onClose={() => setServicelistDialogue(false)}
         maxWidth="md"
         PaperProps={{
           sx: {
@@ -269,9 +330,29 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
           },
         }}
       >
+        <Button
+          variant="outlined"
+          type="button"
+          onClick={() => {
+            setServicelistDialogue(false);
+          }}
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 30,
+          }}
+        >
+          <CloseIcon />
+        </Button>
         <DialogTitle>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6">Service List</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "15px 0",
+            }}
+          >
+            <h5>Service List</h5>
             <Autocomplete
               multiple
               renderTags={() => null}
@@ -289,7 +370,6 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
                     (item) => item.id !== value3.option.id
                   );
                 } else newOptions.push(value3.option);
-                console.log(newOptions);
                 setNewSelectedOptions(newOptions);
                 setSelectedServices(newValue.map((item) => item.service_name));
               }}
@@ -367,6 +447,9 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
                         sx={{ padding: "4px 8px", minWidth: "30px", mr: 2 }}
                         variant="outlined"
                         onClick={() => handleQuantityChange(service, -1)}
+                        disabled={selectedClientData.services.some(
+                          (item) => item.service_name === service
+                        )}
                       >
                         -
                       </Button>
@@ -375,11 +458,15 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
                         sx={{ padding: "4px 8px", minWidth: "30px", ml: 2 }}
                         variant="outlined"
                         onClick={() => handleQuantityChange(service, 1)}
+                        disabled={selectedClientData.services.some(
+                          (item) => item.service_name === service
+                        )}
                       >
                         +
                       </Button>
                     </TableCell>
                     <TableCell align="center">
+                      {console.log(selectedClientData)}
                       <CustomInput
                         value={commentMap[service] || ""}
                         onChange={(e) =>
@@ -387,6 +474,9 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
                         }
                         multiline
                         rows={2}
+                        disabled={selectedClientData.services.some(
+                          (item) => item.service_name === service
+                        )}
                       />
                     </TableCell>
                   </TableRow>
