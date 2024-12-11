@@ -10,7 +10,7 @@ import {
   Paper,
 } from "@mui/material";
 
-const FormPage = ({ serviceHistoryData }) => {
+const FormPage = ({ selectedClientData }) => {
   return (
     <Box style={{ marginTop: "20px" }}>
       <h3> Service History</h3>
@@ -43,32 +43,32 @@ const FormPage = ({ serviceHistoryData }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {serviceHistoryData.map((row) => (
+              {selectedClientData?.services.map((service) => (
                 <TableRow
-                  key={row.serviceTitle}
+                  key={service.id}
                   sx={{
                     "&:hover": { backgroundColor: "#f5f5f5" }, // Hover effect for rows
                     "&:last-child td, &:last-child th": { border: 0 },
                   }}
                 >
-                  <TableCell align="center">{row.serviceId}</TableCell>
-                  <TableCell align="center">{row.serviceTitle}</TableCell>
-                  <TableCell align="center">{row.date}</TableCell>
+                  <TableCell align="center">{service.id}</TableCell>
+                  <TableCell align="center">{service.service_name}</TableCell>
+                  <TableCell align="center">{service.date}</TableCell>
                   <TableCell
                     align="center"
                     sx={{
                       color:
-                        row.status === "Pending"
+                        service.status === "Pending"
                           ? "orange"
-                          : row.status === "In - Progress"
+                          : service.status === "In - Progress"
                             ? "#f58d42"
                             : "green",
                       fontWeight: "bold",
                     }}
                   >
-                    {row.status}
+                    {service.status}
                   </TableCell>
-                  <TableCell align="center">{row.comments}</TableCell>
+                  <TableCell align="center">{service.comments}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

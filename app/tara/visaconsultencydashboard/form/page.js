@@ -24,25 +24,25 @@ import {
   Table,
   Paper,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import ServicesSuccessMessage from "../componnets/ServicesSuccessMessage";
 import Serviceselection from "../componnets/Serviceselection";
 import ServiceHistory from "../componnets/ServiceHistory";
 import CloseIcon from "@mui/icons-material/Close";
-
+import Factory from "@/app/utils/Factory";
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
   const title = searchParams.get("title"); // Retrieve 'name' from query params
   const [dialogOpen, setDialogOpen] = useState(false);
   const [servicelistDialogue, setServicelistDialogue] = useState(false);
-  const [selectedClient, setSelectedClient] = useState(false);
+  const [selectedClient, setSelectedClient] = useState({});
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
+  const [clientList, setClientList] = useState([]);
 
-  let clientList = ["Anand", "Krishna", "Sai Kiran"];
   let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
   const visaPurposes = [
     "Tourism",
@@ -195,6 +195,24 @@ const FormPage = () => {
     console.log("Selected Services: ", selectedServices);
     setServicelistDialogue(true);
   };
+  const getClientList = async () => {
+    const url = "/user_management/visa-clients/";
+    try {
+      const { res, error } = await Factory("get", url, {});
+
+      if (res.status_cd === 0) {
+        setClientList(res.data);
+      }
+    } catch (error) {
+      // Catch any errors during the request
+      console.error("Error:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    getClientList(); // Load client list on component mount
+  }, []);
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
       <h3 style={{ marginBottom: 20 }}>{title}</h3>
@@ -203,16 +221,25 @@ const FormPage = () => {
         <ServicesSuccessMessage />
       ) : (
         <>
-          {" "}
           <Grid container spacing={2}>
             {/* <label>Existing Clients</label> */}
             <Grid item xs={12} md={6}>
               <CustomAutocomplete
-                id="state"
+                id="Client"
                 label="Select Client"
-                options={clientList}
+                options={clientList.map(
+                  (client) => client.first_name + " " + client.last_name
+                )}
                 onChange={(event, newValue) => {
-                  setSelectedClient(true);
+                  // Find the client object corresponding to the selected name
+                  const selectedClient = clientList.find(
+                    (client) =>
+                      client.first_name + " " + client.last_name === newValue
+                  );
+                  let __clientData = [...selectedClient.services];
+                  __clientData.map((item, idx) => (item["disabled"] = true));
+                  selectedClient.services = [...__clientData];
+                  setSelectedClient(selectedClient); // Set the actual client object
                 }}
               />
             </Grid>
@@ -222,7 +249,7 @@ const FormPage = () => {
               </Button>
             </Grid>
           </Grid>
-          {selectedClient && (
+          {Object.keys(selectedClient).length !== 0 && (
             <>
               <Grid container spacing={3} sx={{ mt: 3 }}>
                 {/* Row 1 */}
@@ -230,7 +257,7 @@ const FormPage = () => {
                   <CustomInput
                     id="firstname"
                     label="First Name"
-                    value="Anand"
+                    value={selectedClient.first_name}
                     disabled={true}
                   />
                 </Grid>
@@ -238,7 +265,7 @@ const FormPage = () => {
                   <CustomInput
                     id="lastname"
                     label="Last Name"
-                    value="Garikapati"
+                    value={selectedClient.last_name}
                     disabled={true}
                   />
                 </Grid>
@@ -246,7 +273,7 @@ const FormPage = () => {
                   <CustomInput
                     id="email"
                     label="Email"
-                    value="anand@gmail.com"
+                    value={selectedClient.email}
                     disabled={true}
                   />
                 </Grid>
@@ -254,7 +281,7 @@ const FormPage = () => {
                   <CustomInput
                     id="mobilenumber"
                     label="Mobile Number"
-                    value="888611561"
+                    value={selectedClient.mobile_number}
                     disabled={true}
                   />
                 </Grid>
@@ -263,7 +290,7 @@ const FormPage = () => {
                     id="purpose"
                     label="Purpose"
                     options={visaPurposes}
-                    value="Education"
+                    value={selectedClient.purpose}
                     disabled={true}
                   />
                 </Grid>
@@ -272,7 +299,7 @@ const FormPage = () => {
                     id="visatype"
                     label="Visa Type"
                     options={visaTypes}
-                    value="Tourism"
+                    value={selectedClient.visa_type}
                     disabled={true}
                   />
                 </Grid>
@@ -281,7 +308,7 @@ const FormPage = () => {
                     id="destinationcountry"
                     label="Destination Country"
                     options={destinationCountries}
-                    value="USA"
+                    value={selectedClient.destination_country}
                     disabled={true}
                   />
                 </Grid>
@@ -289,13 +316,14 @@ const FormPage = () => {
                   <CustomInput
                     id="passportnumber"
                     label="Passport Number"
-                    value="JUHT"
+                    value={selectedClient.passport_number}
                     disabled={true}
                   />
                 </Grid>
               </Grid>
               {title === "Create New Request" ? (
                 <Serviceselection
+                  selectedClientData={selectedClient}
                   setShowSuccessMessage={setShowSuccessMessage}
                 />
               ) : (
@@ -305,7 +333,10 @@ const FormPage = () => {
                 />
               )}
 
-              <ServiceHistory serviceHistoryData={serviceHistoryData} />
+              <ServiceHistory
+                selectedClientData={selectedClient}
+                serviceHistoryData={serviceHistoryData}
+              />
             </>
           )}
         </>
