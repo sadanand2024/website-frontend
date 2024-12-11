@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { Box, Grid, Card, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Image from "next/image";
@@ -21,7 +21,7 @@ import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import CardTravelIcon from "@mui/icons-material/CardTravel";
 import BookIcon from "@mui/icons-material/Book";
 import { Description } from "@mui/icons-material";
-
+import Factory from "@/app/utils/Factory";
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.common.white,
@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    minHeight: "280px",
-    maxHeight: "280px",
+    minHeight: "230px",
+    maxHeight: "230px",
     borderRadius: "16px",
     overflow: "hidden",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.6)",
@@ -58,11 +58,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   servicesCardgrid: {
-    minHeight: "150px",
+    minHeight: "120px",
+    maxHeight: "120px",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3)",
   },
   grid: {
-    minHeight: "150px",
+    minHeight: "120px",
+    maxHeight: "120px",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3)",
   },
 }));
@@ -73,27 +75,27 @@ const quickaccessCards = [
     title: "Create New Request",
     count: "",
 
-    icon: <NoteAddIcon style={{ color: "#fff" }} />,
+    icon: <NoteAddIcon style={{ fontSize: 30 }} />,
   },
   {
     name: "Pending",
     title: "Pending",
 
-    icon: <HourglassEmptyIcon style={{ color: "#fff" }} />,
-    count: 20,
+    icon: <HourglassEmptyIcon style={{ fontSize: 30 }} />,
+    count: 0,
   },
   {
     name: "In - Progress",
     title: "In - Progress",
-    icon: <AccountBalanceIcon style={{ color: "#fff" }} />,
-    count: 10,
+    icon: <AccountBalanceIcon style={{ fontSize: 30 }} />,
+    count: 0,
   },
   {
     name: "Completed",
     title: "Completed",
 
-    icon: <CheckCircleIcon style={{ color: "#fff" }} />,
-    count: 13,
+    icon: <CheckCircleIcon style={{ fontSize: 30 }} />,
+    count: 0,
   },
 ];
 
@@ -101,61 +103,60 @@ const ServicesCards = [
   {
     name: "ITR Filing",
     title: "ITR Services Request",
-    icon: <NoteAddIcon style={{ color: "#fff" }} />,
+    icon: <NoteAddIcon style={{ fontSize: 30 }} />,
   },
   {
     name: "Networth Assessment",
     title: "Networth Certificate",
 
-    icon: <AttachMoneyIcon style={{ color: "#fff" }} />,
+    icon: <AttachMoneyIcon style={{ fontSize: 30 }} />,
   },
   {
     name: "Business Proof",
     title: "Business Proof",
 
-    icon: <BusinessCenterIcon style={{ color: "#fff" }} />,
+    icon: <BusinessCenterIcon style={{ fontSize: 30 }} />,
   },
   {
     name: "Loans",
     title: "Loan",
 
-    icon: <ImportExportIcon style={{ color: "#fff" }} />,
+    icon: <ImportExportIcon style={{ fontSize: 30 }} />,
   },
   {
     name: "Visa Fund",
     title: "Visa Fund",
-    icon: <AirlineSeatReclineExtraIcon style={{ color: "#fff" }} />,
+    icon: <AirlineSeatReclineExtraIcon style={{ fontSize: 30 }} />,
   },
   {
     name: "Forex Payment",
     title: "Forex Payment",
-    icon: <AttachMoneyIcon style={{ color: "#fff" }} />,
+    icon: <AttachMoneyIcon style={{ fontSize: 30 }} />,
   },
   {
     name: "Insurance",
     title: "Insurance",
-    icon: <FolderIcon style={{ color: "#fff" }} />,
+    icon: <FolderIcon style={{ fontSize: 30 }} />,
   },
   {
     name: "Travel Booking",
     title: "Travel Booking",
-    icon: <FlightTakeoffIcon style={{ color: "#fff" }} />,
+    icon: <FlightTakeoffIcon style={{ fontSize: 30 }} />,
   },
   {
     name: "Visa Slot",
     title: "Visa Slot",
-    icon: <FlightTakeoffIcon style={{ color: "#fff" }} />,
+    icon: <FlightTakeoffIcon style={{ fontSize: 30 }} />,
   },
   {
     name: "Passport Application",
     title: "Passport Application",
-    icon: <BookIcon style={{ color: "#fff" }} />,
+    icon: <BookIcon style={{ fontSize: 30 }} />,
   },
 ];
-
 function VisaconsultencDashboard() {
   const classes = useStyles();
-
+  const [clientListData, setClientListData] = useState({});
   const router = useRouter();
   const handleCardClick = (card) => {
     if (card.name === "Create New Request") {
@@ -173,21 +174,43 @@ function VisaconsultencDashboard() {
       `/tara/visaconsultencydashboard/form?name=${encodeURIComponent(card.name)}&title=${encodeURIComponent(card.title)}`
     );
   };
+  const getClientsData = async () => {
+    const url = "/user_management/visa-clients/dashboard-status/";
+    try {
+      const { res, error } = await Factory("get", url, {});
+      console.log(res.data);
+      if (res.status_cd === 0) {
+        setClientListData(res.data);
+      }
+    } catch (error) {
+      // Catch any errors during the request
+      console.error("Error:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    getClientsData(); // Load client list on component mount
+  }, []);
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={12} lg={8}>
-          <Grid container className={classes.entryCard}>
-            <Grid item xs={7} sx={{ pt: 6, pl: 6 }}>
+    <Box sx={{ flexGrow: 1, padding: 0 }}>
+      <Grid container spacing={2} sx={{ marginTop: 0, paddingTop: 0 }}>
+        {/* Main Content Section */}
+        <Grid item xs={12} md={8}>
+          <Grid
+            container
+            className={classes.entryCard}
+            sx={{ marginBottom: 2 }}
+          >
+            <Grid item xs={7} sx={{ pt: 2, pl: 6 }}>
               <Typography sx={{ color: "#fff" }} variant="h5">
-                Hello Krishna Sai,
+                Hello User,
               </Typography>
               <Typography sx={{ color: "#fff" }} variant="h6">
                 Welcome Back
               </Typography>
               <Typography sx={{ color: "#c9c9c9", mt: 2 }} variant="subtitle1">
                 Simply dummy text of the printing and typesetting industry.
-                Lorem Ipsum has been the industry's standard dummy text ever
               </Typography>
             </Grid>
             <Grid
@@ -204,45 +227,24 @@ function VisaconsultencDashboard() {
                 alt="Welcome Image"
                 width={280}
                 height={280}
-                style={{ borderRadius: "16px" }}
+                style={{ borderRadius: "16px", marginTop: "-25px" }}
               />
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12} md={12} lg={4}>
-          <Box
-            className={classes.root}
-            sx={{ borderLeft: "1px solid #eef7ee" }}
+
+        {/* Sidebar or Additional Content Section */}
+        <Grid item xs={12} md={4} sx={{ marginTop: 0 }}>
+          <Card
+            className={classes.grid}
+            sx={{ padding: "20px", textAlign: "center", cursor: "pointer" }}
           >
-            <Card
-              className={classes.grid}
-              sx={{
-                borderRadius: "16px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                color: "#fff",
-                padding: "20px",
-                cursor: "pointer",
-                textDecoration: "none", // Prevents underlining the text
-                transition:
-                  "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out", // Adding transition for smooth hover effect
-                "&:hover": {
-                  transform: "scale(1.05)", // Slightly enlarge the card on hover
-                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Add shadow on hover for depth effect
-                },
-              }}
-              onClick={() => handleCardClick(card)}
-            >
-              <h5 style={{ textAlign: "center" }} className="mb-3">
-                Credits Earned
-              </h5>
-              <h4 style={{ textAlign: "center" }}>50</h4>
-            </Card>
-          </Box>
+            <h5 style={{ textAlign: "center" }}>Credits Earned</h5>
+            <h4>50</h4>
+          </Card>
         </Grid>
-        <Grid sx={{ mb: 1, mt: 5 }} item xs={12}>
+
+        <Grid item xs={12}>
           <h5>Quick Access</h5>
         </Grid>
         {quickaccessCards.map((card, idx) => (
@@ -272,7 +274,15 @@ function VisaconsultencDashboard() {
               <Typography sx={{ mt: 2 }} variant="h6">
                 {card.name}
               </Typography>
-              <h6>{card?.count && `(${card?.count})`}</h6>
+              <h6>
+                {card.title === "Pending"
+                  ? clientListData.pending
+                  : card.title === "In - Progress"
+                    ? clientListData.in_progress
+                    : card.title === "Create New Request"
+                      ? ""
+                      : clientListData.completed}
+              </h6>
             </Card>
           </Grid>
         ))}

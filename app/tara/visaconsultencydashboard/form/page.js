@@ -24,24 +24,25 @@ import {
   Table,
   Paper,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import ServicesSuccessMessage from "../componnets/ServicesSuccessMessage";
 import Serviceselection from "../componnets/Serviceselection";
 import ServiceHistory from "../componnets/ServiceHistory";
 import CloseIcon from "@mui/icons-material/Close";
+import Factory from "@/app/utils/Factory";
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
   const title = searchParams.get("title"); // Retrieve 'name' from query params
   const [dialogOpen, setDialogOpen] = useState(false);
   const [servicelistDialogue, setServicelistDialogue] = useState(false);
-  const [selectedClient, setSelectedClient] = useState(false);
+  const [selectedClient, setSelectedClient] = useState({});
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
+  const [clientList, setClientList] = useState([]);
 
-  let clientList = ["Anand", "Krishna", "Sai Kiran"];
   let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
   const visaPurposes = [
     "Tourism",
@@ -60,31 +61,47 @@ const FormPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      firstname: "", // Set 'firstname' as the name from query params
-      lastname: "",
+      first_name: "",
+      last_name: "",
       email: "",
-      mobilenumber: "",
+      mobile_number: "",
       purpose: "Visa",
-      visatype: "",
-      destinationcountry: "",
-      passportnumber: "",
+      visa_type: "",
+      destination_country: "",
+      passport_number: "",
     },
     validationSchema: Yup.object({
-      firstname: Yup.string().required("First name is required"),
-      lastname: Yup.string().required("Last name is required"),
+      first_name: Yup.string().required("First name is required"),
+      last_name: Yup.string().required("Last name is required"),
       email: Yup.string()
         .email("Invalid email format")
         .required("Email is required"),
-      mobilenumber: Yup.string().required("Mobile number is required"),
-      //   purpose: Yup.string().required("Purpose is required"),
-      //   visatype: Yup.string().required("Visa type is required"),
-      //   destinationcountry: Yup.string().required(
-      //     "Destination country is required"
-      //   ),
-      //   passportnumber: Yup.string().required("Passport number is required"),
+      mobile_number: Yup.string().required("Mobile number is required"),
     }),
     onSubmit: async (values) => {
-      console.log("Form submitted with values:", values);
+      const postData = {
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email: values.email,
+        mobile_number: values.mobile_number,
+        purpose: values.purpose,
+        visa_type: values.visa_type,
+        destination_country: values.destination_country,
+      };
+      try {
+        const url = `/user_management/visa-users/`;
+        const { res, error } = await Factory("post", url, postData);
+        console.log(res);
+
+        if (res.status_cd === 0) {
+          setDialogOpen(false);
+        } else {
+          alert("Something went wrong");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Something went wrong. Please try again.");
+      }
     },
   });
 
@@ -178,6 +195,24 @@ const FormPage = () => {
     console.log("Selected Services: ", selectedServices);
     setServicelistDialogue(true);
   };
+  const getClientList = async () => {
+    const url = "/user_management/visa-clients/";
+    try {
+      const { res, error } = await Factory("get", url, {});
+
+      if (res.status_cd === 0) {
+        setClientList(res.data);
+      }
+    } catch (error) {
+      // Catch any errors during the request
+      console.error("Error:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    getClientList(); // Load client list on component mount
+  }, []);
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
       <h3 style={{ marginBottom: 20 }}>{title}</h3>
@@ -186,16 +221,25 @@ const FormPage = () => {
         <ServicesSuccessMessage />
       ) : (
         <>
-          {" "}
           <Grid container spacing={2}>
             {/* <label>Existing Clients</label> */}
             <Grid item xs={12} md={6}>
               <CustomAutocomplete
-                id="state"
+                id="Client"
                 label="Select Client"
-                options={clientList}
+                options={clientList.map(
+                  (client) => client.first_name + " " + client.last_name
+                )}
                 onChange={(event, newValue) => {
-                  setSelectedClient(true);
+                  // Find the client object corresponding to the selected name
+                  const selectedClient = clientList.find(
+                    (client) =>
+                      client.first_name + " " + client.last_name === newValue
+                  );
+                  let __clientData = [...selectedClient.services];
+                  __clientData.map((item, idx) => (item["disabled"] = true));
+                  selectedClient.services = [...__clientData];
+                  setSelectedClient(selectedClient); // Set the actual client object
                 }}
               />
             </Grid>
@@ -205,7 +249,7 @@ const FormPage = () => {
               </Button>
             </Grid>
           </Grid>
-          {selectedClient && (
+          {Object.keys(selectedClient).length !== 0 && (
             <>
               <Grid container spacing={3} sx={{ mt: 3 }}>
                 {/* Row 1 */}
@@ -213,7 +257,7 @@ const FormPage = () => {
                   <CustomInput
                     id="firstname"
                     label="First Name"
-                    value="Anand"
+                    value={selectedClient.first_name}
                     disabled={true}
                   />
                 </Grid>
@@ -221,7 +265,7 @@ const FormPage = () => {
                   <CustomInput
                     id="lastname"
                     label="Last Name"
-                    value="Garikapati"
+                    value={selectedClient.last_name}
                     disabled={true}
                   />
                 </Grid>
@@ -229,7 +273,7 @@ const FormPage = () => {
                   <CustomInput
                     id="email"
                     label="Email"
-                    value="anand@gmail.com"
+                    value={selectedClient.email}
                     disabled={true}
                   />
                 </Grid>
@@ -237,7 +281,7 @@ const FormPage = () => {
                   <CustomInput
                     id="mobilenumber"
                     label="Mobile Number"
-                    value="888611561"
+                    value={selectedClient.mobile_number}
                     disabled={true}
                   />
                 </Grid>
@@ -246,7 +290,7 @@ const FormPage = () => {
                     id="purpose"
                     label="Purpose"
                     options={visaPurposes}
-                    value="Education"
+                    value={selectedClient.purpose}
                     disabled={true}
                   />
                 </Grid>
@@ -255,7 +299,7 @@ const FormPage = () => {
                     id="visatype"
                     label="Visa Type"
                     options={visaTypes}
-                    value="Tourism"
+                    value={selectedClient.visa_type}
                     disabled={true}
                   />
                 </Grid>
@@ -264,7 +308,7 @@ const FormPage = () => {
                     id="destinationcountry"
                     label="Destination Country"
                     options={destinationCountries}
-                    value="USA"
+                    value={selectedClient.destination_country}
                     disabled={true}
                   />
                 </Grid>
@@ -272,13 +316,14 @@ const FormPage = () => {
                   <CustomInput
                     id="passportnumber"
                     label="Passport Number"
-                    value="JUHT"
+                    value={selectedClient.passport_number}
                     disabled={true}
                   />
                 </Grid>
               </Grid>
               {title === "Create New Request" ? (
                 <Serviceselection
+                  selectedClientData={selectedClient}
                   setShowSuccessMessage={setShowSuccessMessage}
                 />
               ) : (
@@ -288,7 +333,10 @@ const FormPage = () => {
                 />
               )}
 
-              <ServiceHistory serviceHistoryData={serviceHistoryData} />
+              <ServiceHistory
+                selectedClientData={selectedClient}
+                serviceHistoryData={serviceHistoryData}
+              />
             </>
           )}
         </>
@@ -315,7 +363,7 @@ const FormPage = () => {
       >
         <Button
           variant="outlined"
-          color="error"
+          //   color="error"
           type="button"
           disabled={formik.isSubmitting}
           onClick={() => {
@@ -327,7 +375,7 @@ const FormPage = () => {
             right: 30,
           }}
         >
-          Close
+          <CloseIcon />
         </Button>
         <DialogTitle>
           <h3>{name} Registration</h3>
@@ -351,8 +399,8 @@ const FormPage = () => {
                 id="firstname"
                 label="First Name"
                 {...getFieldProps("firstname")}
-                touched={touched.firstname}
-                errors={errors.firstname}
+                touched={touched.first_name}
+                errors={errors.first_name}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -360,8 +408,8 @@ const FormPage = () => {
                 id="lastname"
                 label="Last Name"
                 {...getFieldProps("lastname")}
-                touched={touched.lastname}
-                errors={errors.lastname}
+                touched={touched.last_name}
+                errors={errors.last_name}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -378,8 +426,8 @@ const FormPage = () => {
                 id="mobilenumber"
                 label="Mobile Number"
                 {...getFieldProps("mobilenumber")}
-                touched={touched.mobilenumber}
-                errors={errors.mobilenumber}
+                touched={touched.mobile_number}
+                errors={errors.mobile_number}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -400,8 +448,11 @@ const FormPage = () => {
                 label="Visa Type"
                 options={visaTypes}
                 {...getFieldProps("visatype")}
-                error={touched.visatype && Boolean(errors.visatype)} // Check if the field was touched and has an error
-                helperText={touched.visatype && errors.visatype} // Display the error message
+                error={touched.visa_type && Boolean(errors.visa_type)} // Check if the field was touched and has an error
+                helperText={touched.visa_type && errors.visa_type} // Display the error message
+                onChange={(event, newValue) => {
+                  formik.setFieldValue("visa_type", newValue);
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -411,11 +462,11 @@ const FormPage = () => {
                 options={destinationCountries}
                 {...getFieldProps("destinationcountry")}
                 error={
-                  touched.destinationcountry &&
-                  Boolean(errors.destinationcountry)
+                  touched.destination_country &&
+                  Boolean(errors.destination_country)
                 } // Check if the field was touched and has an error
                 helperText={
-                  touched.destinationcountry && errors.destinationcountry
+                  touched.destination_country && errors.destination_country
                 } // Display the error message
                 onChange={(event, newValue) => {
                   formik.setFieldValue("destinationcountry", newValue);
@@ -427,8 +478,8 @@ const FormPage = () => {
                 id="passportnumber"
                 label="Passport Number"
                 {...getFieldProps("passportnumber")}
-                touched={touched.passportnumber}
-                errors={errors.passportnumber}
+                touched={touched.passport_number}
+                errors={errors.passport_number}
               />
             </Grid>
           </Grid>

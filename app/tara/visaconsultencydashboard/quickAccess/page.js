@@ -10,11 +10,14 @@ import {
   Table,
   Paper,
 } from "@mui/material";
+import { useState, useEffect } from "react";
+import Factory from "@/app/utils/Factory";
 
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
   const title = searchParams.get("title"); // Retrieve 'title' from query params
+  const [mappingData, setMappingData] = useState([]);
 
   let PendingData = [
     {
@@ -96,13 +99,29 @@ const FormPage = () => {
       comments: "Done",
     },
   ];
+  const getClientsData = async () => {
+    const url = "/user_management/visa-clients/dashboard-status/";
+    try {
+      const { res, error } = await Factory("get", url, {});
+      console.log(res.data);
 
-  let mappingData =
-    title === "Pending"
-      ? PendingData
-      : title === "In - Progress"
-        ? inprogressData
-        : completedData;
+      if (res.status_cd === 0) {
+        title === "Pending"
+          ? setMappingData(res.data.pending_data)
+          : title === "In - Progress"
+            ? setMappingData(res.data.in_progress_data)
+            : setMappingData(res.data.completed_data);
+      }
+    } catch (error) {
+      // Catch any errors during the request
+      console.error("Error:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    getClientsData(); // Load client list on component mount
+  }, []);
 
   return (
     <Box style={{ marginTop: "20px" }}>
@@ -138,35 +157,38 @@ const FormPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mappingData.map((row) => (
-                <TableRow
-                  key={row.serviceTitle}
-                  sx={{
-                    "&:hover": { backgroundColor: "#f5f5f5" }, // Hover effect for rows
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell align="center">{row.serviceId}</TableCell>
-                  <TableCell align="center">{row.clientname}</TableCell>
-                  <TableCell align="center">{row.serviceTitle}</TableCell>
-                  <TableCell align="center">{row.date}</TableCell>
-                  <TableCell
-                    align="center"
+              {mappingData.length > 0 &&
+                mappingData.map((row) => (
+                  <TableRow
+                    key={row.service_name}
                     sx={{
-                      color:
-                        row.status === "Pending"
-                          ? "orange"
-                          : row.status === "In - Progress"
-                            ? "#f58d42"
-                            : "green",
-                      fontWeight: "bold",
+                      "&:hover": { backgroundColor: "#f5f5f5" }, // Hover effect for rows
+                      "&:last-child td, &:last-child th": { border: 0 },
                     }}
                   >
-                    {row.status}
-                  </TableCell>
-                  <TableCell align="center">{row.comments}</TableCell>
-                </TableRow>
-              ))}
+                    <TableCell align="center">{row.service_id}</TableCell>
+                    <TableCell align="center">
+                      {row.visa_applicant_name}
+                    </TableCell>
+                    <TableCell align="center">{row.service_name}</TableCell>
+                    <TableCell align="center">{row.date}</TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color:
+                          row.status === "Pending"
+                            ? "orange"
+                            : row.status === "In - Progress"
+                              ? "#f58d42"
+                              : "green",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {row.status}
+                    </TableCell>
+                    <TableCell align="center">{row.comments}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>

@@ -221,3 +221,4 @@ const MovingCardTabs = () => {
 };
 
 export default MovingCardTabs;
+
