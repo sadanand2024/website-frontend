@@ -65,7 +65,7 @@ export default function Sidebar({ open, toggleDrawer, isSmallScreen }) {
     {
       title: "Tasks",
       icon: <WorkIcon />,
-      path: "/tara/gst",
+      path: "/tara/visaconsultencydashboard/tasks",
     },
     {
       title: "Clients",

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import VisaconsultencDashboard from "./visaconsultencydashboard";
 // import CAfirmDashboard from "./cafirmDashboard";
-// import IndividualDashboard from "./individualDashboard";
+import IndividualDashboard from "./IndividualDashboard";
 import { useAuth } from "../context/AuthContext";
 
 function DashboardPage() {
@@ -18,10 +18,10 @@ function DashboardPage() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <VisaconsultencDashboard />
-      {/* {userType === "service_provider" && <VisaconsultencDashboard />}
-      {userType === "cafirm" && <CAfirmDashboard />}
-      {userType === "individual" && <IndividualDashboard />} */}
+      {/* <VisaconsultencDashboard /> */}
+      {userType === "ServiceProviderAdmin" && <VisaconsultencDashboard />}
+      {/* {userType === "cafirm" && <CAfirmDashboard />}*/}
+      {userType === "individual" && <IndividualDashboard />}
     </Box>
   );
 }

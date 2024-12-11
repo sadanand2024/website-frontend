@@ -94,6 +94,7 @@ const FormPage = () => {
         console.log(res);
 
         if (res.status_cd === 0) {
+          getClientList();
           setDialogOpen(false);
         } else {
           alert("Something went wrong");
@@ -106,48 +107,7 @@ const FormPage = () => {
   });
 
   const { errors, touched, handleSubmit, getFieldProps } = formik;
-  const ServicesCards = [
-    {
-      name: "ITR Filing",
-      title: "ITR Services Request",
-    },
-    {
-      name: "Networth Assessment",
-      title: "Networth Certificate",
-    },
-    {
-      name: "Business Proof",
-      title: "Business Proof",
-    },
-    {
-      name: "Loans",
-      title: "Loan",
-    },
-    {
-      name: "Visa Fund",
-      title: "Visa Fund",
-    },
-    {
-      name: "Forex Payment",
-      title: "Forex Payment",
-    },
-    {
-      name: "Insurance",
-      title: "Insurance",
-    },
-    {
-      name: "Travel Booking",
-      title: "Travel Booking",
-    },
-    {
-      name: "Visa Slot",
-      title: "Visa Slot",
-    },
-    {
-      name: "Passport Application",
-      title: "Passport Application",
-    },
-  ];
+
   let rows = [
     {
       serviceTitle: "ITR",
@@ -255,7 +215,7 @@ const FormPage = () => {
                 {/* Row 1 */}
                 <Grid item xs={12} sm={6}>
                   <CustomInput
-                    id="firstname"
+                    id="first_name"
                     label="First Name"
                     value={selectedClient.first_name}
                     disabled={true}
@@ -263,7 +223,7 @@ const FormPage = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <CustomInput
-                    id="lastname"
+                    id="last_name"
                     label="Last Name"
                     value={selectedClient.last_name}
                     disabled={true}
@@ -279,7 +239,7 @@ const FormPage = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <CustomInput
-                    id="mobilenumber"
+                    id="mobile_number"
                     label="Mobile Number"
                     value={selectedClient.mobile_number}
                     disabled={true}
@@ -396,18 +356,18 @@ const FormPage = () => {
             {/* Row 1 */}
             <Grid item xs={12} sm={6}>
               <CustomInput
-                id="firstname"
+                id="first_name"
                 label="First Name"
-                {...getFieldProps("firstname")}
+                {...getFieldProps("first_name")}
                 touched={touched.first_name}
                 errors={errors.first_name}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomInput
-                id="lastname"
+                id="last_name"
                 label="Last Name"
-                {...getFieldProps("lastname")}
+                {...getFieldProps("last_name")}
                 touched={touched.last_name}
                 errors={errors.last_name}
               />
@@ -423,9 +383,9 @@ const FormPage = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomInput
-                id="mobilenumber"
+                id="mobile_number"
                 label="Mobile Number"
-                {...getFieldProps("mobilenumber")}
+                {...getFieldProps("mobile_number")}
                 touched={touched.mobile_number}
                 errors={errors.mobile_number}
               />
