@@ -74,8 +74,8 @@ const LoginPage = () => {
           alert("Login failed. Please check your credentials.");
         }
       } catch (error) {
-        console.error("Login error:", error);
-        alert("Something went wrong. Please try again.");
+        console.error("Login error:", error.response.data.detail);
+        alert(error.response.data.detail);
       }
     },
   });

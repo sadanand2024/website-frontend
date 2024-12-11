@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Box, Grid, Card, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Image from "next/image";
 import mainCardBg from "../../../public/img/MainCard.jpg";
 import bg from "../../../public/img/cardBg.jpg";
+import man from "../../../public/img/man.png";
 import Welcome from "../../../public/img/Welcome.png";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
@@ -22,6 +23,11 @@ import CardTravelIcon from "@mui/icons-material/CardTravel";
 import BookIcon from "@mui/icons-material/Book";
 import { Description } from "@mui/icons-material";
 import Factory from "@/app/utils/Factory";
+import { useAuth } from "@/app/context/AuthContext";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import { IconCoins, IconArrowUpRight } from "@tabler/icons-react";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.common.white,
@@ -65,6 +71,22 @@ const useStyles = makeStyles((theme) => ({
   grid: {
     minHeight: "120px",
     maxHeight: "120px",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3)",
+  },
+  infoMainCard: {
+    maxHeight: "230px",
+    minHeight: "230px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: "2px 30px",
+  },
+
+  infoCard: {
+    padding: 20,
+    borderRadius: "16px",
+    // minHeight: "230px",
+    maxHeight: "230px",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3)",
   },
 }));
@@ -155,6 +177,9 @@ const ServicesCards = [
   },
 ];
 function VisaconsultencDashboard() {
+  const { user } = useAuth();
+  const chipDefaultProps = { color: "black", variant: "text", size: "small" };
+  console.log(user);
   const classes = useStyles();
   const [clientListData, setClientListData] = useState({});
   const router = useRouter();
@@ -235,13 +260,58 @@ function VisaconsultencDashboard() {
 
         {/* Sidebar or Additional Content Section */}
         <Grid item xs={12} md={4} sx={{ marginTop: 0 }}>
-          <Card
-            className={classes.grid}
-            sx={{ padding: "20px", textAlign: "center", cursor: "pointer" }}
-          >
-            <h5 style={{ textAlign: "center" }}>Credits Earned</h5>
-            <h4>50</h4>
-          </Card>
+          <div className={classes.infoMainCard}>
+            <Card className={classes.infoCard} style={{ padding: "10px 30px" }}>
+              <Stack
+                direction="row"
+                sx={{ gap: 1 }}
+              >
+                {/* <svg stroke-width="1"></svg> */}
+
+                <Image
+                  src={man}
+                  alt="Welcome Image"
+                  width={60}
+                  height={60}
+                  style={{ borderRadius: "0" }}
+                />
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Typography variant="subtitle1" color="text.secondary">
+                    User Since&nbsp;
+                  </Typography>
+                  <Typography variant="subtitle1" color="primary">
+                    July, 2024
+                  </Typography>
+                </div>
+              </Stack>
+            </Card>
+            <Card className={classes.infoCard}>
+              <Stack sx={{ gap: 0.5 }}>
+                <Typography variant="subtitle1" color="text.secondary">
+                  Credits Earned
+                </Typography>
+                <Stack direction="row" sx={{ gap: 0.5 }}>
+                  <Typography variant="h5">7000</Typography>
+                  <Typography style={{ display: "flex", alignItems: "center" }}>
+                    <IconCoins />
+                  </Typography>
+                </Stack>
+                <Stack direction="row" sx={{ gap: 0.6, alignItems: "center" }}>
+                  <Chip
+                    {...{
+                      ...chipDefaultProps,
+                      label: "20.5%",
+                      icon: <IconArrowUpRight />,
+                    }}
+                    style={{ backgroundColor: "#ffebcd00" }}
+                  />
+                  <Typography variant="caption" color="text.secondary">
+                    vs last month
+                  </Typography>
+                </Stack>
+              </Stack>
+            </Card>
+          </div>
         </Grid>
 
         <Grid item xs={12}>

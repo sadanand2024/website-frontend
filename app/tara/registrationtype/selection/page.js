@@ -128,7 +128,7 @@ const MovingCardTabs = () => {
         <Tab
           label={getTabLabel(
             "Business",
-            " Streamlining business operations, compliance with financial regulations for efficient management and growth.",
+            "Streamlining business operations, compliance with financial regulation management",
             selectedIndex === 0
           )}
           sx={{
@@ -171,6 +171,29 @@ const MovingCardTabs = () => {
           }}
           onClick={() => setSelectedType("firm")}
         />
+        <Tab
+          label={getTabLabel(
+            "Individual",
+            "Provides tax advice and support to individuals, businesses, and organizations",
+            selectedIndex === 2
+          )}
+          sx={{
+            textTransform: "none",
+            padding: "30px 20px", // Reduce padding for smaller screens
+            minWidth: "150px", // Set a minimum width
+            flex: "1 1 auto", // Flex-grow for responsiveness
+            // borderRadius: 2,
+            borderTopLeftRadius: "8px",
+            borderTopRightRadius: "8px",
+            boxShadow:
+              selectedIndex === 2 ? "0 4px 10px rgba(0, 0, 0, 0.2)" : "none",
+            backgroundColor: selectedIndex === 2 ? "white" : "#d7d9db",
+            transition: "background-color 0.3s ease, box-shadow 0.3s ease",
+            cursor: "pointer",
+            textAlign: "center",
+          }}
+          onClick={() => setSelectedType("individual")}
+        />
       </Tabs>
 
       {/* Next Button */}
@@ -197,12 +220,13 @@ const MovingCardTabs = () => {
           color="primary"
           style={{ cursor: "pointer" }}
           onClick={() => {
-            setSelectedType("individual");
+            console.log("individual");
+            // setSelectedType("individual");
             // handleNext();
           }}
           sx={{ mr: 2 }}
         >
-          Skip if you're an Individual 
+          Skip
           {/* <i class="fa-solid fa-arrow-right" /> */}
         </Link>
 
@@ -221,4 +245,3 @@ const MovingCardTabs = () => {
 };
 
 export default MovingCardTabs;
-
