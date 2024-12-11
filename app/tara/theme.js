@@ -8,6 +8,9 @@ const theme = createTheme({
     secondary: {
       main: "#dc004e",
     },
+    black: {
+      main: "#000",
+    },
   },
   breakpoints: {
     values: {
