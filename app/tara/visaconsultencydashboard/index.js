@@ -23,6 +23,7 @@ import CardTravelIcon from "@mui/icons-material/CardTravel";
 import BookIcon from "@mui/icons-material/Book";
 import { Description } from "@mui/icons-material";
 import Factory from "@/app/utils/Factory";
+import { digitsToMonths } from "@/app/utils/dateUtils";
 import { useAuth } from "@/app/context/AuthContext";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
@@ -176,6 +177,7 @@ const ServicesCards = [
     icon: <BookIcon style={{ fontSize: 30 }} />,
   },
 ];
+
 function VisaconsultencDashboard() {
   const { user } = useAuth();
   const chipDefaultProps = { color: "black", variant: "text", size: "small" };
@@ -191,6 +193,9 @@ function VisaconsultencDashboard() {
     return `${month} /${year}`; // Return in MM/YYYY format
   }
   const formattedDate = formatDateToMonthYear(user?.created_on);
+  const [month, year] = formattedDate.split("/");
+
+
   const handleCardClick = (card) => {
     if (card.name === "Create New Request") {
       router.push(
@@ -235,15 +240,16 @@ function VisaconsultencDashboard() {
             className={classes.entryCard}
             sx={{ marginBottom: 2 }}
           >
-            <Grid item xs={7} sx={{ pt: 2, pl: 6 }}>
+            <Grid item xs={7} sx={{ pt: 4, pl: 6 }}>
               <Typography sx={{ color: "#fff" }} variant="h5">
-                Hello User,
+                Hello First time User!
               </Typography>
               <Typography sx={{ color: "#fff" }} variant="h6">
-                Welcome Back
+                Welcome to Tara First!
               </Typography>
               <Typography sx={{ color: "#c9c9c9", mt: 2 }} variant="subtitle1">
-                Simply dummy text of the printing and typesetting industry.
+                We look forward to servicing you in your finance journey. To
+                start with, help us by completing your KYC.
               </Typography>
             </Grid>
             <Grid
@@ -282,10 +288,10 @@ function VisaconsultencDashboard() {
                 />
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <Typography variant="subtitle1" color="text.secondary">
-                    User Since&nbsp;
+                    User Since&nbsp;&nbsp;
                   </Typography>
                   <Typography variant="subtitle1" color="primary">
-                    {formattedDate}
+                    {digitsToMonths[Number(month)]}, {year}
                   </Typography>
                 </div>
               </Stack>
