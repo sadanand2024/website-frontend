@@ -32,17 +32,32 @@ import Serviceselection from "../componnets/Serviceselection";
 import ServiceHistory from "../componnets/ServiceHistory";
 import CloseIcon from "@mui/icons-material/Close";
 import Factory from "@/app/utils/Factory";
+// import { useRouter } from "next/dist/client/router";
+import { useAuth } from "@/app/context/AuthContext";
+
+import { useRouter } from "next/navigation";
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
   const title = searchParams.get("title"); // Retrieve 'name' from query params
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [servicelistDialogue, setServicelistDialogue] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [selectedClient, setSelectedClient] = useState({});
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
   const [clientList, setClientList] = useState([]);
+  const { user, tokens, logout } = useAuth();
+  console.log(user);
+  // const c_data = searchParams.get("client"); // Retrieve 'name' from query params
+  // let router = useRouter();
+  // const { client } = router.query;
+  // const parsedClientData = client
+  //   ? JSON.parse(decodeURIComponent(client))
+  //   : null;
+  // console.log(client);
+  // console.log(parsedClientData);
 
+  // console.log(c_data);
   let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
   const visaPurposes = [
     "Tourism",
@@ -51,6 +66,7 @@ const FormPage = () => {
     "Work",
     "Medical Treatment",
   ];
+
   const destinationCountries = [
     "France",
     "United States",
@@ -108,18 +124,6 @@ const FormPage = () => {
 
   const { errors, touched, handleSubmit, getFieldProps } = formik;
 
-  let rows = [
-    {
-      serviceTitle: "ITR",
-      quantity: 5,
-      comments: "",
-    },
-    {
-      serviceTitle: "Loans",
-      quantity: 2,
-      comments: "",
-    },
-  ];
   let serviceHistoryData = [
     {
       serviceId: 121,
@@ -150,11 +154,7 @@ const FormPage = () => {
     };
     setSelectedServices(updatedServices);
   };
-  const servicesSubmit = () => {
-    // Handle form submission logic here
-    console.log("Selected Services: ", selectedServices);
-    setServicelistDialogue(true);
-  };
+
   const getClientList = async () => {
     const url = "/user_management/visa-clients/";
     try {
@@ -171,8 +171,34 @@ const FormPage = () => {
   };
 
   useEffect(() => {
-    getClientList(); // Load client list on component mount
-  }, []);
+    getClientList();
+  }, [refresh]);
+
+  useEffect(() => {
+    if (Object.keys(selectedClient).length !== 0) {
+      let selectedClientData = clientList.find(
+        (client) =>
+          client.first_name + " " + client.last_name ===
+          selectedClient.first_name + " " + selectedClient.last_name
+      );
+      setSelectedClient(selectedClientData);
+    }
+  }, [clientList]);
+  // useEffect(() => {
+  //     const clientData = searchParams.get("id");
+
+  //     if (!clientData) return; // Exit early if no client data
+
+  //     try {
+  //       // Decode and parse client data
+  //       const decodedData = decodeURIComponent(clientData);
+  //       const parsedID = JSON.parse(decodedData);
+
+  //       // Build the request URL
+  //       const url = `/user_management/visa-applicants/${parsedID}/`;
+
+  //   fetchClientData();
+  // }, [searchParams]);
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
       <h3 style={{ marginBottom: 20 }}>{title}</h3>
@@ -192,22 +218,21 @@ const FormPage = () => {
                 )}
                 onChange={(event, newValue) => {
                   // Find the client object corresponding to the selected name
-                  const selectedClient = clientList.find(
+                  let selectedClientData = clientList.find(
                     (client) =>
                       client.first_name + " " + client.last_name === newValue
                   );
-                  let __clientData = [...selectedClient.services];
-                  __clientData.map((item, idx) => (item["disabled"] = true));
-                  selectedClient.services = [...__clientData];
-                  setSelectedClient(selectedClient); // Set the actual client object
+                  setSelectedClient(selectedClientData); // Set the actual client object
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <Button variant="contained" onClick={() => setDialogOpen(true)}>
-                Add Client
-              </Button>
-            </Grid>
+            {user.user_role === "ServiceProvider_Admin" && (
+              <Grid item xs={12} md={6}>
+                <Button variant="contained" onClick={() => setDialogOpen(true)}>
+                  Add Client
+                </Button>
+              </Grid>
+            )}
           </Grid>
           {Object.keys(selectedClient).length !== 0 && (
             <>
@@ -285,6 +310,7 @@ const FormPage = () => {
                 <Serviceselection
                   selectedClientData={selectedClient}
                   setShowSuccessMessage={setShowSuccessMessage}
+                  setRefresh={setRefresh}
                 />
               ) : (
                 <AdditionalDetails
@@ -294,8 +320,10 @@ const FormPage = () => {
               )}
 
               <ServiceHistory
+                setSelectedClient={setSelectedClient}
                 selectedClientData={selectedClient}
                 serviceHistoryData={serviceHistoryData}
+                setRefresh={setRefresh}
               />
             </>
           )}
@@ -460,127 +488,6 @@ const FormPage = () => {
               }}
             >
               {formik.isSubmitting ? "Processing..." : "Submit"}
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
-
-      {/* servicelist Dialogue */}
-      <Dialog
-        open={servicelistDialogue}
-        onClose={() => setServicelistDialogue(false)}
-        maxWidth="md"
-        PaperProps={{
-          sx: {
-            borderRadius: "20px",
-            padding: "24px",
-          },
-        }}
-        sx={{
-          "& .MuiDialogTitle-root": {
-            textAlign: "center",
-            paddingBottom: "16px",
-          },
-          "& .MuiTypography-body2": {
-            color: "#666",
-            fontSize: "0.9rem",
-          },
-        }}
-      >
-        <DialogTitle>
-          <h3> Service List</h3>
-        </DialogTitle>
-        <Box
-          component="form"
-          noValidate
-          autoComplete="off"
-          onSubmit={handleSubmit}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 3,
-            padding: "8px 0",
-          }}
-        >
-          <TableContainer
-            component={Paper}
-            sx={{ borderRadius: "12px", overflow: "hidden" }}
-          >
-            <Table
-              sx={{ minWidth: 650 }}
-              size="small"
-              aria-label="a dense table"
-            >
-              <TableHead>
-                <TableRow
-                  sx={{
-                    backgroundColor: "rgb(13, 81, 82)", // Add a light background for the header
-                    "& th": {
-                      //   fontWeight: "bold",
-                      textAlign: "center",
-                      color: "white",
-                    },
-                  }}
-                >
-                  <TableCell>Service</TableCell>
-                  <TableCell align="center">Quantity</TableCell>
-                  <TableCell align="center">Comments/ Instructions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{
-                      "&:hover": { backgroundColor: "#f5f5f5" }, // Hover effect for rows
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                  >
-                    <TableCell align="center">{row.serviceTitle}</TableCell>
-                    <TableCell align="center">
-                      <Button
-                        sx={{ padding: "4px 8px", minWidth: "30px", mr: 2 }}
-                        variant="outlined"
-                      >
-                        -
-                      </Button>
-                      {row.quantity}
-                      <Button
-                        sx={{ padding: "4px 8px", minWidth: "30px", ml: 2 }}
-                        variant="outlined"
-                      >
-                        +
-                      </Button>
-                    </TableCell>
-                    <TableCell align="center">
-                      <CustomInput vaalue={row.quantity} />{" "}
-                      {/* Ensure the prop is spelled correctly */}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          <DialogActions
-            sx={{
-              justifyContent: "center",
-              paddingTop: "16px",
-            }}
-          >
-            <Button
-              variant="contained"
-              type="submit"
-              sx={{
-                padding: "8px 32px",
-                textTransform: "none",
-              }}
-              onClick={() => {
-                setServicelistDialogue(false);
-                setShowSuccessMessage(true);
-              }}
-            >
-              {"Submit"}
             </Button>
           </DialogActions>
         </Box>

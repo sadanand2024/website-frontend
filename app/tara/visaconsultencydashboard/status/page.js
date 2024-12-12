@@ -42,29 +42,11 @@ const FormPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [servicelistDialogue, setServicelistDialogue] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [selectedServices, setSelectedServices] = useState([]);
-  const [clientData, setClientData] = useState(null);
 
   const router = useRouter();
-
-  // const { clientData } = router.query;
-  //  /user_management/visa-applicants/{id}/
-  // Parse the clientData from the query string (if it exists)
-  // const parsedClientData = clientData
-  //   ? JSON.parse(decodeURIComponent(clientData))
-  //   : null;
-  // console.log(clientData);
-  // console.log(parsedClientData);
-
+  const clientDataEncoded = encodeURIComponent(JSON.stringify(selectedClient));
   let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
-  const visaPurposes = [
-    "Tourism",
-    "Business",
-    "Study",
-    "Work",
-    "Medical Treatment",
-  ];
+  const visaPurposes = ["Visa"];
   const destinationCountries = [
     "France",
     "United States",
@@ -100,7 +82,7 @@ const FormPage = () => {
   console.log(selectedClient);
   useEffect(() => {
     const fetchClientData = async () => {
-      const clientData = searchParams.get("clientData");
+      const clientData = searchParams.get("id");
 
       if (!clientData) return; // Exit early if no client data
 
@@ -119,11 +101,11 @@ const FormPage = () => {
             throw new Error(error); // Throw if an error is returned
           }
 
-          // Log response (you may want to do something with `res`)
-          // console.log(res);
-
+          // Check the response status
           if (res.status_cd === 0) {
             setSelectedClient(res.data);
+          } else {
+            console.error("Failed to fetch client data");
           }
         } catch (apiError) {
           // Handle errors from the API call
@@ -132,8 +114,6 @@ const FormPage = () => {
             "Something went wrong while fetching the data. Please try again."
           );
         }
-
-        // Optionally set state with the parsed data (ensure parsedData is defined correctly)
       } catch (e) {
         console.error("Error parsing client data:", e);
         alert("Invalid client data format. Please check the URL.");
@@ -145,6 +125,7 @@ const FormPage = () => {
 
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
+      <h3>Client Status</h3>
       <h3 style={{ marginBottom: 20 }}>
         Client Name :{" "}
         {selectedClient?.first_name + " " + selectedClient?.last_name}
@@ -155,76 +136,78 @@ const FormPage = () => {
       >
         Personal Info
       </Typography>
-      <Grid container spacing={3} sx={{ mt: 3 }}>
-        {/* Row 1 */}
-        <Grid item xs={12} sm={6}>
-          <CustomInput
-            id="first_name"
-            label="First Name"
-            value={selectedClient?.first_name}
-            disabled={true}
-          />
+      {selectedClient && (
+        <Grid container spacing={3} sx={{ mt: 3 }}>
+          {/* Row 1 */}
+          <Grid item xs={12} sm={6}>
+            <CustomInput
+              id="first_name"
+              label="First Name"
+              value={selectedClient?.first_name && selectedClient.first_name}
+              disabled={true}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomInput
+              id="last_name"
+              label="Last Name"
+              value={selectedClient?.last_name}
+              disabled={true}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomInput
+              id="email"
+              label="Email"
+              value={selectedClient?.email}
+              disabled={true}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomInput
+              id="mobile_number"
+              label="Mobile Number"
+              value={selectedClient?.mobile_number}
+              disabled={true}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomAutocomplete
+              id="purpose"
+              label="Purpose"
+              // options={visaPurposes}
+              value={selectedClient?.purpose}
+              disabled={true}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomAutocomplete
+              id="visa_type"
+              label="Visa Type"
+              options={visaTypes}
+              value={selectedClient?.visa_type}
+              disabled={true}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomAutocomplete
+              id="destinationcountry"
+              label="Destination Country"
+              options={destinationCountries}
+              value={selectedClient?.destination_country}
+              disabled={true}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomInput
+              id="passportnumber"
+              label="Passport Number"
+              value={selectedClient?.passport_number}
+              disabled={true}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <CustomInput
-            id="last_name"
-            label="Last Name"
-            value={selectedClient?.last_name}
-            disabled={true}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <CustomInput
-            id="email"
-            label="Email"
-            value={selectedClient?.email}
-            disabled={true}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <CustomInput
-            id="mobile_number"
-            label="Mobile Number"
-            value={selectedClient?.mobile_number}
-            disabled={true}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <CustomAutocomplete
-            id="purpose"
-            label="Purpose"
-            options={visaPurposes}
-            value={selectedClient?.purpose}
-            disabled={true}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <CustomAutocomplete
-            id="visatype"
-            label="Visa Type"
-            options={visaTypes}
-            value={selectedClient?.visa_type}
-            disabled={true}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <CustomAutocomplete
-            id="destinationcountry"
-            label="Destination Country"
-            options={destinationCountries}
-            value={selectedClient?.destination_country}
-            disabled={true}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <CustomInput
-            id="passportnumber"
-            label="Passport Number"
-            value={selectedClient?.passport_number}
-            disabled={true}
-          />
-        </Grid>
-      </Grid>
+      )}
 
       <Box
         sx={{ display: "flex", justifyContent: "space-between", mt: 5, mb: 2 }}
@@ -238,17 +221,39 @@ const FormPage = () => {
           size="small" // Keeps the button size small
           sx={{ fontSize: "0.875rem", height: "32px", fontWeight: "bold" }} // Adjusts button padding, font size, and height
         >
-          <AddIcon sx={{ fontSize: 18, mr: 1, fontWeight: "bold" }} /> Add
-          Service
+          <Button
+            sx={{ mr: 1, fontWeight: "bold" }}
+            onClick={() => {
+              router.push(
+                `/tara/visaconsultencydashboard/form?client=${encodeURIComponent(clientDataEncoded)}&title=${encodeURIComponent("kumar")}`
+              );
+            }}
+          >
+            + Add Service
+          </Button>
+          {/* <AddIcon sx={{ fontSize: 18, mr: 1, fontWeight: "bold" }} />  */}
         </Button>
       </Box>
 
       <TableContainer
         component={Paper}
-        sx={{ borderRadius: "12px", overflow: "hidden" }}
+        sx={{
+          borderRadius: "12px",
+          overflow: "hidden",
+          maxHeight: "400px", // Max height of the table container
+          minHeight: "200px", // Min height of the table container
+          overflowY: "auto", // Enables vertical scrolling
+        }}
       >
         <Table sx={{ minWidth: 650 }} size="medium" aria-label="a dense table">
-          <TableHead>
+          <TableHead
+            sx={{
+              position: "sticky",
+              top: 0, // Keeps the header stuck to the top of the container
+              zIndex: 1, // Ensures the header stays above the table rows while scrolling
+              backgroundColor: "rgb(13, 81, 82)", // Keep the header's background color
+            }}
+          >
             <TableRow
               sx={{
                 backgroundColor: "rgb(13, 81, 82)",
@@ -263,23 +268,28 @@ const FormPage = () => {
               <TableCell align="center">Service</TableCell>
               <TableCell align="center">Date</TableCell>
               <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Quantity</TableCell>
               <TableCell align="center">Last Update</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {selectedClient.services.map((task) => (
-              <TableRow key={task.id}>
-                <TableCell align="center">{task.id}</TableCell>
-                <TableCell align="center">{task.service_name}</TableCell>
-                <TableCell align="center">{task.date}</TableCell>
-                <TableCell align="center">{task.status}</TableCell>
-                <TableCell align="center">{task?.lastUpdate}</TableCell>
-                <TableCell align="center">
-                  <EditIcon />
-                </TableCell>
-              </TableRow>
-            ))}
+            {selectedClient &&
+              selectedClient?.services?.map((task) => (
+                <TableRow key={task.id}>
+                  <TableCell align="center">{task.id}</TableCell>
+                  <TableCell align="center">{task.service_name}</TableCell>
+                  <TableCell align="center">{task.date}</TableCell>
+                  <TableCell align="center">{task.status}</TableCell>
+                  <TableCell align="center">{task.quantity}</TableCell>
+                  <TableCell align="center">
+                    {task?.last_updated_date}
+                  </TableCell>
+                  <TableCell align="center">
+                    <EditIcon />
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

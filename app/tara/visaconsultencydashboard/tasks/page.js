@@ -24,6 +24,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import CustomInput from "@/components/CustomInput";
 import CustomAutocomplete from "@/components/CustomAutocomplete";
 import Factory from "@/app/utils/Factory";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 let clientList = ["Anand", "Krishna", "Sai Kiran"];
 let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
 const visaPurposes = [
@@ -40,74 +43,57 @@ const destinationCountries = [
   "Canada",
   "Germany",
 ];
+const STATUS_CHOICES = [
+  { label: "In Progress", value: "in_progress" },
+  { label: "Completed", value: "completed" },
+  { label: "Pending", value: "pending" },
+];
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
   const title = searchParams.get("title"); // Retrieve 'title' from query params
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [clientList, setClientList] = useState([]);
+  const [taskList, setTaskList] = useState([]);
 
-  const dummyData = [
-    {
-      first_name: "John",
-      last_name: "Doe",
-      email: "john.doe@example.com",
-      mobile_number: "8886115361",
-      purpose: "Visa",
-      visa_type: "Tourist Visa",
-      destination_country: "Australia",
-      passport_number: "A1234567",
-    },
-  ];
+  const [editedService, setEditedService] = useState({}); // Track form data
 
-  const formik = useFormik({
-    initialValues: {
-      first_name: "",
-      last_name: "",
-      email: "",
-      mobile_number: "",
-      purpose: "Visa",
-      visa_type: "",
-      destination_country: "",
-      passport_number: "",
-    },
-    validationSchema: Yup.object({
-      first_name: Yup.string().required("First name is required"),
-      last_name: Yup.string().required("Last name is required"),
-      email: Yup.string()
-        .email("Invalid email format")
-        .required("Email is required"),
-      mobile_number: Yup.string().required("Mobile number is required"),
-    }),
-    onSubmit: async (values) => {
-      const postData = {
-        ...values,
-      };
-      try {
-        const url = `/user_management/visa-users/`;
-        const { res } = await Factory("post", url, postData);
-        if (res.status_cd === 0) {
-          getClientList(); // Refresh client list after successful submission
-          setDialogOpen(false);
-        } else {
-          alert("Something went wrong");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Something went wrong. Please try again.");
+  const handleEditClick = (service) => {
+    console.log(service);
+    setEditedService({ ...service });
+    setDialogOpen(true);
+  };
+
+  const handleInputChange = (name, val) => {
+    console.log("Field Name:", name, "Value:", val);
+    setEditedService((prev) => ({
+      ...prev,
+      [name]: val,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const url = `/user_management/service-details/${editedService.id}/`;
+    try {
+      const { res, error } = await Factory("put", url, editedService);
+      console.log(res);
+      if (res.status_cd === 0) {
+        getTasksList();
       }
-    },
-  });
-
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
   const getTasksList = async () => {
     const url = "/user_management/visa-applicants/all-tasks-data/";
     try {
       const { res, error } = await Factory("get", url, {});
 
       if (res.status_cd === 0) {
-        console.log(res);
-        // setClientList(res.data);
+        setDialogOpen(false);
+        setTaskList(res.data);
       }
     } catch (error) {
       // Catch any errors during the request
@@ -115,15 +101,21 @@ const FormPage = () => {
       alert("Something went wrong. Please try again.");
     }
   };
-
+  const handleDelete = async (service) => {
+    const url = `/user_management/service-details/${service.id}/`;
+    const { res, error } = await Factory("delete", url, {});
+    if (res.status === 204) {
+      getTasksList();
+    } else {
+      alert("Failed to delete the service. Please try again.");
+    }
+  };
   useEffect(() => {
     getTasksList(); // Load client list on component mount
   }, []);
-  const { errors, touched, handleSubmit, getFieldProps } = formik;
 
   return (
     <div style={{ padding: "20px" }}>
-      {/* Client List Header and Add Client Button */}
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Typography
@@ -133,72 +125,106 @@ const FormPage = () => {
             Tasks List
           </Typography>
         </Grid>
-        {/* <Grid item xs={12} md={6}>
-          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button variant="contained" onClick={() => setDialogOpen(true)}>
-              Add Client
-            </Button>
-          </Box>
-        </Grid> */}
       </Grid>
 
-      {/* Clients Table */}
-      <TableContainer
-        component={Paper}
-        sx={{ borderRadius: "12px", overflow: "hidden" }}
-      >
-        <Table sx={{ minWidth: 650 }} size="medium" aria-label="a dense table">
-          <TableHead>
-            <TableRow
-              sx={{
-                backgroundColor: "rgb(13, 81, 82)",
-                "& th": {
-                  textAlign: "center",
-                  color: "white",
-                  fontWeight: "bold",
-                },
-              }}
+      <Box sx={{ mt: 1 }}>
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: "12px",
+            overflow: "hidden",
+            maxHeight: "400px", // Max height of the table container
+            minHeight: "200px", // Min height of the table container
+            overflowY: "auto", // Enables vertical scrolling
+          }}
+        >
+          <div style={{ overflowY: "auto", maxHeight: "400px" }}>
+            <Table
+              sx={{ minWidth: 650 }}
+              size="medium"
+              aria-label="a dense table"
             >
-              <TableCell>First Name</TableCell>
-              <TableCell align="center">Last Name</TableCell>
-              <TableCell align="center">Email</TableCell>
-              <TableCell align="center">Mobile Number</TableCell>
-              <TableCell align="center">Purpose</TableCell>
-              <TableCell align="center">Visa Type</TableCell>
-              <TableCell align="center">Destination Country</TableCell>
-              <TableCell align="center">Passport Number</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {clientList.map((client, index) => (
-              <TableRow
-                key={index}
-                sx={{ cursor: "pointer" }}
-                onClick={() => {
-                  router.push(
-                    `/tara/visaconsultencydashboard/status?clientname=${encodeURIComponent(
-                      "Anand"
-                    )}&title=${encodeURIComponent("Networth")}`
-                  );
+              <TableHead
+                sx={{
+                  position: "sticky",
+                  top: 0, // Keeps the header stuck to the top of the container
+                  zIndex: 1, // Ensures the header stays above the table rows while scrolling
+                  backgroundColor: "rgb(13, 81, 82)", // Keep the header's background color
                 }}
               >
-                <TableCell>{client.first_name}</TableCell>
-                <TableCell align="center">{client.last_name}</TableCell>
-                <TableCell align="center">{client.email}</TableCell>
-                <TableCell align="center">{client.mobile_number}</TableCell>
-                <TableCell align="center">{client.purpose}</TableCell>
-                <TableCell align="center">{client.visa_type}</TableCell>
-                <TableCell align="center">
-                  {client.destination_country}
-                </TableCell>
-                <TableCell align="center">{client.passport_number}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                <TableRow
+                  sx={{
+                    backgroundColor: "rgb(13, 81, 82)",
+                    "& th": {
+                      //   textAlign: "center",
+                      color: "white",
+                      fontWeight: "bold",
+                    },
+                  }}
+                >
+                  <TableCell>Task ID</TableCell>
+                  <TableCell align="left">Service</TableCell>
+                  <TableCell align="center">Date</TableCell>
+                  <TableCell align="center">Status</TableCell>
+                  <TableCell align="center">Quantity</TableCell>
+                  <TableCell align="center">Comments</TableCell>
+                  <TableCell align="center">Action</TableCell>
+                </TableRow>
+              </TableHead>
+            </Table>
+          </div>
+          <div style={{ overflowY: "auto", maxHeight: "400px" }}>
+            <Table
+              sx={{ minWidth: 650 }}
+              size="small"
+              aria-label="a dense table"
+            >
+              <TableBody>
+                {taskList?.map((service) => (
+                  <TableRow
+                    key={service.id}
+                    sx={{
+                      "&:hover": { backgroundColor: "#f5f5f5" },
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
+                  >
+                    <TableCell align="center">{service.id}</TableCell>
+                    <TableCell align="center">{service.service_name}</TableCell>
+                    <TableCell align="center">{service.date}</TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color:
+                          service.status === "Pending"
+                            ? "orange"
+                            : service.status === "In - Progress"
+                              ? "#f58d42"
+                              : "green",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {service.status}
+                    </TableCell>
+                    <TableCell align="center">{service.quantity}</TableCell>
+                    <TableCell align="center">{service.comments}</TableCell>
+                    <TableCell align="center">
+                      <Box>
+                        <Button onClick={() => handleEditClick(service)}>
+                          <EditIcon />
+                        </Button>
+                        <Button onClick={() => handleDelete(service)}>
+                          <DeleteIcon />
+                        </Button>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </TableContainer>
+      </Box>
 
-      {/* Add Client Dialog */}
       <Dialog
         open={dialogOpen}
         maxWidth="md"
@@ -231,10 +257,9 @@ const FormPage = () => {
           <CloseIcon />
         </Button>
         <DialogTitle>
-          <h3>{name} Registration</h3>
+          <h3>Task Details</h3>
         </DialogTitle>
 
-        {/* Form for Client Registration */}
         <Box
           component="form"
           noValidate
@@ -248,107 +273,72 @@ const FormPage = () => {
           }}
         >
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <CustomInput
-                id="first_name"
-                label="First Name"
-                {...getFieldProps("first_name")}
-                touched={touched.first_name}
-                errors={errors.first_name}
+                id="id"
+                label="Task ID"
+                name="id"
+                disabled
+                value={editedService.id || ""}
+                onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <CustomInput
-                id="last_name"
-                label="Last Name"
-                {...getFieldProps("last_name")}
-                touched={touched.last_name}
-                errors={errors.last_name}
+                id="service_name"
+                label="Service Name"
+                name="service_name"
+                disabled
+                value={editedService.service_name || ""}
+                onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <CustomInput
-                id="email"
-                label="Email"
-                {...getFieldProps("email")}
-                touched={touched.email}
-                errors={errors.email}
+                id="date"
+                label="Date"
+                name="date"
+                disabled
+                value={editedService.date || ""}
+                onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <CustomInput
-                id="mobile_number"
-                label="Mobile Number"
-                {...getFieldProps("mobile_number")}
-                touched={touched.mobile_number}
-                errors={errors.mobile_number}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <CustomAutocomplete
-                id="purpose"
-                label="Purpose"
-                value="Visa"
-                options={visaPurposes} // Assuming options for autocomplete
-                disabled={true}
-                {...getFieldProps("purpose")}
-                error={touched.purpose && Boolean(errors.purpose)}
-                helperText={touched.purpose && errors.purpose}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <CustomAutocomplete
-                id="visa_type"
-                label="Visa Type"
-                options={visaTypes} // Example visa types
-                {...getFieldProps("visa_type")}
-                error={touched.visa_type && Boolean(errors.visa_type)}
-                helperText={touched.visa_type && errors.visa_type}
-                onChange={(event, newValue) => {
-                  formik.setFieldValue("visa_type", newValue);
+                id="status"
+                label="Status"
+                name="status" // Make sure the name is passed
+                value={editedService.status || ""} // Display the selected status label
+                options={STATUS_CHOICES.map((choice) => choice.label)} // Display labels (e.g., 'In Progress')
+                onChange={(e, val) => {
+                  // Find the value corresponding to the selected label
+                  const selectedStatus = STATUS_CHOICES.find(
+                    (choice) => choice.label === val
+                  );
+                  handleInputChange(
+                    "status",
+                    selectedStatus ? selectedStatus.value : ""
+                  );
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <CustomAutocomplete
-                id="destination_country"
-                label="Destination Country"
-                options={destinationCountries} // Example countries
-                {...getFieldProps("destination_country")}
-                error={
-                  touched.destination_country &&
-                  Boolean(errors.destination_country)
-                }
-                helperText={
-                  touched.destination_country && errors.destination_country
-                }
-                onChange={(event, newValue) => {
-                  formik.setFieldValue("destination_country", newValue);
+            <Grid item xs={12}>
+              <CustomInput
+                id="comments"
+                label="Comments"
+                name="comments"
+                value={editedService.comments || ""}
+                onChange={(e, val) => {
+                  handleInputChange("comments", e.target.value);
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <CustomInput
-                id="passport_number"
-                label="Passport Number"
-                {...getFieldProps("passport_number")}
-                touched={touched.passport_number}
-                errors={errors.passport_number}
-              />
-            </Grid>
+            {/* Add more fields as necessary */}
           </Grid>
 
           <DialogActions sx={{ justifyContent: "center", paddingTop: "16px" }}>
-            <Button
-              variant="contained"
-              type="submit"
-              disabled={formik.isSubmitting}
-              sx={{
-                padding: "8px 32px",
-                textTransform: "none",
-              }}
-            >
-              {formik.isSubmitting ? "Processing..." : "Submit"}
+            <Button variant="contained" type="submit">
+              Update
             </Button>
           </DialogActions>
         </Box>
