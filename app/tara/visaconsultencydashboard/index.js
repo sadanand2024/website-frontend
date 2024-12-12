@@ -242,7 +242,7 @@ function VisaconsultencDashboard() {
           >
             <Grid item xs={7} sx={{ pt: 4, pl: 6 }}>
               <Typography sx={{ color: "#fff" }} variant="h5">
-                Hello First time User!
+                Hi First time user!
               </Typography>
               <Typography sx={{ color: "#fff" }} variant="h6">
                 Welcome to Tara First!
