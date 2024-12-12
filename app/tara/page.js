@@ -11,17 +11,31 @@ function DashboardPage() {
   const userTypes = ["individual", "cafirm", "business", "service_provider"];
   const [userType, setUserType] = useState(null);
   useEffect(() => {
-    // const fetchedUserType = "service_provider";
-
-    setUserType(user.user_type);
+    setUserType(user.user_role);
   }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       {/* <VisaconsultencDashboard /> */}
-      {userType === "ServiceProviderAdmin" && <VisaconsultencDashboard />}
-      {/* {userType === "cafirm" && <CAfirmDashboard />}*/}
-      {userType === "individual" && <IndividualDashboard />}
+      {/* user_role
+: 
+"Individual_User"
+user_type
+: 
+"ServiceProvider"  */}
+      {user.user_type === "Individual" &&
+      user.user_role === "Individual_User" ? (
+        <IndividualDashboard />
+      ) : (
+        ["ServiceProvider_Admin", "ServiceProvider"].includes(
+          user.user_type
+        ) && <VisaconsultencDashboard />
+      )}
+
+      {/* {userType === "ServiceProvider_Admin" ||
+        userType === "ServiceProvider" ||
+        (user.user_role === "Individual_User" && <VisaconsultencDashboard />)}
+      {userType === "cafirm" && <CAfirmDashboard />} */}
     </Box>
   );
 }

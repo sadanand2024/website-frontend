@@ -174,10 +174,13 @@ const FormPage = () => {
                 key={index}
                 sx={{ cursor: "pointer" }}
                 onClick={() => {
+                  // router.push(
+                  //   `/tara/visaconsultencydashboard/status?clientname=${encodeURIComponent(
+                  //     "Anand"
+                  //   )}&title=${encodeURIComponent("Networth")}`
+                  // );
                   router.push(
-                    `/tara/visaconsultencydashboard/status?clientname=${encodeURIComponent(
-                      "Anand"
-                    )}&title=${encodeURIComponent("Networth")}`
+                    `/tara/visaconsultencydashboard/status?id=${client.id}`
                   );
                 }}
               >

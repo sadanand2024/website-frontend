@@ -9,6 +9,7 @@ const CustomAutocomplete = ({
   options,
   error,
   helperText,
+  name,
   ...props
 }) => {
   return (

@@ -31,7 +31,11 @@ import {
   TextField,
 } from "@mui/material";
 import { ConstructionOutlined } from "@mui/icons-material";
-const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
+const FormPage = ({
+  selectedClientData,
+  setShowSuccessMessage,
+  setRefresh,
+}) => {
   const searchParams = useSearchParams();
   const [servicelistDialogue, setServicelistDialogue] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
@@ -164,19 +168,16 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
         comments: service.comments,
         service_type: service.id,
       }));
-    console.log(filteredServices);
 
     const postData = {
       visaapplication_id: selectedClientData.id,
       services: filteredServices,
     };
 
-    console.log(postData);
     const url = "/user_management/visa-servicetasks/";
 
     try {
       const { res, error } = await Factory("post", url, postData);
-      console.log(res);
       if (res.status_cd === 0) {
         setServicelistDialogue(false);
         setShowSuccessMessage(true);
@@ -214,10 +215,12 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
       );
 
       // Pre-select services based on service_type matching in ServicesCards
-      const preSelectedServices = ServicesCards.filter((service) =>
+      let preSelectedServices = [];
+      preSelectedServices = ServicesCards.filter((service) =>
         selectedServiceTypes.includes(service.id)
       ).map((service) => service.service_name);
 
+      console.log("preSelectedServices", preSelectedServices);
       setSelectedServices(preSelectedServices);
 
       // Set quantity and comments for the pre-selected services
@@ -235,10 +238,12 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
 
       setQuantityMap(newQuantityMap);
       setCommentMap(newCommentMap);
+    } else {
+      setSelectedServices([]);
+      // setQuantityMap([]);
+      // setCommentMap([]);
     }
   }, [selectedClientData, ServicesCards]);
-  console.log(newSelectedOptions);
-  console.log(selectedServices);
 
   return (
     <>
