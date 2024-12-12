@@ -179,10 +179,18 @@ const ServicesCards = [
 function VisaconsultencDashboard() {
   const { user } = useAuth();
   const chipDefaultProps = { color: "black", variant: "text", size: "small" };
-  console.log(user);
   const classes = useStyles();
   const [clientListData, setClientListData] = useState({});
   const router = useRouter();
+  function formatDateToMonthYear(dateString) {
+    const dateObj = new Date(dateString); // Convert string to Date object
+    // Get the month and year
+    const month = ("0" + (dateObj.getMonth() + 1)).slice(-2); // Add leading zero if needed
+    const year = dateObj.getFullYear();
+
+    return `${month} /${year}`; // Return in MM/YYYY format
+  }
+  const formattedDate = formatDateToMonthYear(user?.created_on);
   const handleCardClick = (card) => {
     if (card.name === "Create New Request") {
       router.push(
@@ -262,10 +270,7 @@ function VisaconsultencDashboard() {
         <Grid item xs={12} md={4} sx={{ marginTop: 0 }}>
           <div className={classes.infoMainCard}>
             <Card className={classes.infoCard} style={{ padding: "10px 30px" }}>
-              <Stack
-                direction="row"
-                sx={{ gap: 1 }}
-              >
+              <Stack direction="row" sx={{ gap: 1 }}>
                 {/* <svg stroke-width="1"></svg> */}
 
                 <Image
@@ -280,7 +285,7 @@ function VisaconsultencDashboard() {
                     User Since&nbsp;
                   </Typography>
                   <Typography variant="subtitle1" color="primary">
-                    July, 2024
+                    {formattedDate}
                   </Typography>
                 </div>
               </Stack>

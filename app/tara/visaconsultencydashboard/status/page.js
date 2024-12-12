@@ -24,7 +24,7 @@ import {
   Table,
   Paper,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import ServicesSuccessMessage from "../componnets/ServicesSuccessMessage";
@@ -33,15 +33,30 @@ import ServiceHistory from "../componnets/ServiceHistory";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import { useRouter } from "next/navigation";
+import Factory from "@/app/utils/Factory";
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
   const title = searchParams.get("title"); // Retrieve 'name' from query params
   const [dialogOpen, setDialogOpen] = useState(false);
   const [servicelistDialogue, setServicelistDialogue] = useState(false);
-  const [selectedClient, setSelectedClient] = useState(false);
+  const [selectedClient, setSelectedClient] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
+  const [clientData, setClientData] = useState(null);
+
+  const router = useRouter();
+
+  // const { clientData } = router.query;
+  //  /user_management/visa-applicants/{id}/
+  // Parse the clientData from the query string (if it exists)
+  // const parsedClientData = clientData
+  //   ? JSON.parse(decodeURIComponent(clientData))
+  //   : null;
+  // console.log(clientData);
+  // console.log(parsedClientData);
+
   let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
   const visaPurposes = [
     "Tourism",
@@ -82,32 +97,79 @@ const FormPage = () => {
       lastUpdate: "2024-12-02",
     },
   ];
+  console.log(selectedClient);
+  useEffect(() => {
+    const fetchClientData = async () => {
+      const clientData = searchParams.get("clientData");
+
+      if (!clientData) return; // Exit early if no client data
+
+      try {
+        // Decode and parse client data
+        const decodedData = decodeURIComponent(clientData);
+        const parsedID = JSON.parse(decodedData);
+
+        // Build the request URL
+        const url = `/user_management/visa-applicants/${parsedID}/`;
+
+        try {
+          // Make the API request
+          const { res, error } = await Factory("get", url, {});
+          if (error) {
+            throw new Error(error); // Throw if an error is returned
+          }
+
+          // Log response (you may want to do something with `res`)
+          // console.log(res);
+
+          if (res.status_cd === 0) {
+            setSelectedClient(res.data);
+          }
+        } catch (apiError) {
+          // Handle errors from the API call
+          console.error("Error fetching client data:", apiError);
+          alert(
+            "Something went wrong while fetching the data. Please try again."
+          );
+        }
+
+        // Optionally set state with the parsed data (ensure parsedData is defined correctly)
+      } catch (e) {
+        console.error("Error parsing client data:", e);
+        alert("Invalid client data format. Please check the URL.");
+      }
+    };
+
+    fetchClientData();
+  }, [searchParams]);
 
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
-      <h3 style={{ marginBottom: 20 }}>Client Name : Anand</h3>
+      <h3 style={{ marginBottom: 20 }}>
+        Client Name :{" "}
+        {selectedClient?.first_name + " " + selectedClient?.last_name}
+      </h3>
       <Typography
         variant="h6"
         style={{ marginBottom: 20, textAlign: "left", fontWeight: "bold" }}
       >
         Personal Info
       </Typography>
-
       <Grid container spacing={3} sx={{ mt: 3 }}>
         {/* Row 1 */}
         <Grid item xs={12} sm={6}>
           <CustomInput
-            id="firstname"
+            id="first_name"
             label="First Name"
-            value="Anand"
+            value={selectedClient?.first_name}
             disabled={true}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <CustomInput
-            id="lastname"
+            id="last_name"
             label="Last Name"
-            value="Garikapati"
+            value={selectedClient?.last_name}
             disabled={true}
           />
         </Grid>
@@ -115,15 +177,15 @@ const FormPage = () => {
           <CustomInput
             id="email"
             label="Email"
-            value="anand@gmail.com"
+            value={selectedClient?.email}
             disabled={true}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <CustomInput
-            id="mobilenumber"
+            id="mobile_number"
             label="Mobile Number"
-            value="888611561"
+            value={selectedClient?.mobile_number}
             disabled={true}
           />
         </Grid>
@@ -132,7 +194,7 @@ const FormPage = () => {
             id="purpose"
             label="Purpose"
             options={visaPurposes}
-            value="Education"
+            value={selectedClient?.purpose}
             disabled={true}
           />
         </Grid>
@@ -141,7 +203,7 @@ const FormPage = () => {
             id="visatype"
             label="Visa Type"
             options={visaTypes}
-            value="Tourism"
+            value={selectedClient?.visa_type}
             disabled={true}
           />
         </Grid>
@@ -150,7 +212,7 @@ const FormPage = () => {
             id="destinationcountry"
             label="Destination Country"
             options={destinationCountries}
-            value="USA"
+            value={selectedClient?.destination_country}
             disabled={true}
           />
         </Grid>
@@ -158,7 +220,7 @@ const FormPage = () => {
           <CustomInput
             id="passportnumber"
             label="Passport Number"
-            value="JUHT"
+            value={selectedClient?.passport_number}
             disabled={true}
           />
         </Grid>
@@ -206,13 +268,13 @@ const FormPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {taskData.map((task) => (
-              <TableRow key={task.taskId}>
-                <TableCell align="center">{task.taskId}</TableCell>
-                <TableCell align="center">{task.service}</TableCell>
+            {selectedClient.services.map((task) => (
+              <TableRow key={task.id}>
+                <TableCell align="center">{task.id}</TableCell>
+                <TableCell align="center">{task.service_name}</TableCell>
                 <TableCell align="center">{task.date}</TableCell>
                 <TableCell align="center">{task.status}</TableCell>
-                <TableCell align="center">{task.lastUpdate}</TableCell>
+                <TableCell align="center">{task?.lastUpdate}</TableCell>
                 <TableCell align="center">
                   <EditIcon />
                 </TableCell>

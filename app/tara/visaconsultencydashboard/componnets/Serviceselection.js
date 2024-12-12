@@ -176,11 +176,10 @@ const FormPage = ({ selectedClientData, setShowSuccessMessage }) => {
 
     try {
       const { res, error } = await Factory("post", url, postData);
-      cosnoile.log(res);
+      console.log(res);
       if (res.status_cd === 0) {
-        // setServicesCards(res.data);
-        // setServicelistDialogue(false);
-        // setShowSuccessMessage(true);
+        setServicelistDialogue(false);
+        setShowSuccessMessage(true);
       }
     } catch (error) {
       console.error("Error fetching services:", error);

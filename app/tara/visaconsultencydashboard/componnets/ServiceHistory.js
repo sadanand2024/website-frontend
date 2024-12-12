@@ -35,10 +35,20 @@ const FormPage = ({ selectedClientData }) => {
     setEditedService((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Updated Service:", editedService);
-    setDialogOpen(false);
+  const handleSubmit = async (e) => {
+    // e.preventDefault();
+    // console.log("Updated Service:", editedService);
+    // const url = "/user_management/service-details/{id}/";
+    // try {
+    //   const { res, error } = await Factory("put", url, {});
+    //   console.log(res)
+    //   if (res.status_cd === 0) {
+    //     setDialogOpen(false);
+    //   }
+    // } catch (error) {
+    //   console.error("Error fetching services:", error);
+    //   alert("Something went wrong. Please try again.");
+    // }
   };
 
   return (

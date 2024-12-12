@@ -100,13 +100,14 @@ const FormPage = () => {
     },
   });
 
-  const getClientList = async () => {
-    const url = "/user_management/visa-clients/";
+  const getTasksList = async () => {
+    const url = "/user_management/visa-applicants/all-tasks-data/";
     try {
       const { res, error } = await Factory("get", url, {});
 
       if (res.status_cd === 0) {
-        setClientList(res.data);
+        console.log(res);
+        // setClientList(res.data);
       }
     } catch (error) {
       // Catch any errors during the request
@@ -116,7 +117,7 @@ const FormPage = () => {
   };
 
   useEffect(() => {
-    getClientList(); // Load client list on component mount
+    getTasksList(); // Load client list on component mount
   }, []);
   const { errors, touched, handleSubmit, getFieldProps } = formik;
 
