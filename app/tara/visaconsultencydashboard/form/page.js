@@ -178,7 +178,7 @@ const FormPage = () => {
       <h3 style={{ marginBottom: 20 }}>{title}</h3>
 
       {showSuccessMessage ? (
-        <ServicesSuccessMessage />
+        <ServicesSuccessMessage selectedClientData={selectedClient} />
       ) : (
         <>
           <Grid container spacing={2}>

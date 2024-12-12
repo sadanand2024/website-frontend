@@ -2,7 +2,12 @@ import React from "react";
 import { Grid, Typography, Box, Button } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useRouter } from "next/navigation";
-function SuccessMessage() {
+function SuccessMessage({ selectedClientData }) {
+  console.log(selectedClientData);
+  const clientDataEncoded = encodeURIComponent(
+    JSON.stringify(selectedClientData.id)
+  );
+
   const router = useRouter();
   return (
     <Grid
@@ -81,9 +86,13 @@ function SuccessMessage() {
                 fontSize: "16px",
               }}
               onClick={() => {
+                // router.push(
+                //   `/tara/visaconsultencydashboard/status?clientname=${encodeURIComponent("Anand")}&title=${encodeURIComponent("Networth")}`
+                // );
                 router.push(
-                  `/tara/visaconsultencydashboard/status?clientname=${encodeURIComponent("Anand")}&title=${encodeURIComponent("Networth")}`
+                  `/tara/visaconsultencydashboard/status?clientData=${clientDataEncoded}`
                 );
+                // router.push(`/tara/visaconsultencydashboard/status`);
               }}
             >
               Check Your Status

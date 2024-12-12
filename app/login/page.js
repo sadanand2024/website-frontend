@@ -57,10 +57,12 @@ const LoginPage = () => {
             refresh,
             user_kyc,
             user_type,
+            created_on,
+            name,
           } = res.data;
 
           login(
-            { id, email, mobile_number, user_kyc, user_type },
+            { id, email, mobile_number, user_kyc, user_type, created_on, name },
             { access, refresh }
           );
 
