@@ -193,7 +193,7 @@ const LoginPage = () => {
           </Typography>
 
           <FormikProvider value={formik}>
-            <Form autoComplete="off" noValidate onSubmit={formik.handleSubmit}>
+            <Form noValidate onSubmit={formik.handleSubmit}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 <CustomInput
                   label="Email or Phone Number"

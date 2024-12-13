@@ -13,6 +13,7 @@ import {
   Dialog,
   DialogActions,
   Grid,
+  DialogContent,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -23,7 +24,8 @@ import CustomAutocomplete from "@/components/CustomAutocomplete";
 import Factory from "@/app/utils/Factory";
 const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editedService, setEditedService] = useState({}); // Track form data
+  const [editedService, setEditedService] = useState({});
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   // const [selectedClientData, setClientData] = useState({ ...selectedClientData });
   const STATUS_CHOICES = [
     { label: "In Progress", value: "in_progress" },
@@ -42,7 +44,23 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
     setEditedService({ ...service });
     setDialogOpen(true);
   };
+  let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
+  const visaPurposes = [
+    "Tourism",
+    "Business",
+    "Study",
+    "Work",
+    "Medical Treatment",
+  ];
 
+  const destinationCountries = [
+    "FRANCE",
+    "USA",
+    "Australia",
+    "Canada",
+    "Germany",
+    "INDIA",
+  ];
   const updateServiceHistory = async () => {
     const url = `/user_management/visa-applicants/${selectedClientData.id}/`;
     try {
@@ -58,8 +76,26 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(editedService);
+    let putData = {
+      visa_application: {
+        user: editedService.user_id,
+        passport_number: editedService.passport_number,
+        purpose: editedService.purpose,
+        visa_type: editedService.visa_type,
+        destination_country: editedService.destination_country,
+      },
+      service: {
+        id: editedService.id,
+        service_type_id: editedService.service_type,
+        status: editedService.status,
+        comments: editedService.comments,
+        quantity: editedService.quantity,
+      },
+    };
+    console.log(putData);
     const url = `/user_management/service-details/${editedService.id}/`;
-    const { res, error } = await Factory("put", url, editedService);
+    const { res, error } = await Factory("put", url, putData);
     if (res.status_cd === 0) {
       // updateServiceHistory();
       setRefresh((prev) => !prev);
@@ -73,6 +109,7 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
     const { res, error } = await Factory("delete", url, {});
     if (res.status === 204) {
       setRefresh((prev) => !prev);
+      setDeleteDialogOpen(false);
       // updateServiceHistory();
     } else {
       alert("Failed to delete the service. Please try again.");
@@ -100,11 +137,16 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
                     textAlign: "center",
                     color: "white",
                   },
+                  whiteSpace: "nowrap",
                 }}
               >
                 <TableCell>Task ID</TableCell>
                 <TableCell align="center">Service</TableCell>
                 <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Passport Number</TableCell>
+                <TableCell align="center">Purpose</TableCell>
+                <TableCell align="center">Visa Type</TableCell>
+                <TableCell align="center">Destination Country</TableCell>
                 <TableCell align="center">Quantity</TableCell>
                 <TableCell align="center">Status</TableCell>
                 <TableCell align="center">Comments</TableCell>
@@ -124,6 +166,15 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
                     <TableCell align="center">{service.id}</TableCell>
                     <TableCell align="center">{service.service_name}</TableCell>
                     <TableCell align="center">{service.date}</TableCell>
+                    <TableCell align="center">
+                      {service.passport_number}
+                    </TableCell>
+                    <TableCell align="center">{service.purpose}</TableCell>
+                    <TableCell align="center">{service.visa_type}</TableCell>
+
+                    <TableCell align="center">
+                      {service.destination_country}
+                    </TableCell>
                     <TableCell align="center">{service.quantity}</TableCell>
                     <TableCell
                       align="center"
@@ -145,7 +196,13 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
                         <Button onClick={() => handleEditClick(service)}>
                           <EditIcon />
                         </Button>
-                        <Button onClick={() => handleDelete(service)}>
+                        <Button
+                          onClick={() => {
+                            setDeleteDialogOpen(true);
+                            setEditedService({ ...service });
+                            // handleDelete(service);
+                          }}
+                        >
                           <DeleteIcon />
                         </Button>
                       </Box>
@@ -156,7 +213,6 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
           </Table>
         </TableContainer>
       </Box>
-
       {/* Dialog for editing service details */}
       <Dialog
         open={dialogOpen}
@@ -241,7 +297,10 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
                 id="status"
                 label="Status"
                 name="status" // Make sure the name is passed
-                value={editedService.status || ""} // Display the selected status label
+                value={
+                  editedService?.status?.[0]?.toUpperCase() +
+                    editedService?.status?.slice(1) || ""
+                }
                 options={STATUS_CHOICES.map((choice) => choice.label)} // Display labels (e.g., 'In Progress')
                 onChange={(e, val) => {
                   // Find the value corresponding to the selected label
@@ -266,6 +325,50 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
                 }}
               />
             </Grid>
+
+            <Grid item xs={12}>
+              <CustomInput
+                id="passport_number"
+                label="passport number"
+                name="passport_number"
+                value={editedService.passport_number || ""}
+                onChange={(e, val) => {
+                  handleInputChange("passport_number", e.target.value);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <CustomInput
+                id="purpose"
+                label="purpose"
+                name="purpose"
+                value={editedService.purpose || ""}
+                onChange={(e, val) => {
+                  handleInputChange("purpose", e.target.value);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <CustomAutocomplete
+                id="visa_type"
+                label="Visa Type"
+                name="visa_type" // Make sure the name is passed
+                value={
+                  editedService?.visa_type?.[0]?.toUpperCase() +
+                    editedService?.visa_type?.slice(1) || ""
+                }
+                options={visaTypes} // Display labels (e.g., 'In Progress')
+                onChange={(e, val) => {
+                  // Find the value corresponding to the selected label
+
+                  handleInputChange("status", val);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}></Grid>
             {/* Add more fields as necessary */}
           </Grid>
 
@@ -276,6 +379,27 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
           </DialogActions>
         </Box>
       </Dialog>
+      {/* delete dialogue */}
+      <Dialog
+        open={deleteDialogOpen}
+        // onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Are you sure you want to delete the Task?</DialogTitle>
+
+        <DialogActions sx={{ textAlign: "center" }}>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              handleDelete(editedService);
+            }}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>{" "}
     </Box>
   );
 };

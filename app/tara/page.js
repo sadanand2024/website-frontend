@@ -9,20 +9,9 @@ import { useAuth } from "../context/AuthContext";
 function DashboardPage() {
   const { user, logout, setUser, setTokens } = useAuth();
   const userTypes = ["individual", "cafirm", "business", "service_provider"];
-  const [userType, setUserType] = useState(null);
-  useEffect(() => {
-    setUserType(user.user_role);
-  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* <VisaconsultencDashboard /> */}
-      {/* user_role
-: 
-"Individual_User"
-user_type
-: 
-"ServiceProvider"  */}
       {user.user_type === "Individual" &&
       user.user_role === "Individual_User" ? (
         <IndividualDashboard />
@@ -31,11 +20,6 @@ user_type
           user.user_type
         ) && <VisaconsultencDashboard />
       )}
-
-      {/* {userType === "ServiceProvider_Admin" ||
-        userType === "ServiceProvider" ||
-        (user.user_role === "Individual_User" && <VisaconsultencDashboard />)}
-      {userType === "cafirm" && <CAfirmDashboard />} */}
     </Box>
   );
 }

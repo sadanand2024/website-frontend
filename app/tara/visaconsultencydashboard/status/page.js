@@ -44,7 +44,6 @@ const FormPage = () => {
   const [selectedClient, setSelectedClient] = useState(null);
 
   const router = useRouter();
-  const clientDataEncoded = encodeURIComponent(JSON.stringify(selectedClient));
   let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
   const visaPurposes = ["Visa"];
   const destinationCountries = [
@@ -79,7 +78,6 @@ const FormPage = () => {
       lastUpdate: "2024-12-02",
     },
   ];
-  console.log(selectedClient);
   useEffect(() => {
     const fetchClientData = async () => {
       const clientData = searchParams.get("id");
@@ -215,7 +213,7 @@ const FormPage = () => {
         <Typography variant="h6" sx={{ textAlign: "left", fontWeight: "bold" }}>
           Task List
         </Typography>
-        <Button
+        {/* <Button
           variant="outlined"
           color="primary"
           size="small" // Keeps the button size small
@@ -224,15 +222,12 @@ const FormPage = () => {
           <Button
             sx={{ mr: 1, fontWeight: "bold" }}
             onClick={() => {
-              router.push(
-                `/tara/visaconsultencydashboard/form?client=${encodeURIComponent(clientDataEncoded)}&title=${encodeURIComponent("kumar")}`
-              );
+              router.push(`/tara`);
             }}
           >
             + Add Service
           </Button>
-          {/* <AddIcon sx={{ fontSize: 18, mr: 1, fontWeight: "bold" }} />  */}
-        </Button>
+        </Button> */}
       </Box>
 
       <TableContainer

@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Factory from "@/app/utils/Factory";
 import {
   Typography,
   Grid,
@@ -26,15 +27,25 @@ import {
   TextField,
 } from "@mui/material";
 import CustomInput from "@/components/CustomInput";
-const FormPage = ({ selectedService, setShowSuccessMessage }) => {
+const FormPage = ({
+  visadetails,
+  selectedClientData,
+  selectedTitle,
+  setShowSuccessMessage,
+  service_id,
+}) => {
   const searchParams = useSearchParams();
+  let name = searchParams.get("name"); // Retrieve 'name' from query params
+  console.log(name);
   const [serviceListDialog, setServiceListDialog] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
-  console.log(selectedService);
+  console.log(selectedTitle);
+
   useEffect(() => {
     setSelectedServices([
       {
-        servicename: selectedService,
+        id: service_id,
+        servicename: selectedTitle,
         quantity: 0,
         comments: "",
       },
@@ -61,12 +72,32 @@ const FormPage = ({ selectedService, setShowSuccessMessage }) => {
     );
   };
 
-  const submitDetails = () => {
-    console.log(selectedServices);
-    setShowSuccessMessage(true);
-    // You can add any other logic you want when submitting the form
-  };
+  const submitDetails = async () => {
+    // console.log(selectedServices);
+    const filteredServices = selectedServices.map((service) => ({
+      quantity: service.quantity,
+      comments: service.comments,
+      service_type: service.id,
+    }));
+    // setShowSuccessMessage(true);
+    let postData = {
+      user_id: selectedClientData.user,
+      passport_number: visadetails.passport_number,
+      purpose: visadetails.purpose,
+      visa_type: visadetails.visa_type,
+      destination_country: visadetails.destination_country,
+      services: filteredServices,
+    };
+    console.log(postData);
 
+    const url = "/user_management/visa-servicetasks/";
+    const { res, error } = await Factory("post", url, postData);
+    if (res.status_cd === 0) {
+      setShowSuccessMessage(true);
+    } else {
+      console.log("error");
+    }
+  };
   return (
     <>
       <Box style={{ padding: "20px", textAlign: "center", marginTop: 20 }}>
