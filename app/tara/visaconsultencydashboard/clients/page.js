@@ -24,6 +24,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import CustomInput from "@/components/CustomInput";
 import CustomAutocomplete from "@/components/CustomAutocomplete";
 import Factory from "@/app/utils/Factory";
+import { useAuth } from "@/app/context/AuthContext";
+
 let clientList = ["Anand", "Krishna", "Sai Kiran"];
 let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
 const visaPurposes = [
@@ -47,6 +49,7 @@ const FormPage = () => {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [clientList, setClientList] = useState([]);
+  const { user, tokens, logout } = useAuth();
 
   const dummyData = [
     {
@@ -106,7 +109,22 @@ const FormPage = () => {
       const { res, error } = await Factory("get", url, {});
 
       if (res.status_cd === 0) {
-        setClientList(res.data);
+        let arr = res.data.map((item) => {
+          return {
+            first_name: item.first_name,
+            last_name: item.last_name,
+            purpose: item.services[item.services.length - 1].purpose,
+            email: item.email,
+            mobile_number: item.mobile_number,
+            visa_type: item.services[item.services.length - 1].visa_type,
+            destination_country:
+              item.services[item.services.length - 1].destination_country,
+            passport_number:
+              item.services[item.services.length - 1].passport_number,
+          };
+        });
+
+        setClientList(arr);
       }
     } catch (error) {
       // Catch any errors during the request
@@ -132,13 +150,15 @@ const FormPage = () => {
             Clients List
           </Typography>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button variant="contained" onClick={() => setDialogOpen(true)}>
-              Add Client
-            </Button>
-          </Box>
-        </Grid>
+        {user.user_role === "ServiceProvider_Admin" && (
+          <Grid item xs={12} md={6}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button variant="contained" onClick={() => setDialogOpen(true)}>
+                Add Client
+              </Button>
+            </Box>
+          </Grid>
+        )}
       </Grid>
 
       {/* Clients Table */}

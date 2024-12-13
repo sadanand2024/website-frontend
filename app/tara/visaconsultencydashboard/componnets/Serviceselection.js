@@ -35,6 +35,7 @@ const FormPage = ({
   selectedClientData,
   setShowSuccessMessage,
   setRefresh,
+  visadetails,
 }) => {
   const searchParams = useSearchParams();
   const [servicelistDialogue, setServicelistDialogue] = useState(false);
@@ -156,23 +157,28 @@ const FormPage = ({
       };
     });
 
-    const filteredServices = serviceData
-      .filter((service) =>
-        newSelectedOptions.some(
-          (option) => option.service_name === service.service
-        )
-      )
-      .map((service) => ({
-        // service_type: service.service, // Rename the key to service_type
-        quantity: service.quantity,
-        comments: service.comments,
-        service_type: service.id,
-      }));
+    const filteredServices = serviceData.map((service) => ({
+      quantity: service.quantity,
+      comments: service.comments,
+      service_type: service.id,
+    }));
+    // console.log(filteredServices);
+    // console.log(serviceData);
+    // console.log(visadetails);
 
-    const postData = {
-      visaapplication_id: selectedClientData.id,
+    let postData = {
+      user_id: selectedClientData.user,
+      passport_number: visadetails.passport_number,
+      purpose: visadetails.purpose,
+      visa_type: visadetails.visa_type,
+      destination_country: visadetails.destination_country,
       services: filteredServices,
     };
+    console.log(postData);
+    // const postData = {
+    //   visaapplication_id: selectedClientData.id,
+    //   services: filteredServices,
+    // };
 
     const url = "/user_management/visa-servicetasks/";
 
@@ -208,43 +214,40 @@ const FormPage = ({
   }, []);
 
   // Sync selected services, quantity, and comments with selectedClientData
+
   useEffect(() => {
     if (selectedClientData.services.length > 0) {
-      const selectedServiceTypes = selectedClientData.services.map(
-        (client) => client.service_type
-      );
-
-      // Pre-select services based on service_type matching in ServicesCards
-      let preSelectedServices = [];
-      preSelectedServices = ServicesCards.filter((service) =>
-        selectedServiceTypes.includes(service.id)
-      ).map((service) => service.service_name);
-
-      console.log("preSelectedServices", preSelectedServices);
-      setSelectedServices(preSelectedServices);
-
-      // Set quantity and comments for the pre-selected services
-      const newQuantityMap = {};
-      const newCommentMap = {};
-      selectedClientData.services.forEach((service) => {
-        const serviceInCard = ServicesCards.find(
-          (cardService) => cardService.id === service.service_type
-        );
-        if (serviceInCard) {
-          newQuantityMap[serviceInCard.service_name] = service.quantity;
-          newCommentMap[serviceInCard.service_name] = service.comments;
-        }
-      });
-
-      setQuantityMap(newQuantityMap);
-      setCommentMap(newCommentMap);
+      // const selectedServiceTypes = selectedClientData.services.map(
+      //   (client) => client.service_type
+      // );
+      // // Pre-select services based on service_type matching in ServicesCards
+      // let preSelectedServices = [];
+      // preSelectedServices = ServicesCards.filter((service) =>
+      //   selectedServiceTypes.includes(service.id)
+      // ).map((service) => service.service_name);
+      // console.log("preSelectedServices", preSelectedServices);
+      // setSelectedServices(preSelectedServices);
+      // // Set quantity and comments for the pre-selected services
+      // const newQuantityMap = {};
+      // const newCommentMap = {};
+      // selectedClientData.services.forEach((service) => {
+      //   const serviceInCard = ServicesCards.find(
+      //     (cardService) => cardService.id === service.service_type
+      //   );
+      //   if (serviceInCard) {
+      //     newQuantityMap[serviceInCard.service_name] = service.quantity;
+      //     newCommentMap[serviceInCard.service_name] = service.comments;
+      //   }
+      // });
+      // setQuantityMap(newQuantityMap);
+      // setCommentMap(newCommentMap);
     } else {
       setSelectedServices([]);
       // setQuantityMap([]);
       // setCommentMap([]);
     }
   }, [selectedClientData, ServicesCards]);
-
+  console.log(selectedServices);
   return (
     <>
       <Box style={{ padding: "20px", textAlign: "center", marginTop: 20 }}>
@@ -267,19 +270,21 @@ const FormPage = ({
                   margin: "1px",
                 }}
                 onClick={() => {
-                  if (
-                    !selectedClientData.services.some(
-                      (clientService) =>
-                        clientService.service_name === service.service_name
-                    )
-                  ) {
-                    handleServiceSelection(service.service_name, service); // Toggle on card click
-                  }
+                  handleServiceSelection(service.service_name, service); // Toggle on card click
+
+                  // if (
+                  //   !selectedClientData.services.some(
+                  //     (clientService) =>
+                  //       clientService.service_name === service.service_name
+                  //   )
+                  // ) {
+                  //   handleServiceSelection(service.service_name, service); // Toggle on card click
+                  // }
                 }}
-                disabled={selectedClientData.services.some(
-                  (clientService) =>
-                    clientService.service_name === service.service_name
-                )} // Disable entire card
+                // disabled={selectedClientData.services.some(
+                //   (clientService) =>
+                //     clientService.service_name === service.service_name
+                // )} // Disable entire card
               >
                 <Box
                   display="flex"
@@ -290,10 +295,10 @@ const FormPage = ({
                   <FormControlLabel
                     control={<Radio size="small" />}
                     label={service.service_name}
-                    disabled={selectedClientData.services.some(
-                      (clientService) =>
-                        clientService.service_name === service.service_name
-                    )} // Disable radio if already selected in client data
+                    // disabled={selectedClientData.services.some(
+                    //   (clientService) =>
+                    //     clientService.service_name === service.service_name
+                    // )} // Disable radio if already selected in client data
                     checked={selectedServices.includes(service.service_name)}
                   />
                 </Box>
@@ -368,21 +373,22 @@ const FormPage = ({
                 selectedServices.includes(service.service_name)
               )}
               onChange={(event, newValue, value2, value3) => {
-                let newOptions = [...newSelectedOptions];
-                if (value2 === "removeOption") {
-                  newOptions = newOptions.filter(
-                    (item) => item.id !== value3.option.id
-                  );
-                } else newOptions.push(value3.option);
-                setNewSelectedOptions(newOptions);
+                // let newOptions = [...newSelectedOptions];
+                // if (value2 === "removeOption") {
+                //   newOptions = newOptions.filter(
+                //     (item) => item.id !== value3.option.id
+                //   );
+                // } else newOptions.push(value3.option);
+                // setNewSelectedOptions(newOptions);
+                // setSelectedServices(newValue.map((item) => item.service_name));
                 setSelectedServices(newValue.map((item) => item.service_name));
               }}
               getOptionLabel={(option) => option.service_name}
-              getOptionDisabled={(option) =>
-                selectedClientData.services.some(
-                  (item) => item.service_type === option.id
-                )
-              }
+              // getOptionDisabled={(option) =>
+              //   selectedClientData.services.some(
+              //     (item) => item.service_type === option.id
+              //   )
+              // }
               renderInput={(params) => (
                 <TextField {...params} label="Update Services" />
               )}
@@ -451,9 +457,9 @@ const FormPage = ({
                         sx={{ padding: "4px 8px", minWidth: "30px", mr: 2 }}
                         variant="outlined"
                         onClick={() => handleQuantityChange(service, -1)}
-                        disabled={selectedClientData.services.some(
-                          (item) => item.service_name === service
-                        )}
+                        // disabled={selectedClientData.services.some(
+                        //   (item) => item.service_name === service
+                        // )}
                       >
                         -
                       </Button>
@@ -462,9 +468,9 @@ const FormPage = ({
                         sx={{ padding: "4px 8px", minWidth: "30px", ml: 2 }}
                         variant="outlined"
                         onClick={() => handleQuantityChange(service, 1)}
-                        disabled={selectedClientData.services.some(
-                          (item) => item.service_name === service
-                        )}
+                        // disabled={selectedClientData.services.some(
+                        //   (item) => item.service_name === service
+                        // )}
                       >
                         +
                       </Button>
@@ -478,9 +484,9 @@ const FormPage = ({
                         }
                         multiline
                         rows={2}
-                        disabled={selectedClientData.services.some(
-                          (item) => item.service_name === service
-                        )}
+                        // disabled={selectedClientData.services.some(
+                        //   (item) => item.service_name === service
+                        // )}
                       />
                     </TableCell>
                   </TableRow>

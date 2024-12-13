@@ -55,8 +55,8 @@ const FormPage = () => {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [taskList, setTaskList] = useState([]);
-
   const [editedService, setEditedService] = useState({}); // Track form data
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleEditClick = (service) => {
     console.log(service);
@@ -74,9 +74,25 @@ const FormPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let putData = {
+      visa_application: {
+        user: editedService.user,
+        passport_number: editedService.passport_number,
+        purpose: editedService.purpose,
+        visa_type: editedService.visa_type,
+        destination_country: editedService.destination_country,
+      },
+      service: {
+        id: editedService.id,
+        service_type_id: editedService.service_type,
+        status: editedService.status,
+        comments: editedService.comments,
+        quantity: editedService.quantity,
+      },
+    };
     const url = `/user_management/service-details/${editedService.id}/`;
     try {
-      const { res, error } = await Factory("put", url, editedService);
+      const { res, error } = await Factory("put", url, putData);
       console.log(res);
       if (res.status_cd === 0) {
         getTasksList();
@@ -106,6 +122,7 @@ const FormPage = () => {
     const { res, error } = await Factory("delete", url, {});
     if (res.status === 204) {
       getTasksList();
+      setDeleteDialogOpen(false);
     } else {
       alert("Failed to delete the service. Please try again.");
     }
@@ -126,105 +143,83 @@ const FormPage = () => {
           </Typography>
         </Grid>
       </Grid>
-
       <Box sx={{ mt: 1 }}>
         <TableContainer
           component={Paper}
-          sx={{
-            borderRadius: "12px",
-            overflow: "hidden",
-            maxHeight: "400px", // Max height of the table container
-            minHeight: "200px", // Min height of the table container
-            overflowY: "auto", // Enables vertical scrolling
-          }}
+          sx={{ borderRadius: "12px", overflow: "hidden" }}
         >
-          <div style={{ overflowY: "auto", maxHeight: "400px" }}>
-            <Table
-              sx={{ minWidth: 650 }}
-              size="medium"
-              aria-label="a dense table"
-            >
-              <TableHead
+          <Table
+            sx={{ minWidth: 650 }}
+            size="medium"
+            aria-label="a dense table"
+          >
+            <TableHead>
+              <TableRow
                 sx={{
-                  position: "sticky",
-                  top: 0, // Keeps the header stuck to the top of the container
-                  zIndex: 1, // Ensures the header stays above the table rows while scrolling
-                  backgroundColor: "rgb(13, 81, 82)", // Keep the header's background color
+                  backgroundColor: "rgb(13, 81, 82)",
+                  "& th": {
+                    // textAlign: "center",
+                    color: "white",
+                    fontWeight: "bold",
+                  },
                 }}
               >
-                <TableRow
-                  sx={{
-                    backgroundColor: "rgb(13, 81, 82)",
-                    "& th": {
-                      //   textAlign: "center",
-                      color: "white",
-                      fontWeight: "bold",
-                    },
-                  }}
-                >
-                  <TableCell>Task ID</TableCell>
-                  <TableCell align="left">Service</TableCell>
-                  <TableCell align="center">Date</TableCell>
-                  <TableCell align="center">Status</TableCell>
-                  <TableCell align="center">Quantity</TableCell>
-                  <TableCell align="center">Comments</TableCell>
-                  <TableCell align="center">Action</TableCell>
-                </TableRow>
-              </TableHead>
-            </Table>
-          </div>
-          <div style={{ overflowY: "auto", maxHeight: "400px" }}>
-            <Table
-              sx={{ minWidth: 650 }}
-              size="small"
-              aria-label="a dense table"
-            >
-              <TableBody>
-                {taskList?.map((service) => (
-                  <TableRow
-                    key={service.id}
+                <TableCell align="left">Task ID</TableCell>
+                <TableCell align="left">Service</TableCell>
+                <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Status</TableCell>
+                <TableCell align="center">Quantity</TableCell>
+                <TableCell align="center">Comments</TableCell>
+                <TableCell align="center">Action</TableCell>
+              </TableRow>
+            </TableHead>
+          </Table>
+
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableBody>
+              {taskList?.map((service) => (
+                <TableRow key={service.id}>
+                  <TableCell align="center">{service.id}</TableCell>
+                  <TableCell align="center">{service.service_name}</TableCell>
+                  <TableCell align="center">{service.date}</TableCell>
+                  <TableCell
+                    align="center"
                     sx={{
-                      "&:hover": { backgroundColor: "#f5f5f5" },
-                      "&:last-child td, &:last-child th": { border: 0 },
+                      color:
+                        service.status === "Pending"
+                          ? "orange"
+                          : service.status === "In - Progress"
+                            ? "#f58d42"
+                            : "green",
+                      fontWeight: "bold",
                     }}
                   >
-                    <TableCell align="center">{service.id}</TableCell>
-                    <TableCell align="center">{service.service_name}</TableCell>
-                    <TableCell align="center">{service.date}</TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{
-                        color:
-                          service.status === "Pending"
-                            ? "orange"
-                            : service.status === "In - Progress"
-                              ? "#f58d42"
-                              : "green",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {service.status}
-                    </TableCell>
-                    <TableCell align="center">{service.quantity}</TableCell>
-                    <TableCell align="center">{service.comments}</TableCell>
-                    <TableCell align="center">
-                      <Box>
-                        <Button onClick={() => handleEditClick(service)}>
-                          <EditIcon />
-                        </Button>
-                        <Button onClick={() => handleDelete(service)}>
-                          <DeleteIcon />
-                        </Button>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                    {service.status}
+                  </TableCell>
+                  <TableCell align="center">{service.quantity}</TableCell>
+                  <TableCell align="right">{service.comments}</TableCell>
+                  <TableCell align="right">
+                    <Box>
+                      <Button onClick={() => handleEditClick(service)}>
+                        <EditIcon />
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setDeleteDialogOpen(true);
+                          setEditedService({ ...service });
+                          // handleDelete(service);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </Button>
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </TableContainer>
       </Box>
-
       <Dialog
         open={dialogOpen}
         maxWidth="md"
@@ -343,6 +338,27 @@ const FormPage = () => {
           </DialogActions>
         </Box>
       </Dialog>
+      {/* delete dialogue */}
+      <Dialog
+        open={deleteDialogOpen}
+        // onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Are you sure you want to delete the Task?</DialogTitle>
+
+        <DialogActions sx={{ textAlign: "center" }}>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              handleDelete(editedService);
+            }}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>{" "}
     </div>
   );
 };

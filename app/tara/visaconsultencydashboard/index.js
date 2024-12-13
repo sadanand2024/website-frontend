@@ -123,55 +123,52 @@ const quickaccessCards = [
 
 const ServicesCards = [
   {
-    name: "ITR Filing",
-    title: "ITR Services Request",
+    id: 1,
+    title: "ITR",
     icon: <NoteAddIcon style={{ fontSize: 30 }} />,
   },
   {
-    name: "Networth Assessment",
-    title: "Networth Certificate",
-
+    id: 2,
+    title: "Networth",
     icon: <AttachMoneyIcon style={{ fontSize: 30 }} />,
   },
   {
-    name: "Business Proof",
+    id: 3,
     title: "Business Proof",
-
     icon: <BusinessCenterIcon style={{ fontSize: 30 }} />,
   },
   {
-    name: "Loans",
-    title: "Loan",
-
+    id: 4,
+    title: "Loans",
     icon: <ImportExportIcon style={{ fontSize: 30 }} />,
   },
   {
-    name: "Visa Fund",
+    id: 5,
     title: "Visa Fund",
     icon: <AirlineSeatReclineExtraIcon style={{ fontSize: 30 }} />,
   },
   {
-    name: "Forex Payment",
-    title: "Forex Payment",
+    id: 6,
+    title: "Forex Payments",
     icon: <AttachMoneyIcon style={{ fontSize: 30 }} />,
   },
   {
-    name: "Insurance",
+    id: 7,
     title: "Insurance",
     icon: <FolderIcon style={{ fontSize: 30 }} />,
   },
   {
-    name: "Travel Booking",
+    id: 8,
     title: "Travel Booking",
     icon: <FlightTakeoffIcon style={{ fontSize: 30 }} />,
   },
   {
-    name: "Visa Slot",
+    id: 9,
     title: "Visa Slot",
     icon: <FlightTakeoffIcon style={{ fontSize: 30 }} />,
   },
   {
-    name: "Passport Application",
+    id: 10,
     title: "Passport Application",
     icon: <BookIcon style={{ fontSize: 30 }} />,
   },
@@ -204,7 +201,7 @@ function VisaconsultencDashboard() {
   };
   const handleServicesCardClick = (card) => {
     router.push(
-      `/tara/visaconsultencydashboard/form?name=${encodeURIComponent(card.name)}&title=${encodeURIComponent(card.title)}`
+      `/tara/visaconsultencydashboard/form?id=${encodeURIComponent(card.id)}&title=${encodeURIComponent(card.title)}`
     );
   };
   const getClientsData = async () => {
@@ -383,7 +380,7 @@ function VisaconsultencDashboard() {
             >
               {card.icon}
               <Typography sx={{ mt: 2 }} variant="h6">
-                {card.name}
+                {card.title}
               </Typography>
             </Card>
           </Grid>
