@@ -2,7 +2,8 @@ import React from "react";
 import { Grid, Typography, Box, Button } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useRouter } from "next/navigation";
-function SuccessMessage({ selectedClientData }) {
+function SuccessMessage({ visadetails, selectedClientData }) {
+  console.log(selectedClientData);
   const router = useRouter();
   return (
     <Grid
@@ -85,7 +86,7 @@ function SuccessMessage({ selectedClientData }) {
                 //   `/tara/visaconsultencydashboard/status?clientname=${encodeURIComponent("Anand")}&title=${encodeURIComponent("Networth")}`
                 // );
                 router.push(
-                  `/tara/visaconsultencydashboard/status?id=${selectedClientData?.id}`
+                  `/tara/visaconsultencydashboard/status?id=${selectedClientData?.user}`
                 );
                 // router.push(`/tara/visaconsultencydashboard/status`);
               }}

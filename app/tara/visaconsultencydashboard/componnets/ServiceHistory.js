@@ -26,12 +26,6 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editedService, setEditedService] = useState({});
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  // const [selectedClientData, setClientData] = useState({ ...selectedClientData });
-  const STATUS_CHOICES = [
-    { label: "In Progress", value: "in_progress" },
-    { label: "Completed", value: "completed" },
-    { label: "Pending", value: "pending" },
-  ];
   const handleInputChange = (name, val) => {
     // console.log("Field Name:", name, "Value:", val);
     setEditedService((prev) => ({
@@ -45,13 +39,6 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
     setDialogOpen(true);
   };
   let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
-  const visaPurposes = [
-    "Tourism",
-    "Business",
-    "Study",
-    "Work",
-    "Medical Treatment",
-  ];
 
   const destinationCountries = [
     "FRANCE",
@@ -272,45 +259,19 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12}>
-              <CustomInput
-                id="service_name"
-                disabled
-                label="Service Name"
-                name="service_name"
-                value={editedService.service_name || ""}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <CustomInput
-                id="date"
-                label="Date"
-                disabled
-                name="date"
-                value={editedService.date || ""}
-                onChange={handleInputChange}
-              />
-            </Grid>
+
             <Grid item xs={12}>
               <CustomAutocomplete
                 id="status"
                 label="Status"
-                name="status" // Make sure the name is passed
+                name="status"
                 value={
                   editedService?.status?.[0]?.toUpperCase() +
                     editedService?.status?.slice(1) || ""
                 }
-                options={STATUS_CHOICES.map((choice) => choice.label)} // Display labels (e.g., 'In Progress')
+                options={["pending", "completed", "in progress"]}
                 onChange={(e, val) => {
-                  // Find the value corresponding to the selected label
-                  const selectedStatus = STATUS_CHOICES.find(
-                    (choice) => choice.label === val
-                  );
-                  handleInputChange(
-                    "status",
-                    selectedStatus ? selectedStatus.value : ""
-                  );
+                  handleInputChange("status", val);
                 }}
               />
             </Grid>
@@ -339,13 +300,19 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
             </Grid>
 
             <Grid item xs={12}>
-              <CustomInput
-                id="purpose"
-                label="purpose"
-                name="purpose"
-                value={editedService.purpose || ""}
+              <CustomAutocomplete
+                id="destination_country"
+                label="destination country"
+                name="destination_country" // Make sure the name is passed
+                value={
+                  editedService?.destination_country?.[0]?.toUpperCase() +
+                    editedService?.destination_country?.slice(1) || ""
+                }
+                options={destinationCountries} // Display labels (e.g., 'In Progress')
                 onChange={(e, val) => {
-                  handleInputChange("purpose", e.target.value);
+                  // Find the value corresponding to the selected label
+
+                  handleInputChange("destination_country", val);
                 }}
               />
             </Grid>
@@ -363,7 +330,7 @@ const FormPage = ({ selectedClientData, setSelectedClient, setRefresh }) => {
                 onChange={(e, val) => {
                   // Find the value corresponding to the selected label
 
-                  handleInputChange("status", val);
+                  handleInputChange("visa_type", val);
                 }}
               />
             </Grid>

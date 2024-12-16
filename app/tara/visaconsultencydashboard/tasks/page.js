@@ -26,16 +26,8 @@ import CustomAutocomplete from "@/components/CustomAutocomplete";
 import Factory from "@/app/utils/Factory";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
-let clientList = ["Anand", "Krishna", "Sai Kiran"];
 let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
-const visaPurposes = [
-  "Tourism",
-  "Business",
-  "Study",
-  "Work",
-  "Medical Treatment",
-];
+
 const destinationCountries = [
   "France",
   "United States",
@@ -43,15 +35,9 @@ const destinationCountries = [
   "Canada",
   "Germany",
 ];
-const STATUS_CHOICES = [
-  { label: "In Progress", value: "in_progress" },
-  { label: "Completed", value: "completed" },
-  { label: "Pending", value: "pending" },
-];
+
 const FormPage = () => {
   const searchParams = useSearchParams();
-  const name = searchParams.get("name"); // Retrieve 'name' from query params
-  const title = searchParams.get("title"); // Retrieve 'title' from query params
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [taskList, setTaskList] = useState([]);
@@ -148,11 +134,7 @@ const FormPage = () => {
           component={Paper}
           sx={{ borderRadius: "12px", overflow: "hidden" }}
         >
-          <Table
-            sx={{ minWidth: 650 }}
-            size="medium"
-            aria-label="a dense table"
-          >
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow
                 sx={{
@@ -164,26 +146,34 @@ const FormPage = () => {
                   },
                 }}
               >
-                <TableCell align="left">Task ID</TableCell>
-                <TableCell align="left">Service</TableCell>
+                <TableCell>Task ID</TableCell>
+                <TableCell align="center">Service</TableCell>
                 <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Status</TableCell>
+                <TableCell align="center">Passport Number</TableCell>
+                <TableCell align="center">Purpose</TableCell>
+                <TableCell align="center">Visa Type</TableCell>
+                <TableCell align="center">Destination Country</TableCell>
                 <TableCell align="center">Quantity</TableCell>
+                <TableCell align="center">Status</TableCell>
                 <TableCell align="center">Comments</TableCell>
                 <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
-          </Table>
-
-          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableBody>
               {taskList?.map((service) => (
                 <TableRow key={service.id}>
                   <TableCell align="center">{service.id}</TableCell>
-                  <TableCell align="center">{service.service_name}</TableCell>
+                  <TableCell align="left">{service.service_name}</TableCell>
                   <TableCell align="center">{service.date}</TableCell>
+                  <TableCell align="left">{service.passport_number}</TableCell>
+                  <TableCell align="center">{service.purpose}</TableCell>
+                  <TableCell align="left">{service.visa_type}</TableCell>
+                  <TableCell align="left">
+                    {service.destination_country}
+                  </TableCell>
+                  <TableCell align="left">{service.quantity}</TableCell>
                   <TableCell
-                    align="center"
+                    align="left"
                     sx={{
                       color:
                         service.status === "Pending"
@@ -196,9 +186,9 @@ const FormPage = () => {
                   >
                     {service.status}
                   </TableCell>
-                  <TableCell align="center">{service.quantity}</TableCell>
-                  <TableCell align="right">{service.comments}</TableCell>
-                  <TableCell align="right">
+                  <TableCell align="left">{service.comments}</TableCell>
+
+                  <TableCell align="center">
                     <Box>
                       <Button onClick={() => handleEditClick(service)}>
                         <EditIcon />
@@ -252,7 +242,7 @@ const FormPage = () => {
           <CloseIcon />
         </Button>
         <DialogTitle>
-          <h3>Task Details</h3>
+          <h3>Service Details</h3>
         </DialogTitle>
 
         <Box
@@ -278,42 +268,19 @@ const FormPage = () => {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12}>
-              <CustomInput
-                id="service_name"
-                label="Service Name"
-                name="service_name"
-                disabled
-                value={editedService.service_name || ""}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <CustomInput
-                id="date"
-                label="Date"
-                name="date"
-                disabled
-                value={editedService.date || ""}
-                onChange={handleInputChange}
-              />
-            </Grid>
+
             <Grid item xs={12}>
               <CustomAutocomplete
                 id="status"
                 label="Status"
-                name="status" // Make sure the name is passed
-                value={editedService.status || ""} // Display the selected status label
-                options={STATUS_CHOICES.map((choice) => choice.label)} // Display labels (e.g., 'In Progress')
+                name="status"
+                value={
+                  editedService?.status?.[0]?.toUpperCase() +
+                    editedService?.status?.slice(1) || ""
+                }
+                options={["pending", "completed", "in progress"]}
                 onChange={(e, val) => {
-                  // Find the value corresponding to the selected label
-                  const selectedStatus = STATUS_CHOICES.find(
-                    (choice) => choice.label === val
-                  );
-                  handleInputChange(
-                    "status",
-                    selectedStatus ? selectedStatus.value : ""
-                  );
+                  handleInputChange("status", val);
                 }}
               />
             </Grid>
@@ -328,6 +295,56 @@ const FormPage = () => {
                 }}
               />
             </Grid>
+
+            <Grid item xs={12}>
+              <CustomInput
+                id="passport_number"
+                label="passport number"
+                name="passport_number"
+                value={editedService.passport_number || ""}
+                onChange={(e, val) => {
+                  handleInputChange("passport_number", e.target.value);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <CustomAutocomplete
+                id="destination_country"
+                label="destination country"
+                name="destination_country" // Make sure the name is passed
+                value={
+                  editedService?.destination_country?.[0]?.toUpperCase() +
+                    editedService?.destination_country?.slice(1) || ""
+                }
+                options={destinationCountries} // Display labels (e.g., 'In Progress')
+                onChange={(e, val) => {
+                  // Find the value corresponding to the selected label
+
+                  handleInputChange("destination_country", val);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <CustomAutocomplete
+                id="visa_type"
+                label="Visa Type"
+                name="visa_type" // Make sure the name is passed
+                value={
+                  editedService?.visa_type?.[0]?.toUpperCase() +
+                    editedService?.visa_type?.slice(1) || ""
+                }
+                options={visaTypes} // Display labels (e.g., 'In Progress')
+                onChange={(e, val) => {
+                  // Find the value corresponding to the selected label
+
+                  handleInputChange("visa_type", val);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}></Grid>
             {/* Add more fields as necessary */}
           </Grid>
 

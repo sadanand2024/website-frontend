@@ -35,17 +35,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { useRouter } from "next/navigation";
 import Factory from "@/app/utils/Factory";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
   const title = searchParams.get("title"); // Retrieve 'name' from query params
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [servicelistDialogue, setServicelistDialogue] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
-
-  const router = useRouter();
+  const [editedService, setEditedService] = useState({}); // Track form data
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
-  const visaPurposes = ["Visa"];
   const destinationCountries = [
     "France",
     "United States",
@@ -54,70 +54,78 @@ const FormPage = () => {
     "Germany",
   ];
 
-  // Dummy data for tasks
-  const taskData = [
-    {
-      taskId: "T001",
-      service: "Visa Application",
-      date: "2024-12-01",
-      status: "Pending",
-      lastUpdate: "2024-12-03",
-    },
-    {
-      taskId: "T002",
-      service: "Medical Insurance",
-      date: "2024-11-15",
-      status: "Completed",
-      lastUpdate: "2024-11-20",
-    },
-    {
-      taskId: "T003",
-      service: "Flight Booking",
-      date: "2024-11-25",
-      status: "In Progress",
-      lastUpdate: "2024-12-02",
-    },
-  ];
-  useEffect(() => {
-    const fetchClientData = async () => {
-      const clientData = searchParams.get("id");
+  const handleEditClick = (service) => {
+    setEditedService({ ...service });
+    setDialogOpen(true);
+  };
 
-      if (!clientData) return; // Exit early if no client data
-
-      try {
-        // Decode and parse client data
-        const decodedData = decodeURIComponent(clientData);
-        const parsedID = JSON.parse(decodedData);
-
-        // Build the request URL
-        const url = `/user_management/visa-applicants/${parsedID}/`;
-
-        try {
-          // Make the API request
-          const { res, error } = await Factory("get", url, {});
-          if (error) {
-            throw new Error(error); // Throw if an error is returned
-          }
-
-          // Check the response status
-          if (res.status_cd === 0) {
-            setSelectedClient(res.data);
-          } else {
-            console.error("Failed to fetch client data");
-          }
-        } catch (apiError) {
-          // Handle errors from the API call
-          console.error("Error fetching client data:", apiError);
-          alert(
-            "Something went wrong while fetching the data. Please try again."
-          );
-        }
-      } catch (e) {
-        console.error("Error parsing client data:", e);
-        alert("Invalid client data format. Please check the URL.");
-      }
+  const handleInputChange = (name, val) => {
+    console.log("Field Name:", name, "Value:", val);
+    setEditedService((prev) => ({
+      ...prev,
+      [name]: val,
+    }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let putData = {
+      visa_application: {
+        user: editedService.id,
+        passport_number: editedService.passport_number,
+        purpose: editedService.purpose,
+        visa_type: editedService.visa_type,
+        destination_country: editedService.destination_country,
+      },
+      service: {
+        id: editedService.id,
+        service_type_id: editedService.service_type,
+        status: editedService.status,
+        comments: editedService.comments,
+        quantity: editedService.quantity,
+      },
     };
+    console.log(putData);
+    console.log(editedService);
+    const url = `/user_management/service-details/${editedService.id}/`;
+    const { res, error } = await Factory("put", url, putData);
+    console.log(res);
+    if (res.status_cd === 0) {
+      fetchClientData();
+    } else {
+      alert("Something went wrong. Please try again.");
+    }
+  };
 
+  const handleDelete = async (service) => {
+    const url = `/user_management/service-details/${service.id}/`;
+    const { res, error } = await Factory("delete", url, {});
+    if (res.status === 204) {
+      fetchClientData();
+      setDeleteDialogOpen(false);
+    } else {
+      alert("Failed to delete the service. Please try again.");
+    }
+  };
+  const fetchClientData = async () => {
+    const clientData = searchParams.get("id");
+
+    if (!clientData) return;
+
+    const decodedData = decodeURIComponent(clientData);
+    const parsedID = JSON.parse(decodedData);
+
+    const url = `/user_management/visa-applicants/${parsedID}/`;
+
+    const { res, error } = await Factory("get", url, {});
+
+    if (res.status_cd === 0) {
+      setSelectedClient(res.data);
+    } else {
+      console.error("Failed to fetch client data");
+    }
+  };
+
+  useEffect(() => {
     fetchClientData();
   }, [searchParams]);
 
@@ -174,7 +182,12 @@ const FormPage = () => {
               id="purpose"
               label="Purpose"
               // options={visaPurposes}
-              value={selectedClient?.purpose}
+              value={
+                selectedClient.services.length === 0
+                  ? selectedClient.purpose
+                  : selectedClient.services[selectedClient.services.length - 1]
+                      ?.purpose
+              }
               disabled={true}
             />
           </Grid>
@@ -183,7 +196,12 @@ const FormPage = () => {
               id="visa_type"
               label="Visa Type"
               options={visaTypes}
-              value={selectedClient?.visa_type}
+              value={
+                selectedClient.services.length === 0
+                  ? selectedClient.visa_type
+                  : selectedClient.services[selectedClient.services.length - 1]
+                      ?.visa_type
+              }
               disabled={true}
             />
           </Grid>
@@ -192,7 +210,12 @@ const FormPage = () => {
               id="destinationcountry"
               label="Destination Country"
               options={destinationCountries}
-              value={selectedClient?.destination_country}
+              value={
+                selectedClient.services.length === 0
+                  ? selectedClient.destination_country
+                  : selectedClient.services[selectedClient.services.length - 1]
+                      ?.destination_country
+              }
               disabled={true}
             />
           </Grid>
@@ -200,36 +223,24 @@ const FormPage = () => {
             <CustomInput
               id="passportnumber"
               label="Passport Number"
-              value={selectedClient?.passport_number}
+              value={
+                selectedClient.services.length === 0
+                  ? selectedClient.passport_number
+                  : selectedClient.services[selectedClient.services.length - 1]
+                      ?.passport_number
+              }
               disabled={true}
             />
           </Grid>
         </Grid>
       )}
-
       <Box
         sx={{ display: "flex", justifyContent: "space-between", mt: 5, mb: 2 }}
       >
         <Typography variant="h6" sx={{ textAlign: "left", fontWeight: "bold" }}>
           Task List
         </Typography>
-        {/* <Button
-          variant="outlined"
-          color="primary"
-          size="small" // Keeps the button size small
-          sx={{ fontSize: "0.875rem", height: "32px", fontWeight: "bold" }} // Adjusts button padding, font size, and height
-        >
-          <Button
-            sx={{ mr: 1, fontWeight: "bold" }}
-            onClick={() => {
-              router.push(`/tara`);
-            }}
-          >
-            + Add Service
-          </Button>
-        </Button> */}
       </Box>
-
       <TableContainer
         component={Paper}
         sx={{
@@ -262,10 +273,14 @@ const FormPage = () => {
               <TableCell>Task ID</TableCell>
               <TableCell align="center">Service</TableCell>
               <TableCell align="center">Date</TableCell>
-              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Passport Number</TableCell>
+              <TableCell align="center">Purpose</TableCell>
+              <TableCell align="center">Visa Type</TableCell>
+              <TableCell align="center">Destination Country</TableCell>
               <TableCell align="center">Quantity</TableCell>
-              <TableCell align="center">Last Update</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Comments</TableCell>
+              <TableCell align="center">Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -273,21 +288,219 @@ const FormPage = () => {
               selectedClient?.services?.map((task) => (
                 <TableRow key={task.id}>
                   <TableCell align="center">{task.id}</TableCell>
-                  <TableCell align="center">{task.service_name}</TableCell>
+                  <TableCell align="left">{task.service_name}</TableCell>
                   <TableCell align="center">{task.date}</TableCell>
-                  <TableCell align="center">{task.status}</TableCell>
-                  <TableCell align="center">{task.quantity}</TableCell>
-                  <TableCell align="center">
-                    {task?.last_updated_date}
+                  <TableCell align="left">{task.passport_number}</TableCell>
+                  <TableCell align="center">{task.purpose}</TableCell>
+                  <TableCell align="left">{task.visa_type}</TableCell>
+                  <TableCell align="left">{task.destination_country}</TableCell>
+                  <TableCell align="left">{task.quantity}</TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{
+                      color:
+                        task.status === "Pending"
+                          ? "orange"
+                          : task.status === "In - Progress"
+                            ? "#f58d42"
+                            : "green",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {task.status}
                   </TableCell>
+                  <TableCell align="left">{task.comments}</TableCell>
+
                   <TableCell align="center">
-                    <EditIcon />
+                    <Box>
+                      <Button
+                        type="button"
+                        onClick={() => handleEditClick(task)}
+                      >
+                        <EditIcon />
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          setDeleteDialogOpen(true);
+                          setEditedService({ ...task });
+                        }}
+                      >
+                        <DeleteIcon />
+                      </Button>
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <Dialog
+        open={dialogOpen}
+        maxWidth="md"
+        PaperProps={{
+          sx: {
+            borderRadius: "20px",
+            padding: "24px",
+          },
+        }}
+        sx={{
+          "& .MuiDialogTitle-root": {
+            textAlign: "center",
+            paddingBottom: "16px",
+          },
+          "& .MuiTypography-body2": {
+            color: "#666",
+            fontSize: "0.9rem",
+          },
+        }}
+      >
+        <Button
+          variant="outlined"
+          onClick={() => setDialogOpen(false)}
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 30,
+          }}
+        >
+          <CloseIcon />
+        </Button>
+        <DialogTitle>
+          <h3>Service Details</h3>
+        </DialogTitle>
+
+        <Box
+          component="form"
+          noValidate
+          autoComplete="off"
+          onSubmit={handleSubmit}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+            padding: "8px 0",
+          }}
+        >
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <CustomInput
+                id="id"
+                label="Task ID"
+                name="id"
+                disabled
+                value={editedService.id || ""}
+                onChange={handleInputChange}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <CustomAutocomplete
+                id="status"
+                label="Status"
+                name="status"
+                value={
+                  editedService?.status?.[0]?.toUpperCase() +
+                    editedService?.status?.slice(1) || ""
+                }
+                options={["pending", "completed", "in progress"]}
+                onChange={(e, val) => {
+                  handleInputChange("status", val);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <CustomInput
+                id="comments"
+                label="Comments"
+                name="comments"
+                value={editedService.comments || ""}
+                onChange={(e, val) => {
+                  handleInputChange("comments", e.target.value);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <CustomInput
+                id="passport_number"
+                label="passport number"
+                name="passport_number"
+                value={editedService.passport_number || ""}
+                onChange={(e, val) => {
+                  handleInputChange("passport_number", e.target.value);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <CustomAutocomplete
+                id="destination_country"
+                label="destination country"
+                name="destination_country" // Make sure the name is passed
+                value={
+                  editedService?.destination_country?.[0]?.toUpperCase() +
+                    editedService?.destination_country?.slice(1) || ""
+                }
+                options={destinationCountries} // Display labels (e.g., 'In Progress')
+                onChange={(e, val) => {
+                  // Find the value corresponding to the selected label
+
+                  handleInputChange("destination_country", val);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <CustomAutocomplete
+                id="visa_type"
+                label="Visa Type"
+                name="visa_type" // Make sure the name is passed
+                value={
+                  editedService?.visa_type?.[0]?.toUpperCase() +
+                    editedService?.visa_type?.slice(1) || ""
+                }
+                options={visaTypes} // Display labels (e.g., 'In Progress')
+                onChange={(e, val) => {
+                  // Find the value corresponding to the selected label
+
+                  handleInputChange("visa_type", val);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}></Grid>
+            {/* Add more fields as necessary */}
+          </Grid>
+
+          <DialogActions sx={{ justifyContent: "center", paddingTop: "16px" }}>
+            <Button variant="contained" type="submit">
+              Update
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
+      {/* delete dialogue */}
+      <Dialog
+        open={deleteDialogOpen}
+        // onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Are you sure you want to delete the Task?</DialogTitle>
+
+        <DialogActions sx={{ textAlign: "center" }}>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              handleDelete(editedService);
+            }}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>{" "}
     </div>
   );
 };

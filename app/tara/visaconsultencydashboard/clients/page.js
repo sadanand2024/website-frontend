@@ -25,8 +25,6 @@ import CustomInput from "@/components/CustomInput";
 import CustomAutocomplete from "@/components/CustomAutocomplete";
 import Factory from "@/app/utils/Factory";
 import { useAuth } from "@/app/context/AuthContext";
-
-let clientList = ["Anand", "Krishna", "Sai Kiran"];
 let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
 const visaPurposes = [
   "Tourism",
@@ -45,24 +43,10 @@ const destinationCountries = [
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
-  const title = searchParams.get("title"); // Retrieve 'title' from query params
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [clientList, setClientList] = useState([]);
   const { user, tokens, logout } = useAuth();
-
-  const dummyData = [
-    {
-      first_name: "John",
-      last_name: "Doe",
-      email: "john.doe@example.com",
-      mobile_number: "8886115361",
-      purpose: "Visa",
-      visa_type: "Tourist Visa",
-      destination_country: "Australia",
-      passport_number: "A1234567",
-    },
-  ];
 
   const formik = useFormik({
     initialValues: {
@@ -82,65 +66,73 @@ const FormPage = () => {
         .email("Invalid email format")
         .required("Email is required"),
       mobile_number: Yup.string().required("Mobile number is required"),
+      purpose: Yup.string().required("Purpose is required"),
+      visa_type: Yup.string().required("Visa type is required"),
+      destination_country: Yup.string().required(
+        "Destination country is required"
+      ),
+      passport_number: Yup.string().required("Passport number is required"),
     }),
     onSubmit: async (values) => {
       const postData = {
         ...values,
       };
-      try {
-        const url = `/user_management/visa-users/`;
-        const { res } = await Factory("post", url, postData);
-        if (res.status_cd === 0) {
-          getClientList(); // Refresh client list after successful submission
-          setDialogOpen(false);
-        } else {
-          alert("Something went wrong");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Something went wrong. Please try again.");
+      console.log(postData);
+      const url = `/user_management/visa-users/`;
+      const { res } = await Factory("post", url, postData);
+      if (res.status_cd === 0) {
+        getClientList(); // Refresh client list after successful submission
+        setDialogOpen(false);
+      } else {
+        alert("Something went wrong");
       }
     },
   });
 
   const getClientList = async () => {
     const url = "/user_management/visa-clients/";
-    try {
-      const { res, error } = await Factory("get", url, {});
+    const { res, error } = await Factory("get", url, {});
 
-      if (res.status_cd === 0) {
-        let arr = res.data.map((item) => {
-          return {
-            first_name: item.first_name,
-            last_name: item.last_name,
-            purpose: item.services[item.services.length - 1].purpose,
-            email: item.email,
-            mobile_number: item.mobile_number,
-            visa_type: item.services[item.services.length - 1].visa_type,
-            destination_country:
-              item.services[item.services.length - 1].destination_country,
-            passport_number:
-              item.services[item.services.length - 1].passport_number,
-          };
-        });
+    if (res.status_cd === 0) {
+      let arr = res?.data?.map((item) => {
+        return {
+          user: item.user,
+          first_name: item.first_name,
+          last_name: item.last_name,
+          email: item.email,
+          mobile_number: item.mobile_number,
 
-        setClientList(arr);
-      }
-    } catch (error) {
-      // Catch any errors during the request
-      console.error("Error:", error);
-      alert("Something went wrong. Please try again.");
+          purpose:
+            item.services.length === 0
+              ? item.purpose
+              : item.services[item.services.length - 1]?.purpose,
+          visa_type:
+            item.services.length === 0
+              ? item.visa_type
+              : item.services[item.services.length - 1].visa_type,
+          destination_country:
+            item.services.length === 0
+              ? item.destination_country
+              : item.services[item.services.length - 1].destination_country,
+          passport_number:
+            item.services.length === 0
+              ? item.passport_number
+              : item.services[item.services.length - 1].passport_number,
+        };
+      });
+
+      setClientList(arr);
     }
   };
 
   useEffect(() => {
-    getClientList(); // Load client list on component mount
+    getClientList();
   }, []);
-  const { errors, touched, handleSubmit, getFieldProps } = formik;
-
+  const { errors, touched, handleSubmit, getFieldProps, values, setValues } =
+    formik;
+  console.log(clientList);
   return (
     <div style={{ padding: "20px" }}>
-      {/* Client List Header and Add Client Button */}
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Typography
@@ -153,7 +145,22 @@ const FormPage = () => {
         {user.user_role === "ServiceProvider_Admin" && (
           <Grid item xs={12} md={6}>
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button variant="contained" onClick={() => setDialogOpen(true)}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setValues({
+                    first_name: "",
+                    last_name: "",
+                    email: "",
+                    mobile_number: "",
+                    purpose: "Visa",
+                    visa_type: "",
+                    destination_country: "",
+                    passport_number: "",
+                  });
+                  setDialogOpen(true);
+                }}
+              >
                 Add Client
               </Button>
             </Box>
@@ -194,13 +201,8 @@ const FormPage = () => {
                 key={index}
                 sx={{ cursor: "pointer" }}
                 onClick={() => {
-                  // router.push(
-                  //   `/tara/visaconsultencydashboard/status?clientname=${encodeURIComponent(
-                  //     "Anand"
-                  //   )}&title=${encodeURIComponent("Networth")}`
-                  // );
                   router.push(
-                    `/tara/visaconsultencydashboard/status?id=${client.id}`
+                    `/tara/visaconsultencydashboard/status?id=${client?.user}`
                   );
                 }}
               >
