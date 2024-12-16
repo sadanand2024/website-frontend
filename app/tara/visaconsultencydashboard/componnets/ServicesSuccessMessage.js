@@ -73,7 +73,6 @@ function SuccessMessage({ visadetails, selectedClientData }) {
             }}
           >
             <Button
-              // variant="contained"
               variant="outlined"
               color="primary"
               sx={{
@@ -82,13 +81,9 @@ function SuccessMessage({ visadetails, selectedClientData }) {
                 fontSize: "16px",
               }}
               onClick={() => {
-                // router.push(
-                //   `/tara/visaconsultencydashboard/status?clientname=${encodeURIComponent("Anand")}&title=${encodeURIComponent("Networth")}`
-                // );
                 router.push(
                   `/tara/visaconsultencydashboard/status?id=${selectedClientData?.user}`
                 );
-                // router.push(`/tara/visaconsultencydashboard/status`);
               }}
             >
               Check Your Status

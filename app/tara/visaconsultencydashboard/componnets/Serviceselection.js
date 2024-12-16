@@ -46,14 +46,8 @@ const FormPage = ({
   const [ServicesCards, setServicesCards] = useState([]);
   // Handle service selection
   const handleServiceSelection = (serviceName, service) => {
-    // let __newSelectedOptions = JSON.parse(JSON.stringify(newSelectedOptions));
-    // console.log(__newSelectedOptions);
     setSelectedServices((prevSelectedServices) => {
       if (prevSelectedServices.includes(serviceName)) {
-        // __newSelectedOptions = __newSelectedOptions.filter(
-        //   (item) => item.id !== service.id
-        // );
-        // setNewSelectedOptions(__newSelectedOptions);
         let newOptions = [...newSelectedOptions];
         newOptions = newOptions.filter((item) => item.id !== service.id);
         setNewSelectedOptions(newOptions);
@@ -65,25 +59,10 @@ const FormPage = ({
         let newOptions = [...newSelectedOptions];
         newOptions.push(service);
         setNewSelectedOptions(newOptions);
-        // __newSelectedOptions.push(service);
-        // setNewSelectedOptions(__newSelectedOptions);
 
         return [...prevSelectedServices, serviceName];
       }
     });
-    // console.log(__newSelectedOptions);
-    // setNewSelectedOptions(newOptions);
-
-    ///
-    // setNewSelectedOptions((prevSelectedServices) => {
-    //   if (prevSelectedServices.includes(serviceName)) {
-    //     return prevSelectedServices.filter(
-    //       (service) => service !== serviceName
-    //     );
-    //   } else {
-    //     return [...prevSelectedServices, serviceName];
-    //   }
-    // });
   };
 
   // Handle quantity change (increment or decrement)
@@ -175,10 +154,6 @@ const FormPage = ({
       services: filteredServices,
     };
     console.log(postData);
-    // const postData = {
-    //   visaapplication_id: selectedClientData.id,
-    //   services: filteredServices,
-    // };
 
     const url = "/user_management/visa-servicetasks/";
 
@@ -212,8 +187,6 @@ const FormPage = ({
   useEffect(() => {
     getServicesList();
   }, []);
-
-  // Sync selected services, quantity, and comments with selectedClientData
 
   useEffect(() => {
     if (selectedClientData.services.length > 0) {

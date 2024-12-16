@@ -12,17 +12,81 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import Factory from "@/app/utils/Factory";
-
+import TaskList from "../componnets/TaskList";
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
   const title = searchParams.get("title"); // Retrieve 'title' from query params
   const [mappingData, setMappingData] = useState([]);
+  const [taskList, setTaskList] = useState([]);
+  const [editedService, setEditedService] = useState({}); // Track form data
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const destinationCountries = [
+    "France",
+    "United States",
+    "Australia",
+    "Canada",
+    "Germany",
+  ];
 
+  const handleEditClick = (service) => {
+    console.log(service);
+    setEditedService({ ...service });
+    setDialogOpen(true);
+  };
+
+  const handleInputChange = (name, val) => {
+    console.log("Field Name:", name, "Value:", val);
+    setEditedService((prev) => ({
+      ...prev,
+      [name]: val,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let putData = {
+      visa_application: {
+        user: editedService.user,
+        passport_number: editedService.passport_number,
+        purpose: editedService.purpose,
+        visa_type: editedService.visa_type,
+        destination_country: editedService.destination_country,
+      },
+      service: {
+        id: editedService.service_id,
+        service_type_id: editedService.service_type,
+        status: editedService.status,
+        comments: editedService.comments,
+        quantity: editedService.quantity,
+      },
+    };
+    console.log(editedService);
+    console.log(putData);
+    const url = `/user_management/service-details/${editedService.service_id}/`;
+    const { res, error } = await Factory("put", url, putData);
+    if (res.status_cd === 0) {
+      getClientsData();
+      setDialogOpen(false);
+    } else {
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  const handleDelete = async (service) => {
+    const url = `/user_management/service-details/${service.service_id}/`;
+    const { res, error } = await Factory("delete", url, {});
+    if (res.status === 204) {
+      getClientsData(); // Load client list on component mount
+      setDeleteDialogOpen(false);
+    } else {
+      alert("Failed to delete the service. Please try again.");
+    }
+  };
   const getClientsData = async () => {
     const url = "/user_management/visa-clients/dashboard-status/";
     const { res, error } = await Factory("get", url, {});
-    console.log(res.data);
 
     if (res.status_cd === 0) {
       title === "Pending"
@@ -38,85 +102,24 @@ const FormPage = () => {
   useEffect(() => {
     getClientsData(); // Load client list on component mount
   }, []);
-
+  console.log(mappingData);
   return (
     <Box style={{ marginTop: "20px" }}>
       <h5 style={{ marginBottom: 20, textAlign: "center" }}>{title}</h5>
-
-      <Box sx={{ mt: 1 }}>
-        <TableContainer
-          component={Paper}
-          sx={{ borderRadius: "12px", overflow: "hidden" }}
-        >
-          <Table
-            sx={{ minWidth: 650 }}
-            size="medium"
-            aria-label="a dense table"
-          >
-            <TableHead>
-              <TableRow
-                sx={{
-                  backgroundColor: "rgb(13, 81, 82)", // Add a light background for the header
-                  "& th": {
-                    textAlign: "center",
-                    color: "white",
-                    fontWeight: "bold",
-                  },
-                }}
-              >
-                <TableCell>Task ID</TableCell>
-                <TableCell align="center">Service</TableCell>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Passport Number</TableCell>
-                <TableCell align="center">Purpose</TableCell>
-                <TableCell align="center">Visa Type</TableCell>
-                <TableCell align="center">Destination Country</TableCell>
-                <TableCell align="center">Quantity</TableCell>
-                <TableCell align="center">Status</TableCell>
-                <TableCell align="center">Comments</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {mappingData.length > 0 &&
-                mappingData.map((row) => (
-                  <TableRow
-                    key={row.service_name}
-                    sx={{
-                      "&:hover": { backgroundColor: "#f5f5f5" }, // Hover effect for rows
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                  >
-                    <TableCell align="center">{row.service_id}</TableCell>
-                    <TableCell align="center">{row.service_name}</TableCell>
-                    <TableCell align="center">{row.date}</TableCell>
-                    <TableCell align="center">{row.passport_number}</TableCell>
-                    <TableCell align="center">{row.purpose}</TableCell>
-                    <TableCell align="center">{row.visa_type}</TableCell>
-                    <TableCell align="center">{row.quantity}</TableCell>
-                    <TableCell align="center">
-                      {row.destination_country}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{
-                        color:
-                          row.status === "Pending"
-                            ? "orange"
-                            : row.status === "In - Progress"
-                              ? "#f58d42"
-                              : "green",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {row.status}
-                    </TableCell>
-                    <TableCell align="center">{row.comments}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+      <TaskList
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        taskList={mappingData}
+        handleDelete={handleDelete}
+        handleEditClick={handleEditClick}
+        handleSubmit={handleSubmit}
+        editedService={editedService}
+        setEditedService={setEditedService}
+        deleteDialogOpen={deleteDialogOpen}
+        setDeleteDialogOpen={setDeleteDialogOpen}
+        handleInputChange={handleInputChange}
+        destinationCountries={destinationCountries}
+      />
     </Box>
   );
 };

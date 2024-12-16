@@ -36,7 +36,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useRouter } from "next/navigation";
 import Factory from "@/app/utils/Factory";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import TaskList from "../componnets/TaskList";
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
@@ -68,9 +68,11 @@ const FormPage = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(editedService);
+
     let putData = {
       visa_application: {
-        user: editedService.id,
+        user: editedService.user_id,
         passport_number: editedService.passport_number,
         purpose: editedService.purpose,
         visa_type: editedService.visa_type,
@@ -85,11 +87,10 @@ const FormPage = () => {
       },
     };
     console.log(putData);
-    console.log(editedService);
     const url = `/user_management/service-details/${editedService.id}/`;
     const { res, error } = await Factory("put", url, putData);
-    console.log(res);
     if (res.status_cd === 0) {
+      setDialogOpen(false);
       fetchClientData();
     } else {
       alert("Something went wrong. Please try again.");
@@ -241,266 +242,21 @@ const FormPage = () => {
           Task List
         </Typography>
       </Box>
-      <TableContainer
-        component={Paper}
-        sx={{
-          borderRadius: "12px",
-          overflow: "hidden",
-          maxHeight: "400px", // Max height of the table container
-          minHeight: "200px", // Min height of the table container
-          overflowY: "auto", // Enables vertical scrolling
-        }}
-      >
-        <Table sx={{ minWidth: 650 }} size="medium" aria-label="a dense table">
-          <TableHead
-            sx={{
-              position: "sticky",
-              top: 0, // Keeps the header stuck to the top of the container
-              zIndex: 1, // Ensures the header stays above the table rows while scrolling
-              backgroundColor: "rgb(13, 81, 82)", // Keep the header's background color
-            }}
-          >
-            <TableRow
-              sx={{
-                backgroundColor: "rgb(13, 81, 82)",
-                "& th": {
-                  textAlign: "center",
-                  color: "white",
-                  fontWeight: "bold",
-                },
-              }}
-            >
-              <TableCell>Task ID</TableCell>
-              <TableCell align="center">Service</TableCell>
-              <TableCell align="center">Date</TableCell>
-              <TableCell align="center">Passport Number</TableCell>
-              <TableCell align="center">Purpose</TableCell>
-              <TableCell align="center">Visa Type</TableCell>
-              <TableCell align="center">Destination Country</TableCell>
-              <TableCell align="center">Quantity</TableCell>
-              <TableCell align="center">Status</TableCell>
-              <TableCell align="center">Comments</TableCell>
-              <TableCell align="center">Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {selectedClient &&
-              selectedClient?.services?.map((task) => (
-                <TableRow key={task.id}>
-                  <TableCell align="center">{task.id}</TableCell>
-                  <TableCell align="left">{task.service_name}</TableCell>
-                  <TableCell align="center">{task.date}</TableCell>
-                  <TableCell align="left">{task.passport_number}</TableCell>
-                  <TableCell align="center">{task.purpose}</TableCell>
-                  <TableCell align="left">{task.visa_type}</TableCell>
-                  <TableCell align="left">{task.destination_country}</TableCell>
-                  <TableCell align="left">{task.quantity}</TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{
-                      color:
-                        task.status === "Pending"
-                          ? "orange"
-                          : task.status === "In - Progress"
-                            ? "#f58d42"
-                            : "green",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {task.status}
-                  </TableCell>
-                  <TableCell align="left">{task.comments}</TableCell>
 
-                  <TableCell align="center">
-                    <Box>
-                      <Button
-                        type="button"
-                        onClick={() => handleEditClick(task)}
-                      >
-                        <EditIcon />
-                      </Button>
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          setDeleteDialogOpen(true);
-                          setEditedService({ ...task });
-                        }}
-                      >
-                        <DeleteIcon />
-                      </Button>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Dialog
-        open={dialogOpen}
-        maxWidth="md"
-        PaperProps={{
-          sx: {
-            borderRadius: "20px",
-            padding: "24px",
-          },
-        }}
-        sx={{
-          "& .MuiDialogTitle-root": {
-            textAlign: "center",
-            paddingBottom: "16px",
-          },
-          "& .MuiTypography-body2": {
-            color: "#666",
-            fontSize: "0.9rem",
-          },
-        }}
-      >
-        <Button
-          variant="outlined"
-          onClick={() => setDialogOpen(false)}
-          sx={{
-            position: "absolute",
-            top: 8,
-            right: 30,
-          }}
-        >
-          <CloseIcon />
-        </Button>
-        <DialogTitle>
-          <h3>Service Details</h3>
-        </DialogTitle>
-
-        <Box
-          component="form"
-          noValidate
-          autoComplete="off"
-          onSubmit={handleSubmit}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 3,
-            padding: "8px 0",
-          }}
-        >
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <CustomInput
-                id="id"
-                label="Task ID"
-                name="id"
-                disabled
-                value={editedService.id || ""}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <CustomAutocomplete
-                id="status"
-                label="Status"
-                name="status"
-                value={
-                  editedService?.status?.[0]?.toUpperCase() +
-                    editedService?.status?.slice(1) || ""
-                }
-                options={["pending", "completed", "in progress"]}
-                onChange={(e, val) => {
-                  handleInputChange("status", val);
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <CustomInput
-                id="comments"
-                label="Comments"
-                name="comments"
-                value={editedService.comments || ""}
-                onChange={(e, val) => {
-                  handleInputChange("comments", e.target.value);
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <CustomInput
-                id="passport_number"
-                label="passport number"
-                name="passport_number"
-                value={editedService.passport_number || ""}
-                onChange={(e, val) => {
-                  handleInputChange("passport_number", e.target.value);
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <CustomAutocomplete
-                id="destination_country"
-                label="destination country"
-                name="destination_country" // Make sure the name is passed
-                value={
-                  editedService?.destination_country?.[0]?.toUpperCase() +
-                    editedService?.destination_country?.slice(1) || ""
-                }
-                options={destinationCountries} // Display labels (e.g., 'In Progress')
-                onChange={(e, val) => {
-                  // Find the value corresponding to the selected label
-
-                  handleInputChange("destination_country", val);
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <CustomAutocomplete
-                id="visa_type"
-                label="Visa Type"
-                name="visa_type" // Make sure the name is passed
-                value={
-                  editedService?.visa_type?.[0]?.toUpperCase() +
-                    editedService?.visa_type?.slice(1) || ""
-                }
-                options={visaTypes} // Display labels (e.g., 'In Progress')
-                onChange={(e, val) => {
-                  // Find the value corresponding to the selected label
-
-                  handleInputChange("visa_type", val);
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12}></Grid>
-            {/* Add more fields as necessary */}
-          </Grid>
-
-          <DialogActions sx={{ justifyContent: "center", paddingTop: "16px" }}>
-            <Button variant="contained" type="submit">
-              Update
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
-      {/* delete dialogue */}
-      <Dialog
-        open={deleteDialogOpen}
-        // onClose={() => setDeleteDialogOpen(false)}
-      >
-        <DialogTitle>Are you sure you want to delete the Task?</DialogTitle>
-
-        <DialogActions sx={{ textAlign: "center" }}>
-          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              handleDelete(editedService);
-            }}
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>{" "}
+      <TaskList
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        taskList={selectedClient && selectedClient?.services}
+        handleDelete={handleDelete}
+        handleEditClick={handleEditClick}
+        handleSubmit={handleSubmit}
+        editedService={editedService}
+        setEditedService={setEditedService}
+        deleteDialogOpen={deleteDialogOpen}
+        setDeleteDialogOpen={setDeleteDialogOpen}
+        handleInputChange={handleInputChange}
+        destinationCountries={destinationCountries}
+      />
     </div>
   );
 };
