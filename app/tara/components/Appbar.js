@@ -143,7 +143,7 @@ export default function AppBarComponent({
           <Divider sx={{ my: 1 }} />
 
           {/* Menu Items */}
-          <MenuItem
+          {/* <MenuItem
             onClick={() => router.push("/profile")}
             sx={{
               display: "flex",
@@ -170,7 +170,7 @@ export default function AppBarComponent({
           >
             <ExitToAppIcon fontSize="small" />
             Support
-          </MenuItem>
+          </MenuItem> */}
           <Divider sx={{ my: 1 }} />
           <MenuItem
             onClick={handleLogout}

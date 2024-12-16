@@ -48,16 +48,7 @@ const FormPage = () => {
   const [selectedServices, setSelectedServices] = useState([]);
   const [clientList, setClientList] = useState([]);
   const { user, tokens, logout } = useAuth();
-  // const c_data = searchParams.get("client"); // Retrieve 'name' from query params
-  // let router = useRouter();
-  // const { client } = router.query;
-  // const parsedClientData = client
-  //   ? JSON.parse(decodeURIComponent(client))
-  //   : null;
-  // console.log(client);
-  // console.log(parsedClientData);
 
-  // console.log(c_data);
   let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
   const visaPurposes = [
     "Tourism",
@@ -113,19 +104,14 @@ const FormPage = () => {
         passport_number: values.passport_number,
       };
       console.log(postData);
-      try {
-        const url = `/user_management/visa-users/`;
-        const { res, error } = await Factory("post", url, postData);
+      const url = `/user_management/visa-users/`;
+      const { res, error } = await Factory("post", url, postData);
 
-        if (res.status_cd === 0) {
-          getClientList();
-          setDialogOpen(false);
-        } else {
-          alert("Something went wrong");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Something went wrong. Please try again.");
+      if (res.status_cd === 0) {
+        getClientList();
+        setDialogOpen(false);
+      } else {
+        alert("Something went wrong");
       }
     },
   });
@@ -133,53 +119,17 @@ const FormPage = () => {
   const { errors, touched, handleSubmit, getFieldProps, values, setValues } =
     formik;
 
-  let serviceHistoryData = [
-    {
-      serviceId: 121,
-      serviceTitle: "ITR",
-      date: "16-02-2021",
-      status: "Success",
-      comments: "Done",
-    },
-    {
-      serviceId: 253,
-      serviceTitle: "Loans",
-      date: "15-12-2021",
-      status: "Pending",
-      comments: "Under Process",
-    },
-    {
-      serviceId: 322,
-      serviceTitle: "Networth",
-      date: "22-02-2021",
-      status: "Pending",
-      comments: "Processing",
-    },
-  ];
-  const handleServiceSelection = (event, serviceName) => {
-    const updatedServices = {
-      ...selectedServices,
-      [serviceName]: event.target.value,
-    };
-    setSelectedServices(updatedServices);
-  };
-
   const getClientList = async () => {
     const url = "/user_management/visa-clients/";
 
-    try {
-      const { res, error } = await Factory("get", url, {});
+    const { res, error } = await Factory("get", url, {});
 
-      if (res.status_cd === 0) {
-        setClientList(res.data);
-      }
-    } catch (error) {
-      // Catch any errors during the request
-      console.error("Error:", error);
+    if (res.status_cd === 0) {
+      setClientList(res.data);
+    } else {
       alert("Something went wrong. Please try again.");
     }
   };
-  useEffect(() => {}, []);
   useEffect(() => {
     getClientList();
   }, [refresh]);
@@ -223,37 +173,6 @@ const FormPage = () => {
       });
     }
   }, [clientList, selectedClient]);
-  console.log(selectedClient);
-  // useEffect(() => {
-  //   const fetchClientData = async () => {
-  //     const clientid = searchParams.get("id");
-  //     console.log(clientid);
-  //     if (!clientid) {
-  //       return; // Exit early if no client ID is found in the search params
-  //     }
-
-  //     const url = `/user_management/visa-applicants/${clientid}/`;
-
-  //     try {
-  //       const { res, error } = await Factory("get", url, {});
-
-  //       if (error) {
-  //         console.error("Error fetching data:", error);
-  //         return;
-  //       }
-
-  //       if (res.status_cd === 0) {
-  //         setSelectedClient(res.data);
-  //       } else {
-  //         console.log("Failed to fetch client data.");
-  //       }
-  //     } catch (err) {
-  //       console.error("API call failed:", err);
-  //     }
-  //   };
-  //   fetchClientData();
-  // }, [searchParams]); // Re-run this effect when the searchParams change
-  console.log(values);
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
       <h3 style={{ marginBottom: 20 }}>{title}</h3>
@@ -439,7 +358,6 @@ const FormPage = () => {
               <ServiceHistory
                 setSelectedClient={setSelectedClient}
                 selectedClientData={selectedClient}
-                serviceHistoryData={serviceHistoryData}
                 setRefresh={setRefresh}
               />
             </>
