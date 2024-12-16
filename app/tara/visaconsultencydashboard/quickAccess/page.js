@@ -19,102 +19,18 @@ const FormPage = () => {
   const title = searchParams.get("title"); // Retrieve 'title' from query params
   const [mappingData, setMappingData] = useState([]);
 
-  let PendingData = [
-    {
-      serviceId: 121,
-      clientname: "Anand",
-      serviceTitle: "ITR",
-      date: "16-02-2021",
-      status: "Pending",
-      comments: "Under Process",
-    },
-    {
-      serviceId: 253,
-      clientname: "Krishna",
-      serviceTitle: "Loans",
-      date: "15-12-2021",
-      status: "Pending",
-      comments: "Under Process",
-    },
-    {
-      serviceId: 322,
-      clientname: "Sai",
-      serviceTitle: "Networth",
-      date: "22-02-2021",
-      status: "Pending",
-      comments: "Under Process",
-    },
-  ];
-
-  let inprogressData = [
-    {
-      serviceId: 121,
-      clientname: "Anand",
-      serviceTitle: "ITR",
-      date: "16-02-2021",
-      status: "In - Progress",
-      comments: "Processing",
-    },
-    {
-      serviceId: 253,
-      clientname: "Krishna",
-      serviceTitle: "Loans",
-      date: "15-12-2021",
-      status: "In - Progress",
-      comments: "Processing",
-    },
-    {
-      serviceId: 322,
-      clientname: "Sai",
-      serviceTitle: "Networth",
-      date: "22-02-2021",
-      status: "In - Progress",
-      comments: "Processing",
-    },
-  ];
-
-  let completedData = [
-    {
-      serviceId: 121,
-      clientname: "Anand",
-      serviceTitle: "ITR",
-      date: "16-02-2021",
-      status: "Success",
-      comments: "Done",
-    },
-    {
-      serviceId: 253,
-      clientname: "Krishna",
-      serviceTitle: "Loans",
-      date: "15-12-2021",
-      status: "Success",
-      comments: "Done",
-    },
-    {
-      serviceId: 322,
-      clientname: "Sai",
-      serviceTitle: "Networth",
-      date: "22-02-2021",
-      status: "Success",
-      comments: "Done",
-    },
-  ];
   const getClientsData = async () => {
     const url = "/user_management/visa-clients/dashboard-status/";
-    try {
-      const { res, error } = await Factory("get", url, {});
-      console.log(res.data);
+    const { res, error } = await Factory("get", url, {});
+    console.log(res.data);
 
-      if (res.status_cd === 0) {
-        title === "Pending"
-          ? setMappingData(res.data.pending_data)
-          : title === "In - Progress"
-            ? setMappingData(res.data.in_progress_data)
-            : setMappingData(res.data.completed_data);
-      }
-    } catch (error) {
-      // Catch any errors during the request
-      console.error("Error:", error);
+    if (res.status_cd === 0) {
+      title === "Pending"
+        ? setMappingData(res.data.pending_data)
+        : title === "In - Progress"
+          ? setMappingData(res.data.in_progress_data)
+          : setMappingData(res.data.completed_data);
+    } else {
       alert("Something went wrong. Please try again.");
     }
   };
@@ -149,9 +65,13 @@ const FormPage = () => {
                 }}
               >
                 <TableCell>Task ID</TableCell>
-                <TableCell align="center">Client Name</TableCell>
                 <TableCell align="center">Service</TableCell>
                 <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Passport Number</TableCell>
+                <TableCell align="center">Purpose</TableCell>
+                <TableCell align="center">Visa Type</TableCell>
+                <TableCell align="center">Destination Country</TableCell>
+                <TableCell align="center">Quantity</TableCell>
                 <TableCell align="center">Status</TableCell>
                 <TableCell align="center">Comments</TableCell>
               </TableRow>
@@ -167,11 +87,15 @@ const FormPage = () => {
                     }}
                   >
                     <TableCell align="center">{row.service_id}</TableCell>
-                    <TableCell align="center">
-                      {row.visa_applicant_name}
-                    </TableCell>
                     <TableCell align="center">{row.service_name}</TableCell>
                     <TableCell align="center">{row.date}</TableCell>
+                    <TableCell align="center">{row.passport_number}</TableCell>
+                    <TableCell align="center">{row.purpose}</TableCell>
+                    <TableCell align="center">{row.visa_type}</TableCell>
+                    <TableCell align="center">{row.quantity}</TableCell>
+                    <TableCell align="center">
+                      {row.destination_country}
+                    </TableCell>
                     <TableCell
                       align="center"
                       sx={{
