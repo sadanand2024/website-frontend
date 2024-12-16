@@ -119,32 +119,34 @@ const FormPage = () => {
   }, []);
   console.log(taskList);
   return (
-    <>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <Typography
-            variant="h6"
-            style={{ marginBottom: 20, textAlign: "left", fontWeight: "bold" }}
-          >
-            Tasks List
-          </Typography>
-        </Grid>
+    <Grid container spacing={2} justifyContent="center" alignItems="center">
+      <Grid item xs={12} md={12} style={{ textAlign: "center" }}>
+        <Typography
+          variant="h6"
+          style={{
+            fontWeight: "bold",
+          }}
+        >
+          Tasks List
+        </Typography>
       </Grid>
-      <TaskList
-        dialogOpen={dialogOpen}
-        setDialogOpen={setDialogOpen}
-        taskList={taskList}
-        handleDelete={handleDelete}
-        handleEditClick={handleEditClick}
-        handleSubmit={handleSubmit}
-        editedService={editedService}
-        setEditedService={setEditedService}
-        deleteDialogOpen={deleteDialogOpen}
-        setDeleteDialogOpen={setDeleteDialogOpen}
-        handleInputChange={handleInputChange}
-        destinationCountries={destinationCountries}
-      />
-    </>
+      <Grid item xs={12} md={12}>
+        <TaskList
+          dialogOpen={dialogOpen}
+          setDialogOpen={setDialogOpen}
+          taskList={taskList}
+          handleDelete={handleDelete}
+          handleEditClick={handleEditClick}
+          handleSubmit={handleSubmit}
+          editedService={editedService}
+          setEditedService={setEditedService}
+          deleteDialogOpen={deleteDialogOpen}
+          setDeleteDialogOpen={setDeleteDialogOpen}
+          handleInputChange={handleInputChange}
+          destinationCountries={destinationCountries}
+        />
+      </Grid>
+    </Grid>
   );
 };
 

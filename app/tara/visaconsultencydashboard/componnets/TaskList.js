@@ -43,20 +43,27 @@ const TaskList = ({
       <Box sx={{ mt: 1 }}>
         <TableContainer
           component={Paper}
-          sx={{ borderRadius: "12px", overflow: "hidden" }}
+          sx={{
+            borderRadius: "12px",
+            overflow: "auto", // Enable scrolling when content exceeds max height
+            maxHeight: "500px", // Set the maximum height
+            minHeight: "200px", // Set the minimum height
+          }}
         >
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow
-                sx={{
-                  backgroundColor: "rgb(13, 81, 82)",
-                  "& th": {
-                    // textAlign: "center",
-                    color: "white",
-                    fontWeight: "bold",
-                  },
-                }}
-              >
+            <TableHead
+              sx={{
+                backgroundColor: "rgb(13, 81, 82)",
+                position: "sticky", // Sticky header
+                top: 0, // Stick to the top
+                zIndex: 1, // Ensure the header stays above the table body
+                "& th": {
+                  color: "white",
+                  fontWeight: "bold",
+                },
+              }}
+            >
+              <TableRow>
                 <TableCell sx={{ whiteSpace: "nowrap" }}>Task ID</TableCell>
                 <TableCell align="center">Service</TableCell>
                 <TableCell align="center">Date</TableCell>
@@ -90,10 +97,10 @@ const TaskList = ({
                     </TableCell>
                     <TableCell align="center">{service.purpose}</TableCell>
                     <TableCell align="left">{service.visa_type}</TableCell>
-                    <TableCell align="left">
+                    <TableCell align="center">
                       {service.destination_country}
                     </TableCell>
-                    <TableCell align="left">{service.quantity}</TableCell>
+                    <TableCell align="center">{service.quantity}</TableCell>
                     <TableCell
                       align="left"
                       sx={{
@@ -108,7 +115,7 @@ const TaskList = ({
                     >
                       {service.status}
                     </TableCell>
-                    <TableCell align="left">{service.comments}</TableCell>
+                    <TableCell align="center">{service.comments}</TableCell>
 
                     <TableCell align="center">
                       <Box>
