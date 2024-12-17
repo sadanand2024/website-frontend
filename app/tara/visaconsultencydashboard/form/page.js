@@ -90,7 +90,9 @@ const FormPage = () => {
       destination_country: Yup.string().required(
         "Destination country is required"
       ),
-      passport_number: Yup.string().required("Passport number is required"),
+      passport_number: Yup.string()
+        .nullable() // Allows empty values without error
+        .matches(/^[A-Z0-9]{8,9}$/, "Invalid passport number format"),
     }),
     onSubmit: async (values) => {
       const postData = {
@@ -103,21 +105,35 @@ const FormPage = () => {
         destination_country: values.destination_country,
         passport_number: values.passport_number,
       };
-      console.log(postData);
       const url = `/user_management/visa-users/`;
       const { res, error } = await Factory("post", url, postData);
 
       if (res.status_cd === 0) {
         getClientList();
+        resetForm();
+        // let selectedClientData = clientList.find(
+        //   (client) =>
+        //     client.first_name + " " + client.last_name ===
+        //     values.first_name + " " + values.last_name
+        // );
+        // setSelectedClient(selectedClientData);
         setDialogOpen(false);
       } else {
-        alert("Something went wrong");
+        alert(res.data.data["email"] || res.data.data["mobile_number"]);
+        // alert("Something went wrong");
       }
     },
   });
 
-  const { errors, touched, handleSubmit, getFieldProps, values, setValues } =
-    formik;
+  const {
+    errors,
+    touched,
+    handleSubmit,
+    getFieldProps,
+    values,
+    setValues,
+    resetForm,
+  } = formik;
 
   const getClientList = async () => {
     const url = "/user_management/visa-clients/";
@@ -135,7 +151,7 @@ const FormPage = () => {
   }, [refresh]);
 
   useEffect(() => {
-    if (Object.keys(selectedClient).length !== 0) {
+    if (selectedClient && Object.keys(selectedClient).length !== 0) {
       let selectedClientData = clientList.find(
         (client) =>
           client.first_name + " " + client.last_name ===
@@ -226,7 +242,7 @@ const FormPage = () => {
               </Grid>
             )}
           </Grid>
-          {Object.keys(selectedClient).length !== 0 && (
+          {selectedClient && Object.keys(selectedClient).length !== 0 && (
             <>
               <Box
                 component="form"
@@ -411,7 +427,7 @@ const FormPage = () => {
           <CloseIcon />
         </Button>
         <DialogTitle>
-          <h3>{name} Registration</h3>
+          <h3>Add Client</h3>
         </DialogTitle>
         <Box
           component="form"

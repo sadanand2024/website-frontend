@@ -132,6 +132,7 @@ const FormPage = () => {
       </Grid>
       <Grid item xs={12} md={12}>
         <TaskList
+          from="tasklist"
           dialogOpen={dialogOpen}
           setDialogOpen={setDialogOpen}
           taskList={taskList}
