@@ -224,7 +224,7 @@ const FormPage = () => {
     const { res, error } = await Factory("post", url, postData);
     if (res.status_cd === 0) {
       fetchClientData();
-
+      setSelectedServices([]);
       setAddTaskDialogOpen(false);
       // setShowSuccessMessage(true);
     } else {
