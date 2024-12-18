@@ -144,7 +144,6 @@ const FormPage = ({
       destination_country: visadetails.destination_country,
       services: filteredServices,
     };
-    console.log(postData);
 
     const url = "/user_management/visa-servicetasks/";
 
@@ -155,7 +154,6 @@ const FormPage = ({
         setShowSuccessMessage(true);
       }
     } catch (error) {
-      console.error("Error fetching services:", error);
       alert("Something went wrong. Please try again.");
     }
   };
@@ -169,7 +167,6 @@ const FormPage = ({
         setServicesCards(res.data);
       }
     } catch (error) {
-      console.error("Error fetching services:", error);
       alert("Something went wrong. Please try again.");
     }
   };
@@ -178,7 +175,6 @@ const FormPage = ({
     getServicesList();
   }, []);
 
-  console.log(selectedServices);
   return (
     <>
       <Box style={{ padding: "20px", textAlign: "center", marginTop: 20 }}>

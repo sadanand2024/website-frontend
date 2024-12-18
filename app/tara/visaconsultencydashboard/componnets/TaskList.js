@@ -39,9 +39,8 @@ const TaskList = ({
   destinationCountries,
   from,
 }) => {
-  console.log(taskList);
   return (
-    <div style={{ padding: "20px" }}>
+    <div>
       <Box sx={{ mt: 1 }}>
         <TableContainer
           component={Paper}
