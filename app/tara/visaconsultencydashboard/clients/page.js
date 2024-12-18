@@ -71,7 +71,9 @@ const FormPage = () => {
       destination_country: Yup.string().required(
         "Destination country is required"
       ),
-      passport_number: Yup.string().required("Passport number is required"),
+      passport_number: Yup.string()
+        .nullable() // Allows empty values without error
+        .matches(/^[A-Z0-9]{8,9}$/, "Invalid passport number format"),
     }),
     onSubmit: async (values) => {
       const postData = {

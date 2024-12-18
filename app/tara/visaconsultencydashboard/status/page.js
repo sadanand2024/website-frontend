@@ -37,6 +37,7 @@ import { useRouter } from "next/navigation";
 import Factory from "@/app/utils/Factory";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TaskList from "../componnets/TaskList";
+import AddTask from "../componnets/AddTask";
 const FormPage = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Retrieve 'name' from query params
@@ -45,6 +46,14 @@ const FormPage = () => {
   const [selectedClient, setSelectedClient] = useState(null);
   const [editedService, setEditedService] = useState({}); // Track form data
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const [addTaskDialogOpen, setAddTaskDialogOpen] = useState(false);
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [quantityMap, setQuantityMap] = useState({});
+  const [commentMap, setCommentMap] = useState({});
+  const [ServicesCards, setServicesCards] = useState([]);
+  const clientID = searchParams.get("id");
+
   let visaTypes = ["Student Visa", "Visit", "Work Visa", "Business"];
   const destinationCountries = [
     "France",
@@ -68,7 +77,6 @@ const FormPage = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(editedService);
 
     let putData = {
       visa_application: {
@@ -86,7 +94,6 @@ const FormPage = () => {
         quantity: editedService.quantity,
       },
     };
-    console.log(putData);
     const url = `/user_management/service-details/${editedService.id}/`;
     const { res, error } = await Factory("put", url, putData);
     if (res.status_cd === 0) {
@@ -107,6 +114,135 @@ const FormPage = () => {
       alert("Failed to delete the service. Please try again.");
     }
   };
+
+  const handleQuantityChange = (service, operation) => {
+    setQuantityMap((prevQuantityMap) => ({
+      ...prevQuantityMap,
+      [service]: (prevQuantityMap[service] || 0) + operation,
+    }));
+  };
+
+  // Handle comment change
+  const handleCommentChange = (service, comment) => {
+    setCommentMap((prevCommentMap) => ({
+      ...prevCommentMap,
+      [service]: comment,
+    }));
+  };
+  const servicesSubmit = async () => {
+    let services = [
+      {
+        id: 1,
+        service_name: "ITR",
+      },
+      {
+        id: 2,
+        service_name: "Networth",
+      },
+      {
+        id: 3,
+        service_name: "Business Proof",
+      },
+      {
+        id: 4,
+        service_name: "Loans",
+      },
+      {
+        id: 5,
+        service_name: "Visa Fund",
+      },
+      {
+        id: 6,
+        service_name: "Forex Payments",
+      },
+      {
+        id: 7,
+        service_name: "Insurance",
+      },
+      {
+        id: 8,
+        service_name: "Travel Booking",
+      },
+      {
+        id: 9,
+        service_name: "Visa Slot",
+      },
+      {
+        id: 10,
+        service_name: "Passport Application",
+      },
+    ];
+    const serviceData = selectedServices.map((service) => {
+      const serviceObj = services.find((obj) => obj.service_name === service);
+
+      return {
+        id: serviceObj ? serviceObj.id : null,
+        service: service,
+        quantity: quantityMap[service] || 0,
+        comments: commentMap[service] || "",
+      };
+    });
+
+    const filteredServices = serviceData.map((service) => ({
+      quantity: service.quantity,
+      comments: service.comments,
+      service_type: service.id,
+    }));
+    console.log(selectedClient);
+    // console.log(filteredServices);
+    // console.log(serviceData);
+    // console.log(visadetails);
+
+    let postData = {
+      user_id: selectedClient.user,
+      passport_number:
+        selectedClient.services.length === 0
+          ? selectedClient.passport_number
+          : selectedClient.services[selectedClient.services.length - 1]
+              ?.passport_number,
+      purpose:
+        selectedClient.services.length === 0
+          ? selectedClient.purpose
+          : selectedClient.services[selectedClient.services.length - 1]
+              ?.purpose,
+      visa_type:
+        selectedClient.services.length === 0
+          ? selectedClient.visa_type
+          : selectedClient.services[selectedClient.services.length - 1]
+              ?.visa_type,
+      destination_country:
+        selectedClient.services.length === 0
+          ? selectedClient.destination_country
+          : selectedClient.services[selectedClient.services.length - 1]
+              ?.destination_country,
+      services: filteredServices,
+    };
+    console.log(postData);
+
+    const url = "/user_management/visa-servicetasks/";
+
+    const { res, error } = await Factory("post", url, postData);
+    if (res.status_cd === 0) {
+      fetchClientData();
+      setSelectedServices([]);
+      setAddTaskDialogOpen(false);
+      // setShowSuccessMessage(true);
+    } else {
+      alert("Something went wrong. Please try again.");
+    }
+  };
+  const getServicesList = async () => {
+    const url = "/user_management/services/";
+    try {
+      const { res, error } = await Factory("get", url, {});
+      if (res.status_cd === 0) {
+        setServicesCards(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
   const fetchClientData = async () => {
     const clientData = searchParams.get("id");
 
@@ -125,9 +261,9 @@ const FormPage = () => {
       console.error("Failed to fetch client data");
     }
   };
-
   useEffect(() => {
     fetchClientData();
+    getServicesList();
   }, [searchParams]);
 
   return (
@@ -241,6 +377,15 @@ const FormPage = () => {
         <Typography variant="h6" sx={{ textAlign: "left", fontWeight: "bold" }}>
           Task List
         </Typography>
+
+        <Button
+          variant="contained"
+          onClick={() => {
+            setAddTaskDialogOpen(true);
+          }}
+        >
+          Add Task
+        </Button>
       </Box>
 
       <TaskList
@@ -256,6 +401,21 @@ const FormPage = () => {
         setDeleteDialogOpen={setDeleteDialogOpen}
         handleInputChange={handleInputChange}
         destinationCountries={destinationCountries}
+      />
+      <AddTask
+        addTaskDialogOpen={addTaskDialogOpen}
+        setAddTaskDialogOpen={setAddTaskDialogOpen}
+        handleQuantityChange={handleQuantityChange}
+        handleCommentChange={handleCommentChange}
+        selectedServices={selectedServices}
+        setSelectedServices={setSelectedServices}
+        ServicesCards={ServicesCards}
+        setServicesCards={setServicesCards}
+        quantityMap={quantityMap}
+        commentMap={commentMap}
+        setQuantityMap={setQuantityMap}
+        setCommentMap={setCommentMap}
+        servicesSubmit={servicesSubmit}
       />
     </div>
   );
