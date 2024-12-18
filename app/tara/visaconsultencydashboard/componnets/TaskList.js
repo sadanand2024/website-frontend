@@ -37,39 +37,52 @@ const TaskList = ({
   setDeleteDialogOpen,
   handleInputChange,
   destinationCountries,
+  from,
 }) => {
+  console.log(taskList);
   return (
     <div style={{ padding: "20px" }}>
       <Box sx={{ mt: 1 }}>
         <TableContainer
           component={Paper}
-          sx={{ borderRadius: "12px", overflow: "hidden" }}
+          sx={{
+            borderRadius: "12px",
+            overflow: "auto", // Enable scrolling when content exceeds max height
+            maxHeight: "500px", // Set the maximum height
+            minHeight: "200px", // Set the minimum height
+          }}
         >
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow
-                sx={{
-                  backgroundColor: "rgb(13, 81, 82)",
-                  "& th": {
-                    // textAlign: "center",
-                    color: "white",
-                    fontWeight: "bold",
-                  },
-                }}
-              >
+            <TableHead
+              sx={{
+                backgroundColor: "rgb(13, 81, 82)",
+                position: "sticky", // Sticky header
+                top: 0, // Stick to the top
+                zIndex: 1, // Ensure the header stays above the table body
+                "& th": {
+                  color: "white",
+                  fontWeight: "bold",
+                },
+              }}
+            >
+              <TableRow>
                 <TableCell sx={{ whiteSpace: "nowrap" }}>Task ID</TableCell>
                 <TableCell align="center">Service</TableCell>
+                {from === "tasklist" && (
+                  <TableCell align="center">Client Name</TableCell>
+                )}
                 <TableCell align="center">Date</TableCell>
-                <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                {/* <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
                   Passport Number
-                </TableCell>
-                <TableCell align="center">Purpose</TableCell>
-                <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                </TableCell> */}
+                {/* <TableCell align="center">Purpose</TableCell> */}
+                {/* <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
                   Visa Type
-                </TableCell>
+                </TableCell> */}
                 <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
                   Destination Country
                 </TableCell>
+
                 <TableCell align="center">Quantity</TableCell>
                 <TableCell align="center">Status</TableCell>
                 <TableCell align="center">Comments</TableCell>
@@ -84,16 +97,22 @@ const TaskList = ({
                       {service.id || service.service_id}
                     </TableCell>
                     <TableCell align="left">{service.service_name}</TableCell>
+                    {from === "tasklist" && (
+                      <TableCell align="left">
+                        {service.first_name + " " + service.last_name}
+                      </TableCell>
+                    )}
+
                     <TableCell align="center">{service.date}</TableCell>
-                    <TableCell align="center">
+                    {/* <TableCell align="center">
                       {service.passport_number}
-                    </TableCell>
-                    <TableCell align="center">{service.purpose}</TableCell>
-                    <TableCell align="left">{service.visa_type}</TableCell>
-                    <TableCell align="left">
+                    </TableCell> */}
+                    {/* <TableCell align="center">{service.purpose}</TableCell>
+                    <TableCell align="left">{service.visa_type}</TableCell> */}
+                    <TableCell align="center">
                       {service.destination_country}
                     </TableCell>
-                    <TableCell align="left">{service.quantity}</TableCell>
+                    <TableCell align="center">{service.quantity}</TableCell>
                     <TableCell
                       align="left"
                       sx={{
@@ -108,7 +127,7 @@ const TaskList = ({
                     >
                       {service.status}
                     </TableCell>
-                    <TableCell align="left">{service.comments}</TableCell>
+                    <TableCell align="center">{service.comments}</TableCell>
 
                     <TableCell align="center">
                       <Box>

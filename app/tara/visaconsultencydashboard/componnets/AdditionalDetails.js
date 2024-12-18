@@ -36,10 +36,8 @@ const FormPage = ({
 }) => {
   const searchParams = useSearchParams();
   let name = searchParams.get("name"); // Retrieve 'name' from query params
-  console.log(name);
   const [serviceListDialog, setServiceListDialog] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
-  console.log(selectedTitle);
 
   useEffect(() => {
     setSelectedServices([
@@ -73,13 +71,11 @@ const FormPage = ({
   };
 
   const submitDetails = async () => {
-    // console.log(selectedServices);
     const filteredServices = selectedServices.map((service) => ({
       quantity: service.quantity,
       comments: service.comments,
       service_type: service.id,
     }));
-    // setShowSuccessMessage(true);
     let postData = {
       user_id: selectedClientData.user,
       passport_number: visadetails.passport_number,
@@ -88,7 +84,6 @@ const FormPage = ({
       destination_country: visadetails.destination_country,
       services: filteredServices,
     };
-    console.log(postData);
 
     const url = "/user_management/visa-servicetasks/";
     const { res, error } = await Factory("post", url, postData);

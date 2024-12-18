@@ -40,26 +40,17 @@ const FormPage = ({
   const searchParams = useSearchParams();
   const [servicelistDialogue, setServicelistDialogue] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
-  const [newSelectedOptions, setNewSelectedOptions] = useState([]);
   const [quantityMap, setQuantityMap] = useState({});
   const [commentMap, setCommentMap] = useState({});
   const [ServicesCards, setServicesCards] = useState([]);
-  // Handle service selection
+
   const handleServiceSelection = (serviceName, service) => {
     setSelectedServices((prevSelectedServices) => {
       if (prevSelectedServices.includes(serviceName)) {
-        let newOptions = [...newSelectedOptions];
-        newOptions = newOptions.filter((item) => item.id !== service.id);
-        setNewSelectedOptions(newOptions);
-
         return prevSelectedServices.filter(
           (service) => service !== serviceName
         );
       } else {
-        let newOptions = [...newSelectedOptions];
-        newOptions.push(service);
-        setNewSelectedOptions(newOptions);
-
         return [...prevSelectedServices, serviceName];
       }
     });
@@ -183,43 +174,10 @@ const FormPage = ({
     }
   };
 
-  // Fetch and update services list on component mount
   useEffect(() => {
     getServicesList();
   }, []);
 
-  useEffect(() => {
-    if (selectedClientData.services.length > 0) {
-      // const selectedServiceTypes = selectedClientData.services.map(
-      //   (client) => client.service_type
-      // );
-      // // Pre-select services based on service_type matching in ServicesCards
-      // let preSelectedServices = [];
-      // preSelectedServices = ServicesCards.filter((service) =>
-      //   selectedServiceTypes.includes(service.id)
-      // ).map((service) => service.service_name);
-      // console.log("preSelectedServices", preSelectedServices);
-      // setSelectedServices(preSelectedServices);
-      // // Set quantity and comments for the pre-selected services
-      // const newQuantityMap = {};
-      // const newCommentMap = {};
-      // selectedClientData.services.forEach((service) => {
-      //   const serviceInCard = ServicesCards.find(
-      //     (cardService) => cardService.id === service.service_type
-      //   );
-      //   if (serviceInCard) {
-      //     newQuantityMap[serviceInCard.service_name] = service.quantity;
-      //     newCommentMap[serviceInCard.service_name] = service.comments;
-      //   }
-      // });
-      // setQuantityMap(newQuantityMap);
-      // setCommentMap(newCommentMap);
-    } else {
-      setSelectedServices([]);
-      // setQuantityMap([]);
-      // setCommentMap([]);
-    }
-  }, [selectedClientData, ServicesCards]);
   console.log(selectedServices);
   return (
     <>
@@ -243,21 +201,8 @@ const FormPage = ({
                   margin: "1px",
                 }}
                 onClick={() => {
-                  handleServiceSelection(service.service_name, service); // Toggle on card click
-
-                  // if (
-                  //   !selectedClientData.services.some(
-                  //     (clientService) =>
-                  //       clientService.service_name === service.service_name
-                  //   )
-                  // ) {
-                  //   handleServiceSelection(service.service_name, service); // Toggle on card click
-                  // }
+                  handleServiceSelection(service.service_name, service);
                 }}
-                // disabled={selectedClientData.services.some(
-                //   (clientService) =>
-                //     clientService.service_name === service.service_name
-                // )} // Disable entire card
               >
                 <Box
                   display="flex"
@@ -268,10 +213,6 @@ const FormPage = ({
                   <FormControlLabel
                     control={<Radio size="small" />}
                     label={service.service_name}
-                    // disabled={selectedClientData.services.some(
-                    //   (clientService) =>
-                    //     clientService.service_name === service.service_name
-                    // )} // Disable radio if already selected in client data
                     checked={selectedServices.includes(service.service_name)}
                   />
                 </Box>
@@ -346,22 +287,9 @@ const FormPage = ({
                 selectedServices.includes(service.service_name)
               )}
               onChange={(event, newValue, value2, value3) => {
-                // let newOptions = [...newSelectedOptions];
-                // if (value2 === "removeOption") {
-                //   newOptions = newOptions.filter(
-                //     (item) => item.id !== value3.option.id
-                //   );
-                // } else newOptions.push(value3.option);
-                // setNewSelectedOptions(newOptions);
-                // setSelectedServices(newValue.map((item) => item.service_name));
                 setSelectedServices(newValue.map((item) => item.service_name));
               }}
               getOptionLabel={(option) => option.service_name}
-              // getOptionDisabled={(option) =>
-              //   selectedClientData.services.some(
-              //     (item) => item.service_type === option.id
-              //   )
-              // }
               renderInput={(params) => (
                 <TextField {...params} label="Update Services" />
               )}
@@ -449,7 +377,6 @@ const FormPage = ({
                       </Button>
                     </TableCell>
                     <TableCell align="center">
-                      {console.log(selectedClientData)}
                       <CustomInput
                         value={commentMap[service] || ""}
                         onChange={(e) =>

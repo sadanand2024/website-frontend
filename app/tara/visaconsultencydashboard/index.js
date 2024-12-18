@@ -28,7 +28,8 @@ import { useAuth } from "@/app/context/AuthContext";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { IconCoins, IconArrowUpRight } from "@tabler/icons-react";
-
+import TaskIcon from "@mui/icons-material/Task";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.common.white,
@@ -110,7 +111,7 @@ const quickaccessCards = [
   {
     name: "In - Progress",
     title: "In - Progress",
-    icon: <AccountBalanceIcon style={{ fontSize: 30 }} />,
+    icon: <AutorenewIcon style={{ fontSize: 30 }} />,
     count: 0,
   },
   {
@@ -126,7 +127,7 @@ const ServicesCards = [
   {
     id: 1,
     title: "ITR",
-    icon: <NoteAddIcon style={{ fontSize: 30 }} />,
+    icon: <TaskIcon style={{ fontSize: 30 }} />,
   },
   {
     id: 2,
@@ -141,7 +142,7 @@ const ServicesCards = [
   {
     id: 4,
     title: "Loans",
-    icon: <ImportExportIcon style={{ fontSize: 30 }} />,
+    icon: <AccountBalanceIcon style={{ fontSize: 30 }} />,
   },
   {
     id: 5,
